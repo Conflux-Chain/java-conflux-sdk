@@ -19,8 +19,13 @@ import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.RawTransaction;
+import org.web3j.crypto.Sign;
 import org.web3j.crypto.TransactionEncoder;
 import org.web3j.crypto.WalletUtils;
+import org.web3j.rlp.RlpEncoder;
+import org.web3j.rlp.RlpList;
+import org.web3j.rlp.RlpString;
+import org.web3j.rlp.RlpType;
 import org.web3j.utils.Numeric;
 
 /**
@@ -277,8 +282,17 @@ public class AccountManager {
 			credentials = WalletUtils.loadCredentials(password[0], files.get(0).toString());
 		}
 		
-		byte[] signedTransaction = TransactionEncoder.signMessage(tx, credentials);
-		return Numeric.toHexString(signedTransaction);
+		byte[] encodedTx = TransactionEncoder.encode(tx);
+		Sign.SignatureData signature = Sign.signMessage(encodedTx, credentials.getEcKeyPair());
+		// adjust V in signature
+		int headerByte = signature.getV()[0] - 27;
+		signature = new Sign.SignatureData((byte) headerByte, signature.getR(), signature.getS());
+		List<RlpType> fields = TransactionEncoder.asRlpValues(tx, signature);
+		// change the RLP encode of V in signature
+		fields.set(fields.size() - 3, RlpString.create(headerByte));
+		byte[] signedTx = RlpEncoder.encode(new RlpList(fields));
+		
+		return Numeric.toHexString(signedTx);
 	}
 }
 
