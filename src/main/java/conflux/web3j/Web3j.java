@@ -1,24 +1,27 @@
 package conflux.web3j;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
 
 import org.web3j.protocol.Web3jService;
-import org.web3j.protocol.core.Request;
 
 import conflux.web3j.request.Call;
 import conflux.web3j.request.Epoch;
 import conflux.web3j.request.LogFilter;
 import conflux.web3j.response.BigIntResponse;
+import conflux.web3j.response.Block;
 import conflux.web3j.response.BlockResponse;
+import conflux.web3j.response.BlockSummary;
 import conflux.web3j.response.BlockSummaryResponse;
 import conflux.web3j.response.BlocksResponse;
+import conflux.web3j.response.Log;
 import conflux.web3j.response.LogsResponse;
+import conflux.web3j.response.Receipt;
 import conflux.web3j.response.ReceiptResponse;
 import conflux.web3j.response.StringResponse;
+import conflux.web3j.response.Transaction;
 import conflux.web3j.response.TransactionResponse;
 
 /**
@@ -36,130 +39,111 @@ public class Web3j implements Cfx {
 	}
 
 	@Override
-	public Request<?, BigIntResponse> getGasPrice() {
-		return new Request<>("cfx_gasPrice", Collections.<String>emptyList(), this.service, BigIntResponse.class);
+	public Request<BigInteger, BigIntResponse> getGasPrice() {
+		return new Request<>(this.service, "cfx_gasPrice", BigIntResponse.class);
 	}
 
 	@Override
-	public Request<?, BigIntResponse> getEpochNumber(Epoch... epoch) {
-		List<String> args;
-		
+	public Request<BigInteger, BigIntResponse> getEpochNumber(Epoch... epoch) {
 		if (epoch.length == 0) {
-			args = Collections.emptyList();
+			return new Request<>(this.service, "cfx_epochNumber", BigIntResponse.class);
 		} else {
-			args = Arrays.asList(epoch[0].getValue());
+			return new Request<>(this.service, "cfx_epochNumber", BigIntResponse.class, epoch[0].getValue());
 		}
-		
-		return new Request<>("cfx_epochNumber", args, this.service, BigIntResponse.class);
 	}
 
 	@Override
-	public Request<?, BigIntResponse> getBalance(String address, Epoch... epoch) {
-		List<String> args = new ArrayList<String>();
-		args.add(address);
-		
-		if (epoch.length > 0) {
-			args.add(epoch[0].getValue());
+	public Request<BigInteger, BigIntResponse> getBalance(String address, Epoch... epoch) {
+		if (epoch.length == 0) {
+			return new Request<>(this.service, "cfx_getBalance", BigIntResponse.class, address);
+		} else {
+			return new Request<>(this.service, "cfx_getBalance", BigIntResponse.class, address, epoch[0].getValue());
 		}
-		
-		return new Request<>("cfx_getBalance", args, this.service, BigIntResponse.class);
 	}
 
 	@Override
-	public Request<?, StringResponse> getCode(String address, Epoch... epoch) {
-		List<String> args = new ArrayList<String>();
-		args.add(address);
-		
-		if (epoch.length > 0) {
-			args.add(epoch[0].getValue());
+	public Request<String, StringResponse> getCode(String address, Epoch... epoch) {
+		if (epoch.length == 0) {
+			return new Request<>(this.service, "cfx_getCode", StringResponse.class, address);
+		} else {
+			return new Request<>(this.service, "cfx_getCode", StringResponse.class, address, epoch[0].getValue());
 		}
-		
-		return new Request<>("cfx_getCode", args, this.service, StringResponse.class);
 	}
 	
 	@Override
-	public Request<?, BlockSummaryResponse> getBlockSummaryByHash(String blockHash) {
-		return new Request<>("cfx_getBlockByHash", Arrays.asList(blockHash, false), this.service, BlockSummaryResponse.class);
+	public Request<Optional<BlockSummary>, BlockSummaryResponse> getBlockSummaryByHash(String blockHash) {
+		return new Request<>(this.service, "cfx_getBlockByHash", BlockSummaryResponse.class, blockHash, false);
 	}
 
 	@Override
-	public Request<?, BlockResponse> getBlockByHash(String blockHash) {
-		return new Request<>("cfx_getBlockByHash", Arrays.asList(blockHash, true), this.service, BlockResponse.class);
+	public Request<Optional<Block>, BlockResponse> getBlockByHash(String blockHash) {
+		return new Request<>(this.service, "cfx_getBlockByHash", BlockResponse.class, blockHash, true);
 	}
 
 	@Override
-	public Request<?, BlockSummaryResponse> getBlockSummaryByEpoch(Epoch epoch) {
-		return new Request<>("cfx_getBlockByEpochNumber", Arrays.asList(epoch.getValue(), false), this.service, BlockSummaryResponse.class);
+	public Request<Optional<BlockSummary>, BlockSummaryResponse> getBlockSummaryByEpoch(Epoch epoch) {
+		return new Request<>(this.service, "cfx_getBlockByEpochNumber", BlockSummaryResponse.class, epoch.getValue(), false);
 	}
 	
 	@Override
-	public Request<?, BlockResponse> getBlockByEpoch(Epoch epoch) {
-		return new Request<>("cfx_getBlockByEpochNumber", Arrays.asList(epoch.getValue(), true), this.service, BlockResponse.class);
+	public Request<Optional<Block>, BlockResponse> getBlockByEpoch(Epoch epoch) {
+		return new Request<>(this.service, "cfx_getBlockByEpochNumber", BlockResponse.class, epoch.getValue(), true);
 	}
 
 	@Override
-	public Request<?, StringResponse> getBestBlockHash() {
-		return new Request<>("cfx_getBestBlockHash", Collections.<String>emptyList(), this.service, StringResponse.class);
+	public Request<String, StringResponse> getBestBlockHash() {
+		return new Request<>(this.service, "cfx_getBestBlockHash", StringResponse.class);
 	}
 
 	@Override
-	public Request<?, BigIntResponse> getTransactionCount(String address, Epoch... epoch) {
-		List<String> args = new ArrayList<String>();
-		args.add(address);
-		
-		if (epoch.length > 0) {
-			args.add(epoch[0].getValue());
+	public Request<BigInteger, BigIntResponse> getTransactionCount(String address, Epoch... epoch) {
+		if (epoch.length == 0) {
+			return new Request<>(this.service, "cfx_getTransactionCount", BigIntResponse.class, address);
+		} else {
+			return new Request<>(this.service, "cfx_getTransactionCount", BigIntResponse.class, address, epoch[0].getValue());
 		}
-		
-		return new Request<>("cfx_getTransactionCount", args, this.service, BigIntResponse.class);
 	}
 
 	@Override
-	public Request<?, StringResponse> sendRawTransaction(String hexEncoded) {
-		return new Request<>("cfx_sendRawTransaction", Arrays.asList(hexEncoded), this.service, StringResponse.class);
+	public Request<String, StringResponse> sendRawTransaction(String hexEncoded) {
+		return new Request<>(this.service, "cfx_sendRawTransaction", StringResponse.class, hexEncoded);
 	}
 
 	@Override
-	public Request<?, StringResponse> call(Call request, Epoch... epoch) {
-		List<Object> args = new ArrayList<Object>();
-		args.add(request);
-		
-		if (epoch.length > 0) {
-			args.add(epoch[0].getValue());
+	public Request<String, StringResponse> call(Call request, Epoch... epoch) {
+		if (epoch.length == 0) {
+			return new Request<>(this.service, "cfx_call", StringResponse.class, request);
+		} else {
+			return new Request<>(this.service, "cfx_call", StringResponse.class, request, epoch[0].getValue());
 		}
-		
-		return new Request<>("cfx_call", args, this.service, StringResponse.class);
 	}
 
 	@Override
-	public Request<?, LogsResponse> getLogs(LogFilter filter) {
-		return new Request<>("cfx_getLogs", Arrays.asList(filter), this.service, LogsResponse.class);
+	public Request<List<Log>, LogsResponse> getLogs(LogFilter filter) {
+		return new Request<>(this.service, "cfx_getLogs", LogsResponse.class, filter);
 	}
 
 	@Override
-	public Request<?, TransactionResponse> getTransactionByHash(String txHash) {
-		return new Request<>("cfx_getTransactionByHash", Arrays.asList(txHash), this.service, TransactionResponse.class);
+	public Request<Optional<Transaction>, TransactionResponse> getTransactionByHash(String txHash) {
+		return new Request<>(this.service, "cfx_getTransactionByHash", TransactionResponse.class, txHash);
 	}
 
 	@Override
-	public Request<?, BigIntResponse> estimateGas(Call request, Epoch... epoch) {
-		List<Object> args = new ArrayList<Object>();
-		args.add(request);
-		
-		if (epoch.length > 0) {
-			args.add(epoch[0].getValue());
+	public Request<BigInteger, BigIntResponse> estimateGas(Call request, Epoch... epoch) {
+		if (epoch.length == 0) {
+			return new Request<>(this.service, "cfx_estimateGas", BigIntResponse.class, request);
+		} else {
+			return new Request<>(this.service, "cfx_estimateGas", BigIntResponse.class, request, epoch[0].getValue());
 		}
-		
-		return new Request<>("cfx_estimateGas", args, this.service, BigIntResponse.class);
 	}
 
 	@Override
-	public Request<?, BlocksResponse> getBlocksByEpoch(Epoch epoch) {
-		return new Request<>("cfx_getBlocksByEpoch", Arrays.asList(epoch.getValue()), this.service, BlocksResponse.class);
+	public Request<List<String>, BlocksResponse> getBlocksByEpoch(Epoch epoch) {
+		return new Request<>(this.service, "cfx_getBlocksByEpoch", BlocksResponse.class, epoch.getValue());
 	}
 
 	@Override
-	public Request<?, ReceiptResponse> getTransactionReceipt(String txHash) {
-		return new Request<>("cfx_getTransactionReceipt", Arrays.asList(txHash), this.service, ReceiptResponse.class);
+	public Request<Optional<Receipt>, ReceiptResponse> getTransactionReceipt(String txHash) {
+		return new Request<>(this.service, "cfx_getTransactionReceipt", ReceiptResponse.class, txHash);
 	}
 }
