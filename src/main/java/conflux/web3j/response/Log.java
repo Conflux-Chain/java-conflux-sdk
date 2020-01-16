@@ -6,9 +6,6 @@ import java.util.Optional;
 
 import org.web3j.utils.Numeric;
 
-// TODO cannot extends LogEntry due to incompatible issue in Rust.
-// LogEntry.Data: Vec<u8> (serialized to byte[])
-// Log.Data: Bytes (serialized to String)
 public class Log {
 	private String address;
 	private List<String> topics;
@@ -19,7 +16,6 @@ public class Log {
 	private String transactionIndex;
 	private String logIndex;
 	private String transactionLogIndex;
-	private String type;
 	private boolean removed;
 	
 	public String getAddress() {
@@ -116,14 +112,6 @@ public class Log {
 	
 	public void setTransactionLogIndex(String transactionLogIndex) {
 		this.transactionLogIndex = transactionLogIndex;
-	}
-	
-	public String getType() {
-		return type;
-	}
-	
-	public void setType(String type) {
-		this.type = type;
 	}
 	
 	public boolean isRemoved() {

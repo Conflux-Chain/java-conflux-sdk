@@ -15,7 +15,7 @@ public class Receipt {
 	private String to;
 	private String gasUsed;
 	private String contractCreated;
-	private List<LogEntry> logs;
+	private List<Log> logs;
 	private String logsBloom;
 	private String stateRoot;
 	private short outcomeStatus;
@@ -92,11 +92,11 @@ public class Receipt {
 		this.contractCreated = contractCreated;
 	}
 	
-	public List<LogEntry> getLogs() {
+	public List<Log> getLogs() {
 		return logs;
 	}
 	
-	public void setLogs(List<LogEntry> logs) {
+	public void setLogs(List<Log> logs) {
 		this.logs = logs;
 	}
 	
