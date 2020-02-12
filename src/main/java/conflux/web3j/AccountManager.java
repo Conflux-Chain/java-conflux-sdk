@@ -256,31 +256,7 @@ public class AccountManager {
 	 * @exception IllegalArgumentException if account not found, or password not specified for locked account, or password expired for unlocked account.
 	 */
 	public String signTransaction(RawTransaction tx, String address, String... password) throws IOException, CipherException {
-		Credentials credentials;
-		
-		if (password == null || password.length == 0) {
-			UnlockedItem item = this.unlocked.get(address);
-			if (item == null) {
-				throw new IllegalArgumentException("password not specified for locked account");
-			}
-			
-			if (item.expired()) {
-				this.unlocked.remove(address);
-				throw new IllegalArgumentException("password expired for unlocked account");
-			}
-			
-			credentials = item.getCredentials();
-		} else {
-			List<Path> files = Files.list(Paths.get(this.dir))
-					.filter(path -> this.parseAddressFromFilename(path.getFileName().toString()).equalsIgnoreCase(address))
-					.collect(Collectors.toList());
-			
-			if (files.isEmpty()) {
-				throw new IllegalArgumentException("account not found");
-			}
-			
-			credentials = WalletUtils.loadCredentials(password[0], files.get(0).toString());
-		}
+		Credentials credentials = this.getCredentials(address, password);
 		
 		byte[] encodedTx = TransactionEncoder.encode(tx);
 		Sign.SignatureData signature = Sign.signMessage(encodedTx, credentials.getEcKeyPair());
@@ -293,6 +269,45 @@ public class AccountManager {
 		byte[] signedTx = RlpEncoder.encode(new RlpList(fields));
 		
 		return Numeric.toHexString(signedTx);
+	}
+	
+	private Credentials getCredentials(String address, String... password) throws IOException, CipherException {
+		if (password == null || password.length == 0) {
+			UnlockedItem item = this.unlocked.get(address);
+			if (item == null) {
+				throw new IllegalArgumentException("password not specified for locked account");
+			}
+			
+			if (item.expired()) {
+				this.unlocked.remove(address);
+				throw new IllegalArgumentException("password expired for unlocked account");
+			}
+			
+			return item.getCredentials();
+		} else {
+			List<Path> files = Files.list(Paths.get(this.dir))
+					.filter(path -> this.parseAddressFromFilename(path.getFileName().toString()).equalsIgnoreCase(address))
+					.collect(Collectors.toList());
+			
+			if (files.isEmpty()) {
+				throw new IllegalArgumentException("account not found");
+			}
+			
+			return WalletUtils.loadCredentials(password[0], files.get(0).toString());
+		}
+	}
+	
+	public String signMessage(byte[] message, boolean needToHash, String address, String... password) throws IOException, CipherException {
+		Credentials credentials = this.getCredentials(address, password);
+		
+		Sign.SignatureData data = Sign.signMessage(message, credentials.getEcKeyPair(), needToHash);
+		
+		byte[] rsv = new byte[data.getR().length + data.getS().length + data.getV().length];
+		System.arraycopy(data.getR(), 0, rsv, 0, data.getR().length);
+		System.arraycopy(data.getS(), 0, rsv, data.getR().length, data.getS().length);
+		System.arraycopy(data.getV(), 0, rsv, data.getR().length + data.getS().length, data.getV().length);
+		
+		return Numeric.toHexString(rsv);
 	}
 }
 
