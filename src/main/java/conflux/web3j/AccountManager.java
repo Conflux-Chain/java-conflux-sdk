@@ -260,13 +260,12 @@ public class AccountManager {
 		
 		byte[] encodedTx = TransactionEncoder.encode(tx);
 		Sign.SignatureData signature = Sign.signMessage(encodedTx, credentials.getEcKeyPair());
-		// adjust V in signature
-		int headerByte = signature.getV()[0] - 27;
-		signature = new Sign.SignatureData((byte) headerByte, signature.getR(), signature.getS());
 		List<RlpType> fields = TransactionEncoder.asRlpValues(tx, signature);
-		// change the RLP encode of V in signature
-		fields.set(fields.size() - 3, RlpString.create(headerByte));
-		byte[] signedTx = RlpEncoder.encode(new RlpList(fields));
+		byte[] signedTx = RlpEncoder.encode(new RlpList(
+				new RlpList(fields.subList(0, 6)),			// [nonce, gasPrice, gas, to, value, data]
+				RlpString.create(signature.getV()[0] - 27),	// adjusted V
+				fields.get(fields.size() - 2),				// R
+				fields.get(fields.size() - 1)));			// S
 		
 		return Numeric.toHexString(signedTx);
 	}
