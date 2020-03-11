@@ -8,8 +8,8 @@ public class RpcException extends RuntimeException {
 
 	private static final long serialVersionUID = 4965906647640407824L;
 	
-	public static final int ERROR_CODE_IO_SEND = -1;
-	private static final String ERROR_MESSAGE_IO_SEND = "failed to send RPC request";
+	public static final Error ERROR_IO_SEND = new Error(-1, "failed to send RPC request (IO error)");
+	public static final Error ERROR_INTERRUPTED = new Error(-2, "failed to send RPC request (interrupted)");
 	
 	private Error error;
 	
@@ -32,10 +32,18 @@ public class RpcException extends RuntimeException {
 		return String.format("RPC error: code = %d, message = %s, data = %s", error.getCode(), error.getMessage(), error.getData());
 	}
 	
-	public static RpcException sendFailure(IOException e) {
-		Error error = new Error(ERROR_CODE_IO_SEND, ERROR_MESSAGE_IO_SEND);
+	private static RpcException predefined(Error template, Throwable e) {
+		Error error = new Error(template.getCode(), template.getMessage());
 		error.setData(e.getMessage());
 		return new RpcException(error, e);
+	}
+	
+	public static RpcException sendFailure(IOException e) {
+		return predefined(ERROR_IO_SEND, e);
+	}
+	
+	public static RpcException interrupted(InterruptedException e) {
+		return predefined(ERROR_INTERRUPTED, e);
 	}
 
 	public Error getError() {
