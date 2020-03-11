@@ -15,17 +15,56 @@ public class Request<T, R extends Response<?> & HasValue<T>> extends org.web3j.p
 		super(method, Arrays.asList(params), service, responseType);
 	}
 	
-	public T sendAndGet() throws RpcException {
-		try {
-			R response = this.send();
-			if (response.getError() != null) {
-				throw new RpcException(response.getError());
-			}
-			
-			return response.getValue();
-		} catch (IOException e) {
-			throw RpcException.sendFailure(e);
+	private T getResult(R response) throws RpcException {
+		if (response.getError() != null) {
+			throw new RpcException(response.getError());
 		}
+		
+		return response.getValue();
+	}
+	
+	public T sendAndGet() throws RpcException {
+		return this.sendAndGet(0);
+	}
+	
+	public T sendAndGet(int retry) throws RpcException {
+		R response = null;
+		
+		while (response == null) {
+			try {
+				response = this.send();
+			} catch (IOException e) {
+				if (retry <= 0) {
+					throw RpcException.sendFailure(e);
+				}
+				
+				retry--;
+			}
+		}
+		
+		return this.getResult(response);
+	}
+	
+	public T sendAndGet(int retry, long intervalMills) throws RpcException, InterruptedException {
+		R response = null;
+		
+		while (response == null) {
+			try {
+				response = this.send();
+			} catch (IOException e) {
+				if (retry <= 0) {
+					throw RpcException.sendFailure(e);
+				}
+				
+				retry--;
+				
+				if (intervalMills > 0) {
+					Thread.sleep(intervalMills);
+				}
+			}
+		}
+		
+		return this.getResult(response);
 	}
 
 }

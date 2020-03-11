@@ -1,8 +1,11 @@
 package conflux.web3j;
 
+import java.io.Closeable;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
+
+import org.web3j.protocol.http.HttpService;
 
 import conflux.web3j.request.Call;
 import conflux.web3j.request.Epoch;
@@ -22,7 +25,12 @@ import conflux.web3j.response.Transaction;
 import conflux.web3j.response.TransactionResponse;
 
 /** Core Conflux JSON-RPC API. */
-public interface Cfx {
+public interface Cfx extends Closeable {
+	
+	static Cfx create(String url) {
+		return new Web3j(new HttpService(url));
+	}
+	
 	Request<BigInteger, BigIntResponse> getGasPrice();
 	
 	Request<BigInteger, BigIntResponse> getEpochNumber(Epoch... epoch);
@@ -56,4 +64,30 @@ public interface Cfx {
 	Request<List<String>, BlocksResponse> getBlocksByEpoch(Epoch epoch);
 	
 	Request<Optional<Receipt>, ReceiptResponse> getTransactionReceipt(String txHash);
+	
+	default Receipt waitForReceipt(String txHash) throws InterruptedException {
+		return this.waitForReceipt(txHash, 1000);
+	}
+	
+	default Receipt waitForReceipt(String txHash, long intervalMillis) throws InterruptedException {
+		Optional<Receipt> receipt = Optional.empty();
+		
+		while (!receipt.isPresent()) {
+			Thread.sleep(intervalMillis);
+			receipt = this.getTransactionReceipt(txHash).sendAndGet();
+		}
+		
+		return receipt.get();
+	}
+	
+	default void waitForNonce(String address, BigInteger nonceUntil) throws InterruptedException {
+		this.waitForNonce(address, nonceUntil, 1000);
+	}
+	
+	default void waitForNonce(String address, BigInteger nonceUntil, long intervalMillis) throws InterruptedException {
+		while (this.getTransactionCount(address).sendAndGet().compareTo(nonceUntil) < 0) {
+			Thread.sleep(intervalMillis);
+		}
+	}
+	
 }

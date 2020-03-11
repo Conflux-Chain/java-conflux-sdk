@@ -27,11 +27,16 @@ import conflux.web3j.response.TransactionResponse;
 /**
  * JSON-RPC Request object building factory.
  */
-public class Web3j implements Cfx {
+class Web3j implements Cfx {
 	private Web3jService service;
 	
 	public Web3j(Web3jService service) {
 		this.service = service;
+	}
+	
+	@Override
+	public void close() throws IOException {
+		this.service.close();
 	}
 	
 	public void shutdown() throws IOException {
