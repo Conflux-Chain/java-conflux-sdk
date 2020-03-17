@@ -9,6 +9,7 @@ import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.TypeReference.StaticArrayTypeReference;
+import org.web3j.abi.datatypes.DynamicArray;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.StaticArray;
 import org.web3j.abi.datatypes.Type;
@@ -108,6 +109,17 @@ public class ContractCall {
 		}
 		
 		return ((StaticArray<T>) decoded.get(0)).getValue();
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public <T extends Type<?>> List<T> decode(String encodedResult, TypeReference<DynamicArray<T>> returnType) {
+		List<Type> decoded = FunctionReturnDecoder.decode(encodedResult, Arrays.asList((TypeReference) returnType));
+		
+		if (decoded == null || decoded.isEmpty()) {
+			return null;
+		}
+		
+		return ((DynamicArray<T>) decoded.get(0)).getValue();
 	}
 
 }

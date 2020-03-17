@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -42,7 +39,7 @@ public class AccountManager {
 	 * Create a AccountManager instance with default directory.
 	 * @throws IOException if failed to create the default directory.
 	 */
-	public AccountManager() throws IOException {
+	public AccountManager() {
 		this(getDefaultDirectory());
 	}
 	
@@ -51,8 +48,13 @@ public class AccountManager {
 	 * @param dir directory to store key files.
 	 * @throws IOException if failed to create directories.
 	 */
-	public AccountManager(String dir) throws IOException {
-		Files.createDirectories(Paths.get(dir));
+	public AccountManager(String dir) {
+		try {
+			Files.createDirectories(Paths.get(dir));
+		} catch (IOException e) {
+			throw new IllegalArgumentException(e);
+		}
+		
 		this.dir = dir;
 		this.unlocked = new ConcurrentHashMap<String, UnlockedItem>();
 	}
@@ -85,7 +87,7 @@ public class AccountManager {
 	 * @param password used to encrypt the key file.
 	 * @return address of new created account.
 	 */
-	public String create(String password) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchProviderException, CipherException, IOException {
+	public String create(String password) throws Exception {
 		String filename = WalletUtils.generateNewWalletFile(password, new File(this.dir));
 		return WalletUtils.loadCredentials(password, new File(this.dir, filename)).getAddress();
 	}
@@ -136,7 +138,7 @@ public class AccountManager {
 	 * @param newPassword encrypt the new created/managed key file.
 	 * @return imported account address if not exists. Otherwise, return <code>Optional.empty()</code>.
 	 */
-	public Optional<String> importFromFile(String keyFile, String password, String newPassword) throws IOException, CipherException {
+	public Optional<String> importFromFile(String keyFile, String password, String newPassword) throws Exception {
 		Credentials importedCredentials = WalletUtils.loadCredentials(password, keyFile);
 		
 		if (this.exists(importedCredentials.getAddress())) {
@@ -189,7 +191,7 @@ public class AccountManager {
 	 * @param newPassword password to encrypt the new key file.
 	 * @return <code>false</code> if the specified account not found. Otherwise, <code>true</code>.
 	 */
-	public boolean update(String address, String password, String newPassword) throws IOException, CipherException {
+	public boolean update(String address, String password, String newPassword) throws Exception {
 		List<Path> files = Files.list(Paths.get(this.dir))
 				.filter(path -> this.parseAddressFromFilename(path.getFileName().toString()).equalsIgnoreCase(address))
 				.collect(Collectors.toList());
@@ -213,7 +215,7 @@ public class AccountManager {
 	 * @param timeout a period of time to unlock the account. Empty timeout indicates unlock the account indefinitely.
 	 * @return <code>false</code> if the specified account not found. Otherwise, <code>true</code>.
 	 */
-	public boolean unlock(String address, String password, Duration... timeout) throws IOException, CipherException {
+	public boolean unlock(String address, String password, Duration... timeout) throws Exception {
 		List<Path> files = Files.list(Paths.get(this.dir))
 				.filter(path -> this.parseAddressFromFilename(path.getFileName().toString()).equalsIgnoreCase(address))
 				.collect(Collectors.toList());
@@ -255,7 +257,7 @@ public class AccountManager {
 	 * @return signed and RLP encoded transaction.
 	 * @exception IllegalArgumentException if account not found, or password not specified for locked account, or password expired for unlocked account.
 	 */
-	public String signTransaction(RawTransaction tx, String address, String... password) throws IOException, CipherException {
+	public String signTransaction(RawTransaction tx, String address, String... password) throws Exception {
 		Credentials credentials = this.getCredentials(address, password);
 		
 		byte[] encodedTx = TransactionEncoder.encode(tx);
@@ -296,7 +298,7 @@ public class AccountManager {
 		}
 	}
 	
-	public String signMessage(byte[] message, boolean needToHash, String address, String... password) throws IOException, CipherException {
+	public String signMessage(byte[] message, boolean needToHash, String address, String... password) throws Exception {
 		Credentials credentials = this.getCredentials(address, password);
 		
 		Sign.SignatureData data = Sign.signMessage(message, credentials.getEcKeyPair(), needToHash);
