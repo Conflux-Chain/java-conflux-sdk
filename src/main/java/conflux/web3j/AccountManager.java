@@ -132,21 +132,40 @@ public class AccountManager {
 	}
 	
 	/**
+	 * Import unmanaged account from specified credentials.
+	 * @param credentials credentials to import.
+	 * @param password encrypt the new created/managed key file.
+	 * @return imported account address if not exists. Otherwise, return <code>Optional.empty()</code>.
+	 */
+	public Optional<String> imports(Credentials credentials, String password) throws Exception {
+		if (this.exists(credentials.getAddress())) {
+			return Optional.empty();
+		}
+		
+		WalletUtils.generateWalletFile(password, credentials.getEcKeyPair(), new File(this.dir), true);
+		return Optional.of(credentials.getAddress());
+	}
+	
+	/**
 	 * Import unmanaged account from external key file.
 	 * @param keyFile key file path.
 	 * @param password decrypt the external key file.
 	 * @param newPassword encrypt the new created/managed key file.
 	 * @return imported account address if not exists. Otherwise, return <code>Optional.empty()</code>.
 	 */
-	public Optional<String> importFromFile(String keyFile, String password, String newPassword) throws Exception {
+	public Optional<String> imports(String keyFile, String password, String newPassword) throws Exception {
 		Credentials importedCredentials = WalletUtils.loadCredentials(password, keyFile);
-		
-		if (this.exists(importedCredentials.getAddress())) {
-			return Optional.empty();
-		}
-		
-		WalletUtils.generateWalletFile(newPassword, importedCredentials.getEcKeyPair(), new File(this.dir), true);
-		return Optional.of(importedCredentials.getAddress());
+		return this.imports(importedCredentials, newPassword);
+	}
+	
+	/**
+	 * Import unmanaged account from a private key.
+	 * @param privateKey private key to import.
+	 * @param password encrypt the new created/managed key file.
+	 * @return imported account address if not exists. Otherwise, return <code>Optional.empty()</code>.
+	 */
+	public Optional<String> imports(String privateKey, String password) throws Exception {
+		return this.imports(Credentials.create(privateKey), password);
 	}
 	
 	/**
