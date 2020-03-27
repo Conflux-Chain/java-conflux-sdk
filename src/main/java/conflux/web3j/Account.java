@@ -20,7 +20,7 @@ public class Account {
 	private BigInteger nonce;
 	
 	public Account(Cfx cfx, AccountManager am, String address, String password) throws Exception {
-		this(cfx, am, address, password, null);
+		this(cfx, am, address, password, Duration.ZERO);
 	}
 	
 	public Account(Cfx cfx, AccountManager am, String address, String password, Duration unlockTimeout) throws Exception {

@@ -247,7 +247,7 @@ public class AccountManager {
 		
 		UnlockedItem item;
 		
-		if (timeout == null || timeout.length == 0) {
+		if (timeout == null || timeout.length == 0 || timeout[0].isNegative() || timeout[0].isZero()) {
 			item = new UnlockedItem(credentials, Optional.empty());
 		} else {
 			item = new UnlockedItem(credentials, Optional.of(timeout[0]));
