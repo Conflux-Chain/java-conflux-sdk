@@ -2,14 +2,9 @@ package conflux.web3j;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.web3j.abi.FunctionEncoder;
-import org.web3j.abi.datatypes.Function;
-import org.web3j.abi.datatypes.Type;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Sign;
 import org.web3j.rlp.RlpEncoder;
@@ -50,38 +45,7 @@ public class RawTransaction {
 	private BigInteger chainId;
 	private String data;
 	
-	public static RawTransaction transfer(BigInteger nonce, String to, BigInteger value, BigInteger epochHeight) {
-		return call(nonce, CfxUnit.DEFAULT_GAS_LIMIT, to, value, BigInteger.ZERO, epochHeight, null);
-	}
-	
-	public static RawTransaction deploy(BigInteger nonce, BigInteger gas, BigInteger storageLimit, BigInteger epochHeight, String bytecodes) {
-		return deploy(nonce, gas, BigInteger.ZERO, storageLimit, epochHeight, bytecodes);
-	}
-	
-	public static RawTransaction deploy(BigInteger nonce, BigInteger gas, BigInteger value, BigInteger storageLimit, BigInteger epochHeight, String bytecodes) {
-		return call(nonce, gas, "", value, storageLimit, epochHeight, bytecodes);
-	}
-	
-	public static RawTransaction call(BigInteger nonce, BigInteger gas, String to, BigInteger storageLimit, BigInteger epochHeight, String method, Type<?>... inputs) {
-		return call(nonce, gas, to, BigInteger.ZERO, storageLimit, epochHeight, method, inputs);
-	}
-	
-	public static RawTransaction call(BigInteger nonce, BigInteger gas, String to, BigInteger storageLimit, BigInteger epochHeight, String data) {
-		return call(nonce, gas, to, BigInteger.ZERO, storageLimit, epochHeight, data);
-	}
-	
-	public static RawTransaction call(BigInteger nonce, BigInteger gas, String to, BigInteger value, BigInteger storageLimit, BigInteger epochHeight, String method, Type<?>... inputs) {
-		String data = "";
-		
-		if (method != null && !method.isEmpty()) {
-			Function function = new Function(method, Arrays.asList(inputs), Collections.emptyList());
-			data = FunctionEncoder.encode(function);
-		}
-		
-		return call(nonce, gas, to, value, storageLimit, epochHeight, data);
-	}
-	
-	public static RawTransaction call(BigInteger nonce, BigInteger gas, String to, BigInteger value, BigInteger storageLimit, BigInteger epochHeight, String data) {
+	public static RawTransaction create(BigInteger nonce, BigInteger gas, String to, BigInteger value, BigInteger storageLimit, BigInteger epochHeight, String data) {
 		RawTransaction tx = new RawTransaction();
 		
 		tx.nonce = nonce;
@@ -95,6 +59,22 @@ public class RawTransaction {
 		tx.data = data;
 		
 		return tx;
+	}
+	
+	public static RawTransaction transfer(BigInteger nonce, String to, BigInteger value, BigInteger epochHeight) {
+		return create(nonce, CfxUnit.DEFAULT_GAS_LIMIT, to, value, BigInteger.ZERO, epochHeight, null);
+	}
+	
+	public static RawTransaction deploy(BigInteger nonce, BigInteger gas, BigInteger storageLimit, BigInteger epochHeight, String bytecodes) {
+		return create(nonce, gas, "", BigInteger.ZERO, storageLimit, epochHeight, bytecodes);
+	}
+	
+	public static RawTransaction deploy(BigInteger nonce, BigInteger gas, BigInteger value, BigInteger storageLimit, BigInteger epochHeight, String bytecodes) {
+		return create(nonce, gas, "", value, storageLimit, epochHeight, bytecodes);
+	}
+	
+	public static RawTransaction call(BigInteger nonce, BigInteger gas, String to, BigInteger storageLimit, BigInteger epochHeight, String data) {
+		return create(nonce, gas, to, BigInteger.ZERO, storageLimit, epochHeight, data);
 	}
 	
 	public String sign(ECKeyPair ecKeyPair) {

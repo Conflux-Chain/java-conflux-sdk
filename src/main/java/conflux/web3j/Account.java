@@ -2,7 +2,11 @@ package conflux.web3j;
 
 import java.math.BigInteger;
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collections;
 
+import org.web3j.abi.FunctionEncoder;
+import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.crypto.Credentials;
 
@@ -87,9 +91,14 @@ public class Account {
 	}
 	
 	public String call(String contract, BigInteger gasLimit, BigInteger value, String method, Type<?>... inputs) throws Exception {
-		BigInteger currentEpoch = this.cfx.getEpochNumber().sendAndGet();
-		RawTransaction tx = RawTransaction.call(this.nonce, gasLimit, contract, value, DefaultStorageLimit, currentEpoch, method, inputs);
-		return this.send(tx);
+		String data = "";
+		
+		if (method != null && !method.isEmpty()) {
+			Function function = new Function(method, Arrays.asList(inputs), Collections.emptyList());
+			data = FunctionEncoder.encode(function);
+		}
+		
+		return this.call(contract, gasLimit, value, data);
 	}
 	
 	public String call(String contract, BigInteger gasLimit, String data) throws Exception {
@@ -98,7 +107,7 @@ public class Account {
 	
 	public String call(String contract, BigInteger gasLimit, BigInteger value, String data) throws Exception {
 		BigInteger currentEpoch = this.cfx.getEpochNumber().sendAndGet();
-		RawTransaction tx = RawTransaction.call(this.nonce, gasLimit, contract, value, DefaultStorageLimit, currentEpoch, data);
+		RawTransaction tx = RawTransaction.create(this.nonce, gasLimit, contract, value, DefaultStorageLimit, currentEpoch, data);
 		return this.send(tx);
 	}
 	
