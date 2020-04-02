@@ -8,31 +8,47 @@ import java.util.Collections;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
+import org.web3j.crypto.Credentials;
 import org.web3j.crypto.RawTransaction;
 
 public class Account {
 	
 	private Cfx cfx;
 	private AccountManager am;
+	private Credentials credentials;
 	private String address;
 	
 	private BigInteger gasPrice = CfxUnit.DEFAULT_GAS_PRICE;
 	private BigInteger nonce;
 	
-	public Account(Cfx cfx, AccountManager am, String address, String password) throws Exception {
-		this(cfx, am, address, password, Duration.ZERO);
+	private Account(Cfx cfx, String address) {
+		this.cfx = cfx;
+		this.address = address;
+		this.nonce = cfx.getTransactionCount(address).sendAndGet();
 	}
 	
-	public Account(Cfx cfx, AccountManager am, String address, String password, Duration unlockTimeout) throws Exception {
+	public static Account unlock(Cfx cfx, AccountManager am, String address, String password) throws Exception {
+		return unlock(cfx, am, address, password, Duration.ZERO);
+	}
+	
+	public static Account unlock(Cfx cfx, AccountManager am, String address, String password, Duration unlockTimeout) throws Exception {
 		if (!am.unlock(address, password, unlockTimeout)) {
 			throw new Exception("account not found in keystore");
 		}
 		
-		this.cfx = cfx;
-		this.am = am;
-		this.address = address;
+		Account account = new Account(cfx, address);
+		account.am = am;
 		
-		this.nonce = cfx.getTransactionCount(address).sendAndGet();
+		return account;
+	}
+	
+	public static Account create(Cfx cfx, String privateKey) {
+		Credentials credentials = Credentials.create(privateKey);
+		
+		Account account = new Account(cfx, credentials.getAddress());
+		account.credentials = credentials;
+		
+		return account;
 	}
 	
 	public BigInteger getNonce() {
@@ -49,7 +65,9 @@ public class Account {
 	}
 	
 	public String send(RawTransaction tx) throws Exception {
-		String signedTx = this.am.signTransaction(tx, this.address);
+		String signedTx = this.credentials == null
+				? this.am.signTransaction(tx, this.address)
+				: AccountManager.signTransaction(tx, this.credentials);
 		String txHash = this.cfx.sendRawTransaction(signedTx).sendAndGet();
 		
 		if (txHash == null || txHash.isEmpty()) {

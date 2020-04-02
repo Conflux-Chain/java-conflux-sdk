@@ -247,10 +247,10 @@ public class AccountManager {
 		
 		UnlockedItem item;
 		
-		if (timeout == null || timeout.length == 0 || timeout[0].isNegative() || timeout[0].isZero()) {
-			item = new UnlockedItem(credentials, Optional.empty());
-		} else {
+		if (timeout != null && timeout.length > 0 && timeout[0] != null && timeout[0].compareTo(Duration.ZERO) > 0) {
 			item = new UnlockedItem(credentials, Optional.of(timeout[0]));
+		} else {
+			item = new UnlockedItem(credentials, Optional.empty());
 		}
 		
 		this.unlocked.put(address, item);
@@ -278,7 +278,10 @@ public class AccountManager {
 	 */
 	public String signTransaction(RawTransaction tx, String address, String... password) throws Exception {
 		Credentials credentials = this.getCredentials(address, password);
-		
+		return signTransaction(tx, credentials);
+	}
+	
+	public static String signTransaction(RawTransaction tx, Credentials credentials) {
 		byte[] encodedTx = TransactionEncoder.encode(tx);
 		Sign.SignatureData signature = Sign.signMessage(encodedTx, credentials.getEcKeyPair());
 		List<RlpType> fields = TransactionEncoder.asRlpValues(tx, signature);
@@ -292,8 +295,9 @@ public class AccountManager {
 	}
 	
 	private Credentials getCredentials(String address, String... password) throws IOException, CipherException {
-		if (password == null || password.length == 0) {
-			UnlockedItem item = this.unlocked.get(address);
+		UnlockedItem item = this.unlocked.get(address);
+		
+		if (password == null || password.length == 0 || password[0] == null || password[0].isEmpty()) {	
 			if (item == null) {
 				throw new IllegalArgumentException("password not specified for locked account");
 			}
@@ -305,6 +309,14 @@ public class AccountManager {
 			
 			return item.getCredentials();
 		} else {
+			if (item != null) {
+				if (!item.expired()) {
+					return item.getCredentials();
+				}
+				
+				this.unlocked.remove(address);
+			}
+			
 			List<Path> files = Files.list(Paths.get(this.dir))
 					.filter(path -> this.parseAddressFromFilename(path.getFileName().toString()).equalsIgnoreCase(address))
 					.collect(Collectors.toList());
@@ -319,7 +331,10 @@ public class AccountManager {
 	
 	public String signMessage(byte[] message, boolean needToHash, String address, String... password) throws Exception {
 		Credentials credentials = this.getCredentials(address, password);
-		
+		return signMessage(message, needToHash, credentials);
+	}
+	
+	public static String signMessage(byte[] message, boolean needToHash, Credentials credentials) {
 		Sign.SignatureData data = Sign.signMessage(message, credentials.getEcKeyPair(), needToHash);
 		
 		byte[] rsv = new byte[data.getR().length + data.getS().length + data.getV().length];
