@@ -17,6 +17,9 @@ public class Transaction {
 	private String gas;
 	private String contractCreated;
 	private String data;
+	private String storageLimit;
+	private String epochHeight;
+	private String chainId;
 	private String status;
 	private String v;
 	private String r;
@@ -124,6 +127,30 @@ public class Transaction {
 	
 	public void setData(String data) {
 		this.data = data;
+	}
+	
+	public BigInteger getStorageLimit() {
+		return Numeric.decodeQuantity(this.storageLimit);
+	}
+	
+	public void setStorageLimit(String storageLimit) {
+		this.storageLimit = storageLimit;
+	}
+	
+	public BigInteger getEpochHeight() {
+		return Numeric.decodeQuantity(this.epochHeight);
+	}
+	
+	public void setEpochHeight(String epochHeight) {
+		this.epochHeight = epochHeight;
+	}
+	
+	public BigInteger getChainId() {
+		return Numeric.decodeQuantity(this.chainId);
+	}
+	
+	public void setChainId(String chainId) {
+		this.chainId = chainId;
 	}
 	
 	public Optional<BigInteger> getStatus() {

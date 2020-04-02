@@ -2,24 +2,20 @@ package conflux.web3j;
 
 import java.math.BigInteger;
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.Collections;
 
-import org.web3j.abi.FunctionEncoder;
-import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.crypto.Credentials;
-import org.web3j.crypto.RawTransaction;
 
 public class Account {
 	
+	public static BigInteger DefaultStorageLimit = BigInteger.valueOf(100000000);
+	
 	private Cfx cfx;
+	private String address;
+	private BigInteger nonce;
+	
 	private AccountManager am;
 	private Credentials credentials;
-	private String address;
-	
-	private BigInteger gasPrice = CfxUnit.DEFAULT_GAS_PRICE;
-	private BigInteger nonce;
 	
 	private Account(Cfx cfx, String address) {
 		this.cfx = cfx;
@@ -55,19 +51,10 @@ public class Account {
 		return nonce;
 	}
 	
-	public BigInteger getGasPrice() {
-		return gasPrice;
-	}
-	
-	public Account withGasPrice(BigInteger gasPrice) {
-		this.gasPrice = gasPrice;
-		return this;
-	}
-	
 	public String send(RawTransaction tx) throws Exception {
 		String signedTx = this.credentials == null
 				? this.am.signTransaction(tx, this.address)
-				: AccountManager.signTransaction(tx, this.credentials);
+				: tx.sign(this.credentials.getEcKeyPair());
 		String txHash = this.cfx.sendRawTransaction(signedTx).sendAndGet();
 		
 		if (txHash == null || txHash.isEmpty()) {
@@ -80,7 +67,8 @@ public class Account {
 	}
 	
 	public String transfer(String to, BigInteger value) throws Exception {
-		RawTransaction tx = RawTransaction.createEtherTransaction(this.nonce, this.gasPrice, CfxUnit.DEFAULT_GAS_LIMIT, to, value);
+		BigInteger currentEpoch = this.cfx.getEpochNumber().sendAndGet();
+		RawTransaction tx = RawTransaction.transfer(this.nonce, to, value, currentEpoch);
 		return this.send(tx);
 	}
 	
@@ -89,7 +77,8 @@ public class Account {
 	}
 	
 	public String deploy(BigInteger gasLimit, BigInteger value, String bytecodes) throws Exception {
-		RawTransaction tx = RawTransaction.createContractTransaction(this.nonce, this.gasPrice, gasLimit, value, bytecodes);
+		BigInteger currentEpoch = this.cfx.getEpochNumber().sendAndGet();
+		RawTransaction tx = RawTransaction.deploy(this.nonce, gasLimit, value, DefaultStorageLimit, currentEpoch, bytecodes);
 		return this.send(tx);
 	}
 	
@@ -98,14 +87,8 @@ public class Account {
 	}
 	
 	public String call(String contract, BigInteger gasLimit, BigInteger value, String method, Type<?>... inputs) throws Exception {
-		String data = "";
-		
-		if (method != null && !method.isEmpty()) {
-			Function function = new Function(method, Arrays.asList(inputs), Collections.emptyList());
-			data = FunctionEncoder.encode(function);
-		}
-		
-		RawTransaction tx = RawTransaction.createTransaction(this.nonce, this.gasPrice, gasLimit, contract, value, data);
+		BigInteger currentEpoch = this.cfx.getEpochNumber().sendAndGet();
+		RawTransaction tx = RawTransaction.call(this.nonce, gasLimit, contract, value, DefaultStorageLimit, currentEpoch, method, inputs);
 		return this.send(tx);
 	}
 	
@@ -114,7 +97,8 @@ public class Account {
 	}
 	
 	public String call(String contract, BigInteger gasLimit, BigInteger value, String data) throws Exception {
-		RawTransaction tx = RawTransaction.createTransaction(this.nonce, this.gasPrice, gasLimit, contract, value, data);
+		BigInteger currentEpoch = this.cfx.getEpochNumber().sendAndGet();
+		RawTransaction tx = RawTransaction.call(this.nonce, gasLimit, contract, value, DefaultStorageLimit, currentEpoch, data);
 		return this.send(tx);
 	}
 	

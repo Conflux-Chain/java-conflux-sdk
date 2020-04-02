@@ -15,14 +15,8 @@ import java.util.stream.Collectors;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
-import org.web3j.crypto.RawTransaction;
 import org.web3j.crypto.Sign;
-import org.web3j.crypto.TransactionEncoder;
 import org.web3j.crypto.WalletUtils;
-import org.web3j.rlp.RlpEncoder;
-import org.web3j.rlp.RlpList;
-import org.web3j.rlp.RlpString;
-import org.web3j.rlp.RlpType;
 import org.web3j.utils.Numeric;
 
 /**
@@ -278,20 +272,7 @@ public class AccountManager {
 	 */
 	public String signTransaction(RawTransaction tx, String address, String... password) throws Exception {
 		Credentials credentials = this.getCredentials(address, password);
-		return signTransaction(tx, credentials);
-	}
-	
-	public static String signTransaction(RawTransaction tx, Credentials credentials) {
-		byte[] encodedTx = TransactionEncoder.encode(tx);
-		Sign.SignatureData signature = Sign.signMessage(encodedTx, credentials.getEcKeyPair());
-		List<RlpType> fields = TransactionEncoder.asRlpValues(tx, signature);
-		byte[] signedTx = RlpEncoder.encode(new RlpList(
-				new RlpList(fields.subList(0, 6)),			// [nonce, gasPrice, gas, to, value, data]
-				RlpString.create(signature.getV()[0] - 27),	// adjusted V
-				fields.get(fields.size() - 2),				// R
-				fields.get(fields.size() - 1)));			// S
-		
-		return Numeric.toHexString(signedTx);
+		return tx.sign(credentials.getEcKeyPair());
 	}
 	
 	private Credentials getCredentials(String address, String... password) throws IOException, CipherException {
