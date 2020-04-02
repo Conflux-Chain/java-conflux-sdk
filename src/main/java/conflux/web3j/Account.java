@@ -9,6 +9,9 @@ import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.crypto.Credentials;
+import org.web3j.crypto.ECKeyPair;
+
+import conflux.web3j.types.AddressType;
 
 public class Account {
 	
@@ -19,7 +22,7 @@ public class Account {
 	private BigInteger nonce;
 	
 	private AccountManager am;
-	private Credentials credentials;
+	private ECKeyPair ecKeyPair;
 	
 	private Account(Cfx cfx, String address) {
 		this.cfx = cfx;
@@ -45,8 +48,8 @@ public class Account {
 	public static Account create(Cfx cfx, String privateKey) {
 		Credentials credentials = Credentials.create(privateKey);
 		
-		Account account = new Account(cfx, credentials.getAddress());
-		account.credentials = credentials;
+		Account account = new Account(cfx, AddressType.User.normalize(credentials.getAddress()));
+		account.ecKeyPair = credentials.getEcKeyPair();
 		
 		return account;
 	}
@@ -56,9 +59,9 @@ public class Account {
 	}
 	
 	public String send(RawTransaction tx) throws Exception {
-		String signedTx = this.credentials == null
+		String signedTx = this.ecKeyPair == null
 				? this.am.signTransaction(tx, this.address)
-				: tx.sign(this.credentials.getEcKeyPair());
+				: tx.sign(this.ecKeyPair);
 		String txHash = this.cfx.sendRawTransaction(signedTx).sendAndGet();
 		
 		if (txHash == null || txHash.isEmpty()) {

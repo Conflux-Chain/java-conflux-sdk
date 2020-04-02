@@ -15,15 +15,28 @@ import java.util.stream.Collectors;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
+import org.web3j.crypto.Keys;
 import org.web3j.crypto.Sign;
+import org.web3j.crypto.Wallet;
+import org.web3j.crypto.WalletFile;
 import org.web3j.crypto.WalletUtils;
 import org.web3j.utils.Numeric;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import conflux.web3j.types.Address;
+import conflux.web3j.types.AddressType;
 
 /**
  * AccountManager manages Conflux accounts at local file system.
  *
  */
 public class AccountManager {
+	
+	private static final ObjectMapper objectMapper = new ObjectMapper();
+	private static final String keyfilePrefix = "conflux-keyfile-";
+	private static final String keyfileExt = ".json";
+	
 	// directory to store the key files.
 	private String dir;
 	// unlocked accounts: map<address, item>
@@ -82,8 +95,18 @@ public class AccountManager {
 	 * @return address of new created account.
 	 */
 	public String create(String password) throws Exception {
-		String filename = WalletUtils.generateNewWalletFile(password, new File(this.dir));
-		return WalletUtils.loadCredentials(password, new File(this.dir, filename)).getAddress();
+		return this.createKeyFile(password, Keys.createEcKeyPair());
+	}
+	
+	private String createKeyFile(String password, ECKeyPair ecKeyPair) throws Exception {
+		WalletFile walletFile = Wallet.createStandard(password, ecKeyPair);
+		walletFile.setAddress(AddressType.User.normalize(walletFile.getAddress()));
+
+		String filename = String.format("%s%s%s", keyfilePrefix, walletFile.getAddress(), keyfileExt);
+		File keyfile = new File(this.dir, filename);
+		objectMapper.writeValue(keyfile, walletFile);
+
+		return walletFile.getAddress();
 	}
 	
 	/**
@@ -104,40 +127,30 @@ public class AccountManager {
 	 * @return account address of the key file.
 	 */
 	private String parseAddressFromFilename(String filename) {
-		String prefix = "UTC--";
-		String ext = ".json";
-		if (!filename.startsWith(prefix) || !filename.endsWith(ext)) {
+		if (!filename.startsWith(keyfilePrefix) || !filename.endsWith(keyfileExt)) {
 			return "";
 		}
 		
-		filename = filename.substring(prefix.length(), filename.length() - ext.length());
+		String address = filename.substring(keyfilePrefix.length(), filename.length() - keyfileExt.length());
 		
-		int index = filename.indexOf("--");
-		if (index == -1) {
+		try {
+			Address.validate(address, AddressType.User);
+		} catch (Exception e) {
 			return "";
 		}
 		
-		String address = filename.substring(index + "--".length());
-		if (address.length() != 40) {
-			return "";
-		}
-		
-		return "0x" + address;
+		return address;
 	}
 	
-	/**
-	 * Import unmanaged account from specified credentials.
-	 * @param credentials credentials to import.
-	 * @param password encrypt the new created/managed key file.
-	 * @return imported account address if not exists. Otherwise, return <code>Optional.empty()</code>.
-	 */
-	public Optional<String> imports(Credentials credentials, String password) throws Exception {
-		if (this.exists(credentials.getAddress())) {
+	private Optional<String> imports(Credentials credentials, String password) throws Exception {
+		String address = AddressType.User.normalize(credentials.getAddress());
+		if (this.exists(address)) {
 			return Optional.empty();
 		}
 		
-		WalletUtils.generateWalletFile(password, credentials.getEcKeyPair(), new File(this.dir), true);
-		return Optional.of(credentials.getAddress());
+		this.createKeyFile(password, credentials.getEcKeyPair());
+		
+		return Optional.of(address);
 	}
 	
 	/**
@@ -214,9 +227,8 @@ public class AccountManager {
 		}
 		
 		ECKeyPair ecKeyPair = WalletUtils.loadCredentials(password, files.get(0).toString()).getEcKeyPair();
-		
 		Files.delete(files.get(0));
-		WalletUtils.generateWalletFile(newPassword, ecKeyPair, new File(this.dir), true);
+		this.createKeyFile(newPassword, ecKeyPair);
 		
 		return true;
 	}
@@ -242,9 +254,9 @@ public class AccountManager {
 		UnlockedItem item;
 		
 		if (timeout != null && timeout.length > 0 && timeout[0] != null && timeout[0].compareTo(Duration.ZERO) > 0) {
-			item = new UnlockedItem(credentials, Optional.of(timeout[0]));
+			item = new UnlockedItem(credentials.getEcKeyPair(), Optional.of(timeout[0]));
 		} else {
-			item = new UnlockedItem(credentials, Optional.empty());
+			item = new UnlockedItem(credentials.getEcKeyPair(), Optional.empty());
 		}
 		
 		this.unlocked.put(address, item);
@@ -271,11 +283,11 @@ public class AccountManager {
 	 * @exception IllegalArgumentException if account not found, or password not specified for locked account, or password expired for unlocked account.
 	 */
 	public String signTransaction(RawTransaction tx, String address, String... password) throws Exception {
-		Credentials credentials = this.getCredentials(address, password);
-		return tx.sign(credentials.getEcKeyPair());
+		ECKeyPair ecKeyPair = this.getEcKeyPair(address, password);
+		return tx.sign(ecKeyPair);
 	}
 	
-	private Credentials getCredentials(String address, String... password) throws IOException, CipherException {
+	private ECKeyPair getEcKeyPair(String address, String... password) throws IOException, CipherException {
 		UnlockedItem item = this.unlocked.get(address);
 		
 		if (password == null || password.length == 0 || password[0] == null || password[0].isEmpty()) {	
@@ -288,11 +300,11 @@ public class AccountManager {
 				throw new IllegalArgumentException("password expired for unlocked account");
 			}
 			
-			return item.getCredentials();
+			return item.getEcKeyPair();
 		} else {
 			if (item != null) {
 				if (!item.expired()) {
-					return item.getCredentials();
+					return item.getEcKeyPair();
 				}
 				
 				this.unlocked.remove(address);
@@ -306,17 +318,17 @@ public class AccountManager {
 				throw new IllegalArgumentException("account not found");
 			}
 			
-			return WalletUtils.loadCredentials(password[0], files.get(0).toString());
+			return WalletUtils.loadCredentials(password[0], files.get(0).toString()).getEcKeyPair();
 		}
 	}
 	
 	public String signMessage(byte[] message, boolean needToHash, String address, String... password) throws Exception {
-		Credentials credentials = this.getCredentials(address, password);
-		return signMessage(message, needToHash, credentials);
+		ECKeyPair ecKeyPair = this.getEcKeyPair(address, password);
+		return signMessage(message, needToHash, ecKeyPair);
 	}
 	
-	public static String signMessage(byte[] message, boolean needToHash, Credentials credentials) {
-		Sign.SignatureData data = Sign.signMessage(message, credentials.getEcKeyPair(), needToHash);
+	public static String signMessage(byte[] message, boolean needToHash, ECKeyPair ecKeyPair) {
+		Sign.SignatureData data = Sign.signMessage(message, ecKeyPair, needToHash);
 		
 		byte[] rsv = new byte[data.getR().length + data.getS().length + data.getV().length];
 		System.arraycopy(data.getR(), 0, rsv, 0, data.getR().length);
@@ -328,11 +340,11 @@ public class AccountManager {
 }
 
 class UnlockedItem {
-	private Credentials credentials;
+	private ECKeyPair ecKeyPair;
 	private Optional<Instant> until;
 	
-	public UnlockedItem(Credentials credentials, Optional<Duration> timeout) {
-		this.credentials = credentials;
+	public UnlockedItem(ECKeyPair ecKeyPair, Optional<Duration> timeout) {
+		this.ecKeyPair = ecKeyPair;
 		
 		if (!timeout.isPresent()) {
 			this.until = Optional.empty();
@@ -341,8 +353,8 @@ class UnlockedItem {
 		}
 	}
 	
-	public Credentials getCredentials() {
-		return credentials;
+	public ECKeyPair getEcKeyPair() {
+		return ecKeyPair;
 	}
 	
 	public boolean expired() {
