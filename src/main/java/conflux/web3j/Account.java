@@ -24,7 +24,7 @@ public class Account {
 	private Account(Cfx cfx, String address) {
 		this.cfx = cfx;
 		this.address = address;
-		this.nonce = cfx.getTransactionCount(address).sendAndGet();
+		this.nonce = cfx.getNonce(address).sendAndGet();
 	}
 	
 	public static Account unlock(Cfx cfx, AccountManager am, String address, String password) throws Exception {

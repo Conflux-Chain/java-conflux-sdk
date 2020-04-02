@@ -23,6 +23,8 @@ import conflux.web3j.response.ReceiptResponse;
 import conflux.web3j.response.StringResponse;
 import conflux.web3j.response.Transaction;
 import conflux.web3j.response.TransactionResponse;
+import conflux.web3j.response.UsedGasAndCollateral;
+import conflux.web3j.response.UsedGasAndCollateralResponse;
 
 /** Core Conflux JSON-RPC API. */
 public interface Cfx extends Closeable {
@@ -57,7 +59,7 @@ public interface Cfx extends Closeable {
 	
 	Request<String, StringResponse> getBestBlockHash();
 	
-	Request<BigInteger, BigIntResponse> getTransactionCount(String address, Epoch... epoch);
+	Request<BigInteger, BigIntResponse> getNonce(String address, Epoch... epoch);
 	
 	Request<String, StringResponse> sendRawTransaction(String hexEncoded);
 	
@@ -67,7 +69,7 @@ public interface Cfx extends Closeable {
 	
 	Request<Optional<Transaction>, TransactionResponse> getTransactionByHash(String txHash);
 	
-	Request<BigInteger, BigIntResponse> estimateGas(Call request, Epoch... epoch);
+	Request<UsedGasAndCollateral, UsedGasAndCollateralResponse> estimateGasAndCollateral(Call request, Epoch... epoch);
 	
 	Request<List<String>, BlocksResponse> getBlocksByEpoch(Epoch epoch);
 	
@@ -93,7 +95,7 @@ public interface Cfx extends Closeable {
 	}
 	
 	default void waitForNonce(String address, BigInteger nonceUntil, long intervalMillis) throws InterruptedException {
-		while (this.getTransactionCount(address).sendAndGet().compareTo(nonceUntil) < 0) {
+		while (this.getNonce(address).sendAndGet().compareTo(nonceUntil) < 0) {
 			Thread.sleep(intervalMillis);
 		}
 	}

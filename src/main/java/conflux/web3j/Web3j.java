@@ -23,6 +23,8 @@ import conflux.web3j.response.ReceiptResponse;
 import conflux.web3j.response.StringResponse;
 import conflux.web3j.response.Transaction;
 import conflux.web3j.response.TransactionResponse;
+import conflux.web3j.response.UsedGasAndCollateral;
+import conflux.web3j.response.UsedGasAndCollateralResponse;
 
 /**
  * JSON-RPC Request object building factory.
@@ -121,12 +123,12 @@ class Web3j implements Cfx {
 	}
 
 	@Override
-	public Request<BigInteger, BigIntResponse> getTransactionCount(String address, Epoch... epoch) {
+	public Request<BigInteger, BigIntResponse> getNonce(String address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getTransactionCount", BigIntResponse.class, address)
+			return new Request<>(this.service, "cfx_getNextNonce", BigIntResponse.class, address)
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getTransactionCount", BigIntResponse.class, address, epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getNextNonce", BigIntResponse.class, address, epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
@@ -161,12 +163,12 @@ class Web3j implements Cfx {
 	}
 
 	@Override
-	public Request<BigInteger, BigIntResponse> estimateGas(Call request, Epoch... epoch) {
+	public Request<UsedGasAndCollateral, UsedGasAndCollateralResponse> estimateGasAndCollateral(Call request, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_estimateGas", BigIntResponse.class, request)
+			return new Request<>(this.service, "cfx_estimateGasAndCollateral", UsedGasAndCollateralResponse.class, request)
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_estimateGas", BigIntResponse.class, request, epoch[0].getValue())
+			return new Request<>(this.service, "cfx_estimateGasAndCollateral", UsedGasAndCollateralResponse.class, request, epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
