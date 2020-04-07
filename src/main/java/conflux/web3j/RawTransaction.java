@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.web3j.crypto.ECKeyPair;
+import org.web3j.crypto.Hash;
 import org.web3j.crypto.Sign;
 import org.web3j.rlp.RlpEncoder;
 import org.web3j.rlp.RlpList;
@@ -96,26 +97,33 @@ public class RawTransaction {
 		return Numeric.toHexString(signedTx);
 	}
 	
-	private RlpType toRlp() {
+	public RlpType toRlp() {
 		List<RlpType> values = new ArrayList<RlpType>();
-		
+
 		values.add(RlpString.create(this.nonce));
 		values.add(RlpString.create(this.gasPrice));
 		values.add(RlpString.create(this.gas));
-		
-        if (this.to != null && !this.to.isEmpty()) {
-        	values.add(RlpString.create(Numeric.hexStringToByteArray(this.to)));
-        } else {
-        	values.add(RlpString.create(""));
-        }
-        
-        values.add(RlpString.create(this.value));
-        values.add(RlpString.create(this.storageLimit));
-        values.add(RlpString.create(this.epochHeight));
-        values.add(RlpString.create(this.chainId));
-        values.add(RlpString.create(Numeric.hexStringToByteArray(this.data == null ? "" : this.data)));
-        
-        return new RlpList(values);
+
+		if (this.to != null && !this.to.isEmpty()) {
+			values.add(RlpString.create(Numeric.hexStringToByteArray(this.to)));
+		} else {
+			values.add(RlpString.create(""));
+		}
+
+		values.add(RlpString.create(this.value));
+		values.add(RlpString.create(this.storageLimit));
+		values.add(RlpString.create(this.epochHeight));
+		values.add(RlpString.create(this.chainId));
+		values.add(RlpString.create(Numeric.hexStringToByteArray(this.data == null ? "" : this.data)));
+
+		return new RlpList(values);
+	}
+	
+	public String hash() {
+		RlpType rlpTx = this.toRlp();
+		byte[] encoded = RlpEncoder.encode(rlpTx);
+		byte[] hash = Hash.sha3(encoded);
+		return Numeric.toHexString(hash);
 	}
 	
 	public BigInteger getNonce() {

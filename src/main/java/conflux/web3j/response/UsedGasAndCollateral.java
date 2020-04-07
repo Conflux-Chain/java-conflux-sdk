@@ -17,7 +17,7 @@ public class UsedGasAndCollateral {
 	}
 	
 	public BigInteger getStorageCollateralized() {
-		return new BigInteger(this.storageCollateralized);
+		return Numeric.decodeQuantity(this.storageCollateralized);
 	}
 	
 	public void setStorageCollateralized(String storageCollateralized) {

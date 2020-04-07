@@ -54,6 +54,14 @@ public class Account {
 		return account;
 	}
 	
+	public Cfx getCfx() {
+		return cfx;
+	}
+	
+	public String getAddress() {
+		return address;
+	}
+	
 	public BigInteger getNonce() {
 		return nonce;
 	}
