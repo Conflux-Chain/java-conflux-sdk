@@ -1,0 +1,23 @@
+apply plugin: 'java-library'
+description 'java-sdk Conflux crypto library'
+
+dependencies {
+    compile "org.slf4j:slf4j-api:1.7.30"
+    compile project(':abi')
+    compile project(':rlp')
+    compile project(':utils')
+    compile "com.fasterxml.jackson.core:jackson-databind:2.10.1"
+}
+
+configurations { testArtifacts.extendsFrom testRuntime }
+
+//生成jar包
+task makeJar1(type: Copy) {
+    delete 'build/libs/crypto.jar'
+    from('build/intermediates/bundles/release/')
+    into('build/libs/')
+    include('classes.jar')
+    rename ('classes.jar', 'crypto.jar')
+}
+makeJar1.dependsOn(build)
+//artifacts { testArtifacts testsJar }

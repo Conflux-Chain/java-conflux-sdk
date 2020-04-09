@@ -1,0 +1,24 @@
+apply plugin: 'java-library'
+description 'java-sdk project code generators'
+
+dependencies {
+    compile project(':core')
+    compile "com.squareup:javapoet:$javapoetVersion"
+    compile "info.picocli:picocli:3.0.0"
+    testImplementation project(path: ':core', configuration: 'testArtifacts')
+    compile("org.junit.platform:junit-platform-launcher:1.6.0-SNAPSHOT")
+    compile("org.junit.jupiter:junit-jupiter-engine:5.5.0")
+    compile("org.junit.vintage:junit-vintage-engine:5.5.1")
+    compile project(path: ':abi')
+    testImplementation project(path: ':abi')
+}
+
+//生成jar包
+task makeJar(type: Copy) {
+    delete 'build/libs/codegen.jar'
+    from('build/intermediates/bundles/release/')
+    into('build/libs/')
+    include('classes.jar')
+    rename ('classes.jar', 'codegen.jar')
+}
+makeJar.dependsOn(build)

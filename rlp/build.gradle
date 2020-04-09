@@ -1,0 +1,17 @@
+apply plugin: 'java-library'
+description 'Conflux Recursive Length Prefix (RLP) encoding for serializing objects'
+
+dependencies {
+    compile project(':utils')
+}
+//生成jar包
+task makeJar(type: Copy) {
+    delete 'build/libs/rlp.jar'
+    from('build/intermediates/bundles/release/')
+    into('build/libs/')
+    include('classes.jar')
+    rename ('classes.jar', 'rlp.jar')
+}
+makeJar.dependsOn(build)
+
+//gradlew makeJar

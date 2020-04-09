@@ -1,0 +1,14 @@
+apply plugin: 'java-library'
+description 'Simple Java tuples library'
+
+//生成jar包
+task makeJar(type: Copy) {
+    delete 'build/libs/tuples.jar'
+    from('build/intermediates/bundles/release/')
+    into('build/libs/')
+    include('classes.jar')
+    rename ('classes.jar', 'tuples.jar')
+}
+makeJar.dependsOn(build)
+
+//gradlew makeJar

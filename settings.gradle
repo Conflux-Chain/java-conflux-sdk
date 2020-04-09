@@ -8,3 +8,14 @@
  */
 
 rootProject.name = 'conflux-web3j'
+include':abi'
+include ':besu'
+include ':codegen'
+include ':contracts'
+include ':core'
+include ':crypto'
+include ':eea'
+include ':hosted-providers'
+include ':rlp'
+include ':tuples'
+include ':utils'

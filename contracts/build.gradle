@@ -1,0 +1,17 @@
+apply plugin: 'java-library'
+description 'java-sdk support for Ethereum Improvement Proposals (EIP\'s)'
+
+dependencies {
+    compile project(':core')
+    testImplementation project(path: ':core', configuration: 'testArtifacts')
+}
+
+//生成jar包
+task makeJar(type: Copy) {
+    delete 'build/libs/contracts.jar'
+    from('build/intermediates/bundles/release/')
+    into('build/libs/')
+    include('classes.jar')
+    rename ('classes.jar', 'contracts.jar')
+}
+makeJar.dependsOn(build)

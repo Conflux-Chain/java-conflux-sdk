@@ -1,0 +1,27 @@
+package org.cfx.abi.datatypes.generated;
+
+import java.util.List;
+import org.cfx.abi.datatypes.StaticArray;
+import org.cfx.abi.datatypes.Type;
+
+public class StaticArray8<T extends Type> extends StaticArray<T> {
+    @Deprecated
+    public StaticArray8(List<T> values) {
+        super(8, values);
+    }
+
+    @Deprecated
+    @SafeVarargs
+    public StaticArray8(T... values) {
+        super(8, values);
+    }
+
+    public StaticArray8(Class<T> type, List<T> values) {
+        super(type, 8, values);
+    }
+
+    @SafeVarargs
+    public StaticArray8(Class<T> type, T... values) {
+        super(type, 8, values);
+    }
+}

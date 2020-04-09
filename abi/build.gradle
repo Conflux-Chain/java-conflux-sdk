@@ -1,0 +1,17 @@
+apply plugin: 'java-library'
+description 'Conflux Application Binary Interface (ABI) for working with smart contracts'
+
+
+dependencies {
+    compile project(':utils')
+}
+
+
+task makeJar(type: Copy) {
+    delete 'build/libs/abi.jar'
+    from('build/intermediates/bundles/release/')
+    into('build/libs/')
+    include('classes.jar')
+    rename ('classes.jar', 'abi.jar')
+}
+makeJar.dependsOn(build)

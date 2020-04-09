@@ -1,0 +1,18 @@
+apply plugin: 'java-library'
+description 'EEA JSON-RPC API'
+
+dependencies {
+    compile project(':core')
+    testImplementation project(path: ':core', configuration: 'testArtifacts')
+}
+//生成jar包
+task makeJar(type: Copy) {
+    delete 'build/libs/eea.jar'
+    from('build/intermediates/bundles/release/')
+    into('build/libs/')
+    include('classes.jar')
+    rename ('classes.jar', 'eea.jar')
+}
+makeJar.dependsOn(build)
+
+//gradlew makeJar
