@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import conflux.web3j.types.Address;
 import conflux.web3j.types.AddressType;
+import conflux.web3j.types.RawTransaction;
 
 /**
  * AccountManager manages Conflux accounts at local file system.

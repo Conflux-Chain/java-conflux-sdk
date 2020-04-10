@@ -25,6 +25,7 @@ import conflux.web3j.response.Transaction;
 import conflux.web3j.response.TransactionResponse;
 import conflux.web3j.response.UsedGasAndCollateral;
 import conflux.web3j.response.UsedGasAndCollateralResponse;
+import conflux.web3j.types.SendTransactionResult;
 
 /** Core Conflux JSON-RPC API. */
 public interface Cfx extends Closeable {
@@ -98,6 +99,14 @@ public interface Cfx extends Closeable {
 		while (this.getNonce(address).sendAndGet().compareTo(nonceUntil) < 0) {
 			Thread.sleep(intervalMillis);
 		}
+	}
+	
+	default SendTransactionResult sendRawTransactionAndGet(String hexEncoded) {
+		StringResponse response = this.sendRawTransaction(hexEncoded).sendWithRetry();
+		
+		return response.getError() == null
+				? new SendTransactionResult(response.getValue())
+				: new SendTransactionResult(response.getError());
 	}
 	
 }

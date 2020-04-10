@@ -12,6 +12,7 @@ import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
 
 import conflux.web3j.types.AddressType;
+import conflux.web3j.types.RawTransaction;
 
 public class Account {
 	

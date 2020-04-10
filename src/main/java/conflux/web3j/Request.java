@@ -24,28 +24,18 @@ public class Request<T, R extends Response<?> & HasValue<T>> extends org.web3j.p
 		return this;
 	}
 	
-	private T getResult(R response) throws RpcException {
-		if (response.getError() != null) {
-			throw new RpcException(response.getError());
-		}
-		
-		return response.getValue();
+	public R sendWithRetry() throws RpcException {
+		return this.sendWithRetry(this.retry);
 	}
 	
-	public T sendAndGet() throws RpcException {
-		return this.sendAndGet(this.retry);
+	public R sendWithRetry(int retry) throws RpcException {
+		return this.sendWithRetry(retry, this.intervalMillis);
 	}
 	
-	public T sendAndGet(int retry) throws RpcException {
-		return this.sendAndGet(retry, this.intervalMillis);
-	}
-	
-	public T sendAndGet(int retry, long intervalMills) throws RpcException {
-		R response = null;
-		
-		while (response == null) {
+	public R sendWithRetry(int retry, long intervalMills) throws RpcException {
+		while (true) {
 			try {
-				response = this.send();
+				return this.send();
 			} catch (IOException e) {
 				if (retry <= 0) {
 					throw RpcException.sendFailure(e);
@@ -62,8 +52,24 @@ public class Request<T, R extends Response<?> & HasValue<T>> extends org.web3j.p
 				}
 			}
 		}
+	}
+	
+	public T sendAndGet() throws RpcException {
+		return this.sendAndGet(this.retry);
+	}
+	
+	public T sendAndGet(int retry) throws RpcException {
+		return this.sendAndGet(retry, this.intervalMillis);
+	}
+	
+	public T sendAndGet(int retry, long intervalMills) throws RpcException {
+		R response = this.sendWithRetry(retry, intervalMills);
 		
-		return this.getResult(response);
+		if (response.getError() != null) {
+			throw new RpcException(response.getError());
+		}
+		
+		return response.getValue();
 	}
 
 }

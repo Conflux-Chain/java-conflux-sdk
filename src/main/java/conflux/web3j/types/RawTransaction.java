@@ -1,4 +1,4 @@
-package conflux.web3j;
+package conflux.web3j.types;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -14,6 +14,8 @@ import org.web3j.rlp.RlpString;
 import org.web3j.rlp.RlpType;
 import org.web3j.utils.Bytes;
 import org.web3j.utils.Numeric;
+
+import conflux.web3j.CfxUnit;
 
 public class RawTransaction {
 	
