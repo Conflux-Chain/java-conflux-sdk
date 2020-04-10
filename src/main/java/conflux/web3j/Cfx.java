@@ -101,7 +101,7 @@ public interface Cfx extends Closeable {
 		}
 	}
 	
-	default SendTransactionResult sendRawTransactionAndGet(String hexEncoded) {
+	default SendTransactionResult sendRawTransactionAndGet(String hexEncoded) throws RpcException {
 		StringResponse response = this.sendRawTransaction(hexEncoded).sendWithRetry();
 		
 		return response.getError() == null

@@ -13,6 +13,7 @@ import org.web3j.crypto.ECKeyPair;
 
 import conflux.web3j.types.AddressType;
 import conflux.web3j.types.RawTransaction;
+import conflux.web3j.types.SendTransactionResult;
 
 public class Account {
 	
@@ -67,25 +68,31 @@ public class Account {
 		return nonce;
 	}
 	
-	public String send(RawTransaction tx) throws Exception {
+	public String mustSend(RawTransaction tx) throws Exception {
+		SendTransactionResult result = this.send(tx);
+		
+		if (result.getRawError() != null) {
+			throw new RpcException(result.getRawError());
+		}
+		
+		return result.getTxHash();
+	}
+	
+	public SendTransactionResult send(RawTransaction tx) throws Exception {
 		String signedTx = this.ecKeyPair == null
 				? this.am.signTransaction(tx, this.address)
 				: tx.sign(this.ecKeyPair);
-		String txHash = this.cfx.sendRawTransaction(signedTx).sendAndGet();
-		
-		if (txHash == null || txHash.isEmpty()) {
-			throw new Exception("failed to send transaction, tx hash is null or empty");
-		}
+		SendTransactionResult result = this.cfx.sendRawTransactionAndGet(signedTx);
 		
 		this.nonce = this.nonce.add(BigInteger.ONE);
 		
-		return txHash;
+		return result;
 	}
 	
 	public String transfer(String to, BigInteger value) throws Exception {
 		BigInteger currentEpoch = this.cfx.getEpochNumber().sendAndGet();
 		RawTransaction tx = RawTransaction.transfer(this.nonce, to, value, currentEpoch);
-		return this.send(tx);
+		return this.mustSend(tx);
 	}
 	
 	public String deploy(BigInteger gasLimit, String bytecodes) throws Exception {
@@ -95,7 +102,7 @@ public class Account {
 	public String deploy(BigInteger gasLimit, BigInteger value, String bytecodes) throws Exception {
 		BigInteger currentEpoch = this.cfx.getEpochNumber().sendAndGet();
 		RawTransaction tx = RawTransaction.deploy(this.nonce, gasLimit, value, DefaultStorageLimit, currentEpoch, bytecodes);
-		return this.send(tx);
+		return this.mustSend(tx);
 	}
 	
 	public String call(String contract, BigInteger gasLimit, String method, Type<?>... inputs) throws Exception {
@@ -120,7 +127,7 @@ public class Account {
 	public String call(String contract, BigInteger gasLimit, BigInteger value, String data) throws Exception {
 		BigInteger currentEpoch = this.cfx.getEpochNumber().sendAndGet();
 		RawTransaction tx = RawTransaction.create(this.nonce, gasLimit, contract, value, DefaultStorageLimit, currentEpoch, data);
-		return this.send(tx);
+		return this.mustSend(tx);
 	}
 	
 	public void waitForNonceUpdated() throws InterruptedException {
