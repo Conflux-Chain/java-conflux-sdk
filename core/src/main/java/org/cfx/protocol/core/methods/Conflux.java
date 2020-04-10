@@ -97,7 +97,7 @@ public interface Conflux {
     Request<?, CfxGetStorageAt> cfxGetStorageAt(
             String address, BigInteger position, DefaultBlockParameter defaultBlockParameter);
 
-    Request<?, CfxGetTransactionCount> cfxGetTransactionCount(
+    Request<?, CfxGetTransactionCount> cfxGetNonce(
             String address, DefaultBlockParameter defaultBlockParameter);
 
     Request<?, CfxGetBlockTransactionCountByHash> cfxGetBlockTransactionCountByHash(

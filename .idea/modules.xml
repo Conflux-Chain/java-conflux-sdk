@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/abi/abi.iml" filepath="$PROJECT_DIR$/.idea/modules/abi/abi.iml" group="conflux-web3j/abi" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/besu/besu.iml" filepath="$PROJECT_DIR$/.idea/modules/besu/besu.iml" group="conflux-web3j/besu" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/codegen/codegen.iml" filepath="$PROJECT_DIR$/.idea/modules/codegen/codegen.iml" group="conflux-web3j/codegen" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/conflux-web3j.iml" filepath="$PROJECT_DIR$/.idea/modules/conflux-web3j.iml" group="conflux-web3j" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/contracts/contracts.iml" filepath="$PROJECT_DIR$/.idea/modules/contracts/contracts.iml" group="conflux-web3j/contracts" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/core.iml" filepath="$PROJECT_DIR$/.idea/modules/core/core.iml" group="conflux-web3j/core" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/crypto/crypto.iml" filepath="$PROJECT_DIR$/.idea/modules/crypto/crypto.iml" group="conflux-web3j/crypto" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/eea/eea.iml" filepath="$PROJECT_DIR$/.idea/modules/eea/eea.iml" group="conflux-web3j/eea" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/hosted-providers/hosted-providers.iml" filepath="$PROJECT_DIR$/.idea/modules/hosted-providers/hosted-providers.iml" group="conflux-web3j/hosted-providers" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rlp/rlp.iml" filepath="$PROJECT_DIR$/.idea/modules/rlp/rlp.iml" group="conflux-web3j/rlp" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tuples/tuples.iml" filepath="$PROJECT_DIR$/.idea/modules/tuples/tuples.iml" group="conflux-web3j/tuples" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/utils/utils.iml" filepath="$PROJECT_DIR$/.idea/modules/utils/utils.iml" group="conflux-web3j/utils" />
+    </modules>
+  </component>
+</project>

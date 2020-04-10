@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.jnr:jnr-ffi:2.1.9">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.jnr/jnr-ffi/2.1.9/c465565992e8264012023c8b240e8175e235aa4e/jnr-ffi-2.1.9.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.jnr/jnr-ffi/2.1.9/1efc102a12d8ba95a6ad0e6e78d0391bbf01264f/jnr-ffi-2.1.9-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

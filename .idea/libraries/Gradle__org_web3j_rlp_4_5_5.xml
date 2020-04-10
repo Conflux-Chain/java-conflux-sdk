@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.web3j:rlp:4.5.5">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.web3j/rlp/4.5.5/fe7fb3e3b2dd772b5beb1972062b992e5a5c0ab6/rlp-4.5.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.web3j/rlp/4.5.5/5b5a061b47fdb52a77bbf0af6de71dc3c33ac6ee/rlp-4.5.5-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

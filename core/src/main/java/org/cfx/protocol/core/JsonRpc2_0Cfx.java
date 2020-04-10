@@ -239,10 +239,10 @@ public class JsonRpc2_0Cfx implements Cfx {
     }
 
     @Override
-    public Request<?, CfxGetTransactionCount> cfxGetTransactionCount(
+    public Request<?, CfxGetTransactionCount> cfxGetNonce(
             String address, DefaultBlockParameter defaultBlockParameter) {
         return new Request<>(
-                "cfx_getTransactionCount",
+                "cfx_getNextNonce",
                 Arrays.asList(address, defaultBlockParameter.getValue()),
                 cfxService,
                 CfxGetTransactionCount.class);
