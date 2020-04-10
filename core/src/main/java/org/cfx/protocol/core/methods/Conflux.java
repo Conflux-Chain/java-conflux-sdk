@@ -55,6 +55,7 @@ import org.cfx.protocol.core.methods.response.ShhNewIdentity;
 import org.cfx.protocol.core.methods.response.ShhPost;
 import org.cfx.protocol.core.methods.response.ShhUninstallFilter;
 import org.cfx.protocol.core.methods.response.ShhVersion;
+import org.cfx.protocol.core.methods.response.UsedGasAndCollateralResponse;
 import org.cfx.protocol.core.methods.response.management.AdminNodeInfo;
 
 import java.math.BigInteger;
@@ -125,7 +126,7 @@ public interface Conflux {
             org.cfx.protocol.core.methods.request.Transaction transaction,
             DefaultBlockParameter defaultBlockParameter);
 
-    Request<?, CfxEstimateGas> cfxEstimateGas(
+    Request<?, UsedGasAndCollateralResponse> cfxEstimateGasAndCollateral(
             org.cfx.protocol.core.methods.request.Transaction transaction);
 
     Request<?, CfxBlock> cfxGetBlockByHash(String blockHash, boolean returnFullTransactionObjects);

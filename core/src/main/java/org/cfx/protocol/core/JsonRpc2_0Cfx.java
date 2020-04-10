@@ -68,6 +68,7 @@ import org.cfx.protocol.core.methods.response.ShhUninstallFilter;
 import org.cfx.protocol.core.methods.response.ShhVersion;
 import org.cfx.protocol.core.methods.response.CfxClientVersion;
 import org.cfx.protocol.core.methods.response.CfxSha3;
+import org.cfx.protocol.core.methods.response.UsedGasAndCollateralResponse;
 import org.cfx.protocol.core.methods.response.management.AdminNodeInfo;
 import org.cfx.protocol.rx.JsonRpc2_0Rx;
 import org.cfx.protocol.websocket.events.LogNotification;
@@ -340,9 +341,9 @@ public class JsonRpc2_0Cfx implements Cfx {
     }
 
     @Override
-    public Request<?, CfxEstimateGas> cfxEstimateGas(org.cfx.protocol.core.methods.request.Transaction transaction) {
+    public Request<?, UsedGasAndCollateralResponse> cfxEstimateGasAndCollateral(org.cfx.protocol.core.methods.request.Transaction transaction) {
         return new Request<>(
-                "cfx_estimateGas", Arrays.asList(transaction), cfxService, CfxEstimateGas.class);
+                "cfx_estimateGasAndCollateral", Arrays.asList(transaction), cfxService, UsedGasAndCollateralResponse.class);
     }
 
 
