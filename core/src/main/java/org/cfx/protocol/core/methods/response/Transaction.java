@@ -1,12 +1,14 @@
 package org.cfx.protocol.core.methods.response;
 
 import java.math.BigInteger;
+import java.util.Optional;
 
 import org.cfx.utils.Numeric;
 
 public class Transaction {
     private static final int CHAIN_ID_INC = 35;
     private static final int LOWER_REAL_V = 27;
+
 
     private String hash;
     private String nonce;
@@ -25,6 +27,12 @@ public class Transaction {
     private String r;
     private String s;
     private long v;
+
+    private String contractCreated;
+    private String storageLimit;
+    private String epochHeight;
+    private String chainId;
+    private String status;
 
     public Transaction() {}
 
@@ -45,7 +53,12 @@ public class Transaction {
             String raw,
             String r,
             String s,
-            long v) {
+            long v,
+            String contractCreated,
+            String storageLimit,
+            String status,
+            String epochHeight,
+            String chainId) {
         this.hash = hash;
         this.nonce = nonce;
         this.blockHash = blockHash;
@@ -63,7 +76,53 @@ public class Transaction {
         this.r = r;
         this.s = s;
         this.v = v;
+        this.contractCreated = contractCreated;
+        this.storageLimit = storageLimit;
+        this.status = status;
+        this.epochHeight = epochHeight;
+        this.chainId = chainId;
     }
+
+    public Optional<String> getContractCreated() {
+        if (this.contractCreated == null || this.contractCreated.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(this.contractCreated);
+        }
+    }
+
+    public void setContractCreated(String contractCreated) {
+        this.contractCreated = contractCreated;
+    }
+    public BigInteger getEpochHeight() {
+        return Numeric.decodeQuantity(this.epochHeight);
+    }
+
+    public void setEpochHeight(String epochHeight) {
+        this.epochHeight = epochHeight;
+    }
+
+    public Optional<BigInteger> getStatus() {
+        if (this.status == null || this.status.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(Numeric.decodeQuantity(this.status));
+        }
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+
+    public BigInteger getStorageLimit() {
+        return Numeric.decodeQuantity(this.storageLimit);
+    }
+
+    public void setStorageLimit(String storageLimit) {
+        this.storageLimit = storageLimit;
+    }
+
 
     public String getHash() {
         return hash;
@@ -221,12 +280,21 @@ public class Transaction {
         return v;
     }
 
-    public Long getChainId() {
-        if (v == LOWER_REAL_V || v == (LOWER_REAL_V + 1)) {
-            return null;
-        }
-        Long chainId = (v - CHAIN_ID_INC) / 2;
-        return chainId;
+//    public Long getChainId() {
+//        if (v == LOWER_REAL_V || v == (LOWER_REAL_V + 1)) {
+//            return null;
+//        }
+//        Long chainId = (v - CHAIN_ID_INC) / 2;
+//        return chainId;
+//    }
+
+
+    public BigInteger getChainId() {
+        return Numeric.decodeQuantity(this.chainId);
+    }
+
+    public void setChainId(String chainId) {
+        this.chainId = chainId;
     }
 
     // public void setV(byte v) {
