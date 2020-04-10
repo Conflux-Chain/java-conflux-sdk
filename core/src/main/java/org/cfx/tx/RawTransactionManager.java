@@ -71,7 +71,7 @@ public class RawTransactionManager extends TransactionManager {
 
     protected BigInteger getNonce() throws IOException {
         CfxGetTransactionCount ethGetTransactionCount =
-                cfx.cfxGetTransactionCount(
+                cfx.cfxGetNonce(
                                 credentials.getAddress(), DefaultBlockParameterName.PENDING)
                         .send();
 

@@ -17,6 +17,9 @@ public class RawTransaction {
     private String to;
     private BigInteger value;
     private String data;
+    private BigInteger storageLimit;
+    private BigInteger epochHeight;
+    private BigInteger chainId;
 
     protected RawTransaction(
             BigInteger nonce,
@@ -24,13 +27,20 @@ public class RawTransaction {
             BigInteger gasLimit,
             String to,
             BigInteger value,
-            String data) {
+            String data,
+            BigInteger storageLimit,
+            BigInteger epochHeight,
+            BigInteger chainId
+            ) {
         this.nonce = nonce;
         this.gasPrice = gasPrice;
         this.gasLimit = gasLimit;
         this.to = to;
         this.value = value;
         this.data = data != null ? Numeric.cleanHexPrefix(data) : null;
+        this.storageLimit = storageLimit;
+        this.epochHeight = epochHeight;
+        this.chainId = chainId;
     }
 
     public static RawTransaction createContractTransaction(
@@ -40,7 +50,7 @@ public class RawTransaction {
             BigInteger value,
             String init) {
 
-        return new RawTransaction(nonce, gasPrice, gasLimit, "", value, init);
+        return new RawTransaction(nonce, gasPrice, gasLimit, "", value, init,BigInteger.ZERO,BigInteger.ZERO,BigInteger.ZERO);
     }
 
     public static RawTransaction createCfxTransaction(
@@ -50,7 +60,7 @@ public class RawTransaction {
             String to,
             BigInteger value) {
 
-        return new RawTransaction(nonce, gasPrice, gasLimit, to, value, "");
+        return new RawTransaction(nonce, gasPrice, gasLimit, to, value, "",BigInteger.ZERO,BigInteger.ZERO,BigInteger.ZERO);
     }
 
     public static RawTransaction createTransaction(
@@ -66,7 +76,7 @@ public class RawTransaction {
             BigInteger value,
             String data) {
 
-        return new RawTransaction(nonce, gasPrice, gasLimit, to, value, data);
+        return new RawTransaction(nonce, gasPrice, gasLimit, to, value, data,BigInteger.ZERO,BigInteger.ZERO,BigInteger.ZERO);
     }
 
     public BigInteger getNonce() {
@@ -92,4 +102,8 @@ public class RawTransaction {
     public String getData() {
         return data;
     }
+
+    public BigInteger getStorageLimit(){return  storageLimit;}
+    public BigInteger getepochHeight(){return  epochHeight;}
+    public BigInteger getchainId(){return  chainId;}
 }

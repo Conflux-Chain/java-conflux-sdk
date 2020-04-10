@@ -31,22 +31,22 @@ public class TransactionEncoder {
 
     public static  byte[] getEncodedData(RawTransaction rawTransaction,Sign.SignatureData signatureData){
 
-        //        // adjust V in signature
-//        int headerByte = signatureData.getV()[0] - 27;
-//        signatureData = new Sign.SignatureData((byte) headerByte, signatureData.getR(), signatureData.getS());
-//        List<RlpType> fields = TransactionEncoder.asRlpValues(rawTransaction, signatureData);
-//        // change the RLP encode of V in signature
-//        fields.set(fields.size() - 3, RlpString.create(headerByte));
-//        byte[] signedTx = RlpEncoder.encode(new RlpList(fields));
+
         List<RlpType> fields = TransactionEncoder.asRlpValues(rawTransaction, signatureData);
+
+        int v = signatureData.getV()[0] - 27;
+        byte[] r = Bytes.trimLeadingZeroes(signatureData.getR());
+        byte[] s = Bytes.trimLeadingZeroes(signatureData.getS());
+
         byte[] signedTx = RlpEncoder.encode(new RlpList(
-                new RlpList(fields.subList(0, 6)),			// [nonce, gasPrice, gas, to, value, data]
-                RlpString.create(signatureData.getV()[0] - 27),	// adjusted V
-                fields.get(fields.size() - 2),				// R
-                fields.get(fields.size() - 1)));			// S
+                new RlpList(fields.subList(0, 9)),			// [nonce, gasPrice, gas, to, value,StorageLimit,epochHeight, GasLimit,data]
+                RlpString.create(v),
+                RlpString.create(r),
+                RlpString.create(s)));
 
         return  signedTx;
     }
+
 
     public static byte[] signMessage(
             RawTransaction rawTransaction, long chainId, Credentials credentials) {
@@ -126,6 +126,11 @@ public class TransactionEncoder {
         }
 
         result.add(RlpString.create(rawTransaction.getValue()));
+
+        //new add
+        result.add(RlpString.create(rawTransaction.getStorageLimit()));
+        result.add(RlpString.create(rawTransaction.getepochHeight()));
+        result.add(RlpString.create(rawTransaction.getchainId()));
 
         // value field will already be hex encoded, so we need to convert into binary first
         byte[] data = Numeric.hexStringToByteArray(rawTransaction.getData());

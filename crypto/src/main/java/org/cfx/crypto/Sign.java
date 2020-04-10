@@ -35,14 +35,14 @@ public class Sign {
                     CURVE_PARAMS.getH());
     static final BigInteger HALF_CURVE_ORDER = CURVE_PARAMS.getN().shiftRight(1);
 
-    static final String MESSAGE_PREFIX = "\u0019Ethereum Signed Message:\n";
+    static final String MESSAGE_PREFIX = "\u0019Conflux Signed Message:\n";
 
-    static byte[] getEthereumMessagePrefix(int messageLength) {
+    static byte[] getConfluxMessagePrefix(int messageLength) {
         return MESSAGE_PREFIX.concat(String.valueOf(messageLength)).getBytes();
     }
 
-    static byte[] getEthereumMessageHash(byte[] message) {
-        byte[] prefix = getEthereumMessagePrefix(message.length);
+    static byte[] getConfluxMessageHash(byte[] message) {
+        byte[] prefix = getConfluxMessagePrefix(message.length);
 
         byte[] result = new byte[prefix.length + message.length];
         System.arraycopy(prefix, 0, result, 0, prefix.length);
@@ -52,7 +52,7 @@ public class Sign {
     }
 
     public static SignatureData signPrefixedMessage(byte[] message, ECKeyPair keyPair) {
-        return signMessage(getEthereumMessageHash(message), keyPair, false);
+        return signMessage(getConfluxMessageHash(message), keyPair, false);
     }
 
     public static SignatureData signMessage(byte[] message, ECKeyPair keyPair) {
@@ -204,7 +204,7 @@ public class Sign {
      */
     public static BigInteger signedPrefixedMessageToKey(byte[] message, SignatureData signatureData)
             throws SignatureException {
-        return signedMessageHashToKey(getEthereumMessageHash(message), signatureData);
+        return signedMessageHashToKey(getConfluxMessageHash(message), signatureData);
     }
 
     /**

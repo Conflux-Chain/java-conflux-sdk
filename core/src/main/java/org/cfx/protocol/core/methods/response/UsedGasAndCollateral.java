@@ -5,8 +5,8 @@ import org.cfx.utils.Numeric;
 import java.math.BigInteger;
 
 public class UsedGasAndCollateral {
-    private String gasUsed;
-    private String storageCollateralized;
+    public String gasUsed;
+    public String storageCollateralized;
 
     public BigInteger getGasUsed() {
         return Numeric.decodeQuantity(this.gasUsed);

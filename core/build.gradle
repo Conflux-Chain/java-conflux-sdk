@@ -50,13 +50,13 @@ configurations { testArtifacts.extendsFrom testRuntime }
 //artifacts { testArtifacts testsJar }
 
 //生成jar包
-task makeJar(type: Copy) {
+task makeJar4(type: Copy) {
     delete 'build/libs/core.jar'
     from('build/intermediates/bundles/release/')
     into('build/libs/')
     include('classes.jar')
     rename ('classes.jar', 'core.jar')
 }
-makeJar.dependsOn(build)
+makeJar4.dependsOn(build)
 
 //gradlew makeJar

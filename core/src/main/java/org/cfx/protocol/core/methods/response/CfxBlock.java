@@ -530,7 +530,12 @@ public class CfxBlock extends Response<CfxBlock.Block> {
                 String raw,
                 String r,
                 String s,
-                int v) {
+                int v,
+                String contractCreated,
+                String storageLimit,
+                String epochHeight,
+                String chainId,
+                String status) {
             super(
                     hash,
                     nonce,
@@ -548,7 +553,7 @@ public class CfxBlock extends Response<CfxBlock.Block> {
                     raw,
                     r,
                     s,
-                    v);
+                    v,contractCreated,storageLimit,epochHeight,chainId,status);
         }
 
         @Override

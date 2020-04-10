@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum DefaultBlockParameterName implements DefaultBlockParameter {
     EARLIEST("earliest"),
-    LATEST("latest"),
+    LATEST("latest_state"),
     PENDING("pending");
 
     private String name;
