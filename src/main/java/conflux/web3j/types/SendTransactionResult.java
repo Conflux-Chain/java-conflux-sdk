@@ -28,5 +28,17 @@ public class SendTransactionResult {
 	public Error getRawError() {
 		return rawError;
 	}
+	
+	@Override
+	public String toString() {
+		if (this.txHash != null) {
+			return this.txHash;
+		}
+		
+		return String.format("RPC error: code = %s, message = %s, data = %s", 
+				this.rawError.getCode(),
+				this.rawError.getMessage(),
+				this.rawError.getData());
+	}
 
 }
