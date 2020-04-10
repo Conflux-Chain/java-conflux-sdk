@@ -1,4 +1,5 @@
 package org.cfx.protocol.core.methods.response;
+
 import org.cfx.utils.Numeric;
 
 import java.math.BigInteger;
@@ -16,7 +17,7 @@ public class UsedGasAndCollateral {
     }
 
     public BigInteger getStorageCollateralized() {
-        return new BigInteger(this.storageCollateralized);
+        return Numeric.decodeQuantity(this.storageCollateralized);
     }
 
     public void setStorageCollateralized(String storageCollateralized) {
