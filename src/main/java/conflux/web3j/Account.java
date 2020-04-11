@@ -68,8 +68,24 @@ public class Account {
 		return nonce;
 	}
 	
-	public String mustSend(RawTransaction tx) throws Exception {
-		SendTransactionResult result = this.send(tx);
+	public String sign(RawTransaction tx) throws Exception {
+		return this.ecKeyPair == null
+				? this.am.signTransaction(tx, this.address)
+				: tx.sign(this.ecKeyPair);
+	}
+	
+	public SendTransactionResult send(String signedTx) throws Exception {
+		SendTransactionResult result = this.cfx.sendRawTransactionAndGet(signedTx);
+		
+		if (result.getRawError() == null) {
+			this.nonce = this.nonce.add(BigInteger.ONE);
+		}
+		
+		return result;
+	}
+	
+	public String mustSend(String signedTx) throws Exception {
+		SendTransactionResult result = this.send(signedTx);
 		
 		if (result.getRawError() != null) {
 			throw new RpcException(result.getRawError());
@@ -78,15 +94,14 @@ public class Account {
 		return result.getTxHash();
 	}
 	
+	public String mustSend(RawTransaction tx) throws Exception {
+		String signedTx = this.sign(tx);
+		return this.mustSend(signedTx);
+	}
+	
 	public SendTransactionResult send(RawTransaction tx) throws Exception {
-		String signedTx = this.ecKeyPair == null
-				? this.am.signTransaction(tx, this.address)
-				: tx.sign(this.ecKeyPair);
-		SendTransactionResult result = this.cfx.sendRawTransactionAndGet(signedTx);
-		
-		this.nonce = this.nonce.add(BigInteger.ONE);
-		
-		return result;
+		String signedTx = this.sign(tx);
+		return this.send(signedTx);
 	}
 	
 	public String transfer(String to, BigInteger value) throws Exception {
