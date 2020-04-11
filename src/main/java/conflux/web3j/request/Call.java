@@ -12,6 +12,7 @@ public class Call {
 	private BigInteger value;
 	private String data;
 	private BigInteger nonce;
+	private BigInteger storageLimit;
 	
 	public String getFrom() {
 		return from;
@@ -67,5 +68,13 @@ public class Call {
 	
 	public void setNonce(BigInteger nonce) {
 		this.nonce = nonce;
+	}
+	
+	public String getStorageLimit() {
+		return this.storageLimit == null ? null : Numeric.encodeQuantity(this.storageLimit);
+	}
+	
+	public void setStorageLimit(BigInteger storageLimit) {
+		this.storageLimit = storageLimit;
 	}
 }

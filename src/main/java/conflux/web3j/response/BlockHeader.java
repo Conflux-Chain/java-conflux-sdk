@@ -21,7 +21,6 @@ public class BlockHeader {
 	private String timestamp;
 	private String difficulty;
 	private List<String> refereeHashes;
-	private String stable;
 	private boolean adaptive;
 	private String nonce;
 	private String size;
@@ -140,18 +139,6 @@ public class BlockHeader {
 	
 	public void setRefereeHashes(List<String> refereeHashes) {
 		this.refereeHashes = refereeHashes;
-	}
-	
-	public Optional<Boolean> getStable() {
-		if (this.stable == null || this.stable.isEmpty()) {
-			return Optional.empty();
-		} else {
-			return Optional.of(Boolean.parseBoolean(this.stable));
-		}
-	}
-	
-	public void setStable(String stable) {
-		this.stable = stable;
 	}
 	
 	public boolean isAdaptive() {

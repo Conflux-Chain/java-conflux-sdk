@@ -11,7 +11,7 @@ public class LogFilter {
 	private List<String> blockHashes;
 	private List<String> address;
 	private List<List<String>> topics;
-	private Short limit;
+	private Long limit;
 	
 	public Epoch getFromEpoch() {
 		return fromEpoch;
@@ -61,7 +61,7 @@ public class LogFilter {
 		}
 	}
 	
-	public void setLimit(Short limit) {
+	public void setLimit(Long limit) {
 		this.limit = limit;
 	}
 }

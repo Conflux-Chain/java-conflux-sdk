@@ -3,15 +3,9 @@ package conflux.web3j.contract;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 import org.web3j.abi.FunctionEncoder;
-import org.web3j.abi.FunctionReturnDecoder;
-import org.web3j.abi.TypeReference;
-import org.web3j.abi.TypeReference.StaticArrayTypeReference;
-import org.web3j.abi.datatypes.DynamicArray;
 import org.web3j.abi.datatypes.Function;
-import org.web3j.abi.datatypes.StaticArray;
 import org.web3j.abi.datatypes.Type;
 
 import conflux.web3j.Cfx;
@@ -87,40 +81,6 @@ public class ContractCall {
 		return this.epoch == null
 				? this.cfx.call(this.call)
 				: this.cfx.call(this.call, this.epoch);
-	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public <D, T extends Type<D>> D decode(String encodedResult, Class<T> returnType) {
-		TypeReference returnTypeRef = TypeReference.create(returnType);
-		List<Type> decoded = FunctionReturnDecoder.decode(encodedResult, Arrays.asList(returnTypeRef));
-		
-		if (decoded == null || decoded.isEmpty()) {
-			return null;
-		}
-		
-		return ((T) decoded.get(0)).getValue();
-	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public <T extends Type<?>> List<T> decode(String encodedResult, StaticArrayTypeReference<StaticArray<T>> returnType) {
-		List<Type> decoded = FunctionReturnDecoder.decode(encodedResult, Arrays.asList((TypeReference) returnType));
-		
-		if (decoded == null || decoded.isEmpty()) {
-			return null;
-		}
-		
-		return ((StaticArray<T>) decoded.get(0)).getValue();
-	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public <T extends Type<?>> List<T> decode(String encodedResult, TypeReference<DynamicArray<T>> returnType) {
-		List<Type> decoded = FunctionReturnDecoder.decode(encodedResult, Arrays.asList((TypeReference) returnType));
-		
-		if (decoded == null || decoded.isEmpty()) {
-			return null;
-		}
-		
-		return ((DynamicArray<T>) decoded.get(0)).getValue();
 	}
 
 }

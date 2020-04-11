@@ -16,7 +16,6 @@ public class Log {
 	private String transactionIndex;
 	private String logIndex;
 	private String transactionLogIndex;
-	private boolean removed;
 	
 	public String getAddress() {
 		return address;
@@ -112,13 +111,5 @@ public class Log {
 	
 	public void setTransactionLogIndex(String transactionLogIndex) {
 		this.transactionLogIndex = transactionLogIndex;
-	}
-	
-	public boolean isRemoved() {
-		return removed;
-	}
-	
-	public void setRemoved(boolean removed) {
-		this.removed = removed;
 	}
 }

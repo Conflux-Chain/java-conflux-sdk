@@ -13,6 +13,7 @@ import org.web3j.abi.datatypes.generated.Uint256;
 
 import conflux.web3j.Cfx;
 import conflux.web3j.RpcException;
+import conflux.web3j.contract.abi.DecodeUtil;
 
 public class ERC777Call extends ContractCall {
 	
@@ -24,37 +25,37 @@ public class ERC777Call extends ContractCall {
 	
 	public String name() throws RpcException {
 		String encodedResult = this.call("name").sendAndGet();
-		return this.decode(encodedResult, Utf8String.class);
+		return DecodeUtil.decode(encodedResult, Utf8String.class);
 	}
 	
 	public String symbol() throws RpcException {
 		String encodedResult = this.call("symbol").sendAndGet();
-		return this.decode(encodedResult, Utf8String.class);
+		return DecodeUtil.decode(encodedResult, Utf8String.class);
 	}
 	
 	public BigInteger granularity() throws RpcException {
 		String encodedResult = this.call("granularity").sendAndGet();
-		return this.decode(encodedResult, Uint256.class);
+		return DecodeUtil.decode(encodedResult, Uint256.class);
 	}
 	
 	public BigInteger totalSupply() throws RpcException {
 		String encodedResult = this.call("totalSupply").sendAndGet();
-		return this.decode(encodedResult, Uint256.class);
+		return DecodeUtil.decode(encodedResult, Uint256.class);
 	}
 	
 	public BigInteger balanceOf(String owner) throws RpcException {
 		String encodedResult = this.call("balanceOf", new Address(owner)).sendAndGet();
-		return this.decode(encodedResult, Uint256.class);
+		return DecodeUtil.decode(encodedResult, Uint256.class);
 	}
 	
 	public boolean isOperatorFor(String operator, String tokenHolder) throws RpcException {
 		String encodedResult = this.call("isOperatorFor", new Address(operator), new Address(tokenHolder)).sendAndGet();
-		return this.decode(encodedResult, Bool.class);
+		return DecodeUtil.decode(encodedResult, Bool.class);
 	}
 	
 	public List<String> defaultOperators() throws RpcException {
 		String encodedResult = this.call("defaultOperators").sendAndGet();
-		List<Address> operators = this.decode(encodedResult, TYPE_DYNAMIC_ARRAY_ADDRESS);
+		List<Address> operators = DecodeUtil.decode(encodedResult, TYPE_DYNAMIC_ARRAY_ADDRESS);
 		return operators.stream()
 				.map(address -> address.getValue())
 				.collect(Collectors.toList());

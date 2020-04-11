@@ -85,8 +85,8 @@ public class Transaction {
 		this.to = to;
 	}
 	
-	public String getValue() {
-		return value;
+	public BigInteger getValue() {
+		return Numeric.decodeQuantity(this.value);
 	}
 	
 	public void setValue(String value) {
