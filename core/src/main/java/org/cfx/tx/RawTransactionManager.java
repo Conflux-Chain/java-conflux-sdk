@@ -11,6 +11,8 @@ import org.cfx.protocol.Cfx;
 import org.cfx.protocol.core.DefaultBlockParameter;
 import org.cfx.protocol.core.DefaultBlockParameterName;
 import org.cfx.protocol.core.methods.request.Transaction;
+import org.cfx.protocol.core.methods.response.CfxBlock;
+import org.cfx.protocol.core.methods.response.CfxBlockNumber;
 import org.cfx.protocol.core.methods.response.CfxGetCode;
 import org.cfx.protocol.core.methods.response.CfxGetTransactionCount;
 import org.cfx.protocol.core.methods.response.CfxSendTransaction;
@@ -70,12 +72,20 @@ public class RawTransactionManager extends TransactionManager {
     }
 
     protected BigInteger getNonce() throws IOException {
-        CfxGetTransactionCount ethGetTransactionCount =
+        CfxGetTransactionCount cfxGetTransactionCount =
                 cfx.cfxGetNonce(
                                 credentials.getAddress(), DefaultBlockParameterName.PENDING)
                         .send();
 
-        return ethGetTransactionCount.getTransactionCount();
+        return cfxGetTransactionCount.getTransactionCount();
+    }
+
+    protected BigInteger epochHeight()throws IOException {
+        CfxBlockNumber blockNumber =
+                cfx.cfxBlockNumber()
+                        .send();
+
+        return blockNumber.getBlockNumber();
     }
 
     public TxHashVerifier getTxHashVerifier() {
@@ -97,12 +107,15 @@ public class RawTransactionManager extends TransactionManager {
             throws IOException {
 
         BigInteger nonce = getNonce();
-
+        BigInteger storageLimit = BigInteger.valueOf(100000);
+        BigInteger epochHeight= epochHeight();
+        BigInteger chainId = BigInteger.valueOf(0);
         RawTransaction rawTransaction =
-                RawTransaction.createTransaction(nonce, gasPrice, gasLimit, to, value, data);
+                RawTransaction.createTransaction(nonce, gasPrice, gasLimit, to, value, data,storageLimit,epochHeight,chainId);
 
         return signAndSend(rawTransaction);
     }
+
 
     @Override
     public String sendCall(String to, String data, DefaultBlockParameter defaultBlockParameter)

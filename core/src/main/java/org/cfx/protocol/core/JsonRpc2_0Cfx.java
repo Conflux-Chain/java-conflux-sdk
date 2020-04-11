@@ -322,8 +322,8 @@ public class JsonRpc2_0Cfx implements Cfx {
     public Request<?, org.cfx.protocol.core.methods.response.CfxSendTransaction>
     cfxSendRawTransaction(String signedTransactionData) {
         return new Request<>(
-//                "cfx_sendRawTransaction",
-                "cfx_signTransaction",
+                "cfx_sendRawTransaction",
+//                "cfx_signTransaction",
                 Arrays.asList(signedTransactionData),
                 cfxService,
                 org.cfx.protocol.core.methods.response.CfxSendTransaction.class);

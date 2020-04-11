@@ -20,4 +20,5 @@ task makeJar1(type: Copy) {
     rename ('classes.jar', 'crypto.jar')
 }
 makeJar1.dependsOn(build)
+//gradlew makeJar
 //artifacts { testArtifacts testsJar }
