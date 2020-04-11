@@ -68,6 +68,12 @@ public class Account {
 		return nonce;
 	}
 	
+	public String sign(RawTransaction tx) throws Exception {
+		return this.ecKeyPair == null
+				? this.am.signTransaction(tx, this.address)
+				: tx.sign(this.ecKeyPair);
+	}
+	
 	public String mustSend(RawTransaction tx) throws Exception {
 		SendTransactionResult result = this.send(tx);
 		
