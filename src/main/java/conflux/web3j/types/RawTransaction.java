@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.web3j.crypto.ECKeyPair;
-import org.web3j.crypto.Hash;
 import org.web3j.crypto.Sign;
 import org.web3j.rlp.RlpEncoder;
 import org.web3j.rlp.RlpList;
@@ -119,13 +118,6 @@ public class RawTransaction {
 		values.add(RlpString.create(Numeric.hexStringToByteArray(this.data == null ? "" : this.data)));
 
 		return new RlpList(values);
-	}
-	
-	public String hash() {
-		RlpType rlpTx = this.toRlp();
-		byte[] encoded = RlpEncoder.encode(rlpTx);
-		byte[] hash = Hash.sha3(encoded);
-		return Numeric.toHexString(hash);
 	}
 	
 	public BigInteger getNonce() {
