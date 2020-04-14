@@ -11,8 +11,11 @@ import org.web3j.abi.datatypes.Type;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import conflux.web3j.types.AddressType;
 import conflux.web3j.types.RawTransaction;
+import conflux.web3j.types.SendTransactionError;
 import conflux.web3j.types.SendTransactionResult;
 
 public class Account {
@@ -56,6 +59,7 @@ public class Account {
 		return account;
 	}
 	
+	@JsonIgnore
 	public Cfx getCfx() {
 		return cfx;
 	}
@@ -68,6 +72,10 @@ public class Account {
 		return nonce;
 	}
 	
+	public void setNonce(BigInteger nonce) {
+		this.nonce = nonce;
+	}
+	
 	public String sign(RawTransaction tx) throws Exception {
 		return this.ecKeyPair == null
 				? this.am.signTransaction(tx, this.address)
@@ -77,7 +85,18 @@ public class Account {
 	public SendTransactionResult send(String signedTx) throws Exception {
 		SendTransactionResult result = this.cfx.sendRawTransactionAndGet(signedTx);
 		
-		if (result.getRawError() == null) {
+		/*
+		 * Update nonce in following cases:
+		 * 1. Send transaction successfully.
+		 * 2. Transaction sent multiple times due to IO error via retry mechanism,
+		 * and RPC error TxAlreadyExists returned.
+		 * 
+		 * Generally, this is used to send multiple transactions with continuous tx nonce.
+		 * So, each transaction sent to full node should be unique. When RPC error TxAlreadyExists
+		 * returned, the corresponding transaction should be received by RPC server.
+		 */
+		if (result.getRawError() == null 
+				|| result.getErrorType().equals(SendTransactionError.TxAlreadyExists)) {
 			this.nonce = this.nonce.add(BigInteger.ONE);
 		}
 		
