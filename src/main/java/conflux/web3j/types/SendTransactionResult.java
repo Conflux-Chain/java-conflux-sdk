@@ -35,7 +35,8 @@ public class SendTransactionResult {
 			return this.txHash;
 		}
 		
-		return String.format("RPC error: code = %s, message = %s, data = %s", 
+		return String.format("RPC error: type = %s, code = %s, message = %s, data = %s",
+				this.errorType,
 				this.rawError.getCode(),
 				this.rawError.getMessage(),
 				this.rawError.getData());
