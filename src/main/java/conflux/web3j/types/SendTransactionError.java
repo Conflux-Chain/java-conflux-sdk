@@ -59,8 +59,13 @@ public enum SendTransactionError {
 			return null;
 		}
 		
+		String data = rpcError.getData();
+		if (data != null) {
+			data = data.replace("\"", "").replace("\\", "");
+		}
+		
 		for (SendTransactionError error : SendTransactionError.values()) {
-			if (error.matches(message)) {
+			if (error.matches(data)) {
 				return error;
 			}
 		}
