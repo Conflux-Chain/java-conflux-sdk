@@ -38,7 +38,7 @@ public class TupleDecoder {
 		return tuples;
 	}
 	
-	private String next() {
+	public String next() {
 		return this.next(MAX_BYTE_LENGTH_FOR_HEX_STRING);
 	}
 	
