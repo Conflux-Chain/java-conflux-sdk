@@ -20,7 +20,7 @@ import conflux.web3j.types.SendTransactionResult;
 
 public class Account {
 	
-	public static BigInteger DefaultStorageLimit = BigInteger.valueOf(100000000);
+	public static BigInteger DefaultStorageLimit = BigInteger.valueOf(10000);
 	
 	private Cfx cfx;
 	private String address;
@@ -96,7 +96,8 @@ public class Account {
 		 * returned, the corresponding transaction should be received by RPC server.
 		 */
 		if (result.getRawError() == null 
-				|| result.getErrorType().equals(SendTransactionError.TxAlreadyExists)) {
+				|| result.getErrorType().equals(SendTransactionError.TxAlreadyExists)
+				|| result.getErrorType().equals(SendTransactionError.InvalidNonceAlreadyUsed)) {
 			this.nonce = this.nonce.add(BigInteger.ONE);
 		}
 		

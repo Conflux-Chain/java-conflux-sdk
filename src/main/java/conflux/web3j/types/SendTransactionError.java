@@ -16,10 +16,9 @@ public enum SendTransactionError {
 	InvalidSignature(null, "invalid signature", "Invalid EC signature", "Cannot recover public key"),
 	InvalidNonceTooStale("Transaction", "is discarded due to a too stale nonce"),
 	InvalidNonceTooFuture("Transaction", "is discarded due to in too distant future"),
+	InvalidNonceAlreadyUsed(null, "Tx with same nonce already inserted"),
 	
-	Internal(null, 
-			"Failed to read account_cache from storage",
-			"Failed imported to deferred pool"),
+	Internal(null, "Failed to read account_cache from storage"),
 	
 	Unknown(null, "unknown");
 	
