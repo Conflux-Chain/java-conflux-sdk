@@ -6,7 +6,7 @@ public enum SendTransactionError {
 	
 	Rlp(null, "rlp", "Rlp", "RLP"),
 	TxAlreadyExists("tx already exist"),
-	TxPoolFull("txpool is full"),
+	TxPoolFull(null, "txpool is full", "Transaction Pool is full"),
 	
 	InvalidEpochHeight("transaction epoch height"),
 	InvalidChainId("transaction chain_id"),
