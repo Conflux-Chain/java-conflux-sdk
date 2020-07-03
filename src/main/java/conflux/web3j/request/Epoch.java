@@ -21,6 +21,11 @@ public interface Epoch extends HasValue<String> {
 		return DefaultEpoch.LATEST_MINED;
 	}
 	
+	static Epoch numberOf(long number) {
+		String value = Numeric.encodeQuantity(BigInteger.valueOf(number));
+		return new EpochByValue(value);
+	}
+	
 	static Epoch numberOf(BigInteger number) {
 		String value = Numeric.encodeQuantity(number);
 		return new EpochByValue(value);
