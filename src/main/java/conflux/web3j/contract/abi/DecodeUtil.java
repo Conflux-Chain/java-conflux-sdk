@@ -10,7 +10,7 @@ import org.web3j.abi.datatypes.DynamicArray;
 import org.web3j.abi.datatypes.StaticArray;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Utf8String;
-import org.web3j.protocol.core.Response.Error;
+import org.web3j.utils.Numeric;
 
 public class DecodeUtil {
 	
@@ -48,14 +48,28 @@ public class DecodeUtil {
 		return ((DynamicArray<T>) decoded.get(0)).getValue();
 	}
 	
-	public static String decodeErrorData(Error error) {
-		// temp fix full node issue
-		String data = error.getData().replace("\"", "").replace("\\", "");
+	public static String decodeErrorData(String data) {
+		if (data == null || data.isEmpty()) {
+			return data;
+		}
 		
-		// skip the 0x prefix and method signature (4 bytes)
-		data = data.substring(10);
+		// remove the leading/trailing quote
+		data = data.replace("\"", "").replace("\\", "");
 		
-		return decode(data, Utf8String.class);
+		if (data.length() <= 10 || ((data.length() - 10) % 64 != 0)) {
+			// decode as normal string
+			return new String(Numeric.hexStringToByteArray(data));
+		}
+		
+		try {
+			// skip the 0x prefix and method signature (4 bytes)
+			data = data.substring(10);
+			
+			return decode(data, Utf8String.class);
+		} catch (Exception e) {
+			// decode as normal string
+			return new String(Numeric.hexStringToByteArray(data));
+		}
 	}
 
 }
