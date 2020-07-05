@@ -26,6 +26,6 @@ public class UsedGasAndCollateral {
 	
 	@Override
 	public String toString() {
-		return String.format("{gasUsed = %s, storageCollateralized = %s}", this.gasUsed, this.storageCollateralized);
+		return String.format("{gasUsed = %s, storageCollateralized = %s}", this.getGasUsed(), this.getStorageCollateralized());
 	}
 }
