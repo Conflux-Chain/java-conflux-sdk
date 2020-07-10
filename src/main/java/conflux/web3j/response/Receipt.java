@@ -11,7 +11,7 @@ public class Receipt {
 	public static class Response extends CfxNullableResponse<Receipt> {}
 	
 	private String transactionHash;
-	private long index;
+	private String index;
 	private String blockHash;
 	private String epochNumber;
 	private String from;
@@ -21,7 +21,7 @@ public class Receipt {
 	private List<Log> logs;
 	private String logsBloom;
 	private String stateRoot;
-	private short outcomeStatus;
+	private String outcomeStatus;
 	
 	public String getTransactionHash() {
 		return transactionHash;
@@ -31,11 +31,11 @@ public class Receipt {
 		this.transactionHash = transactionHash;
 	}
 	
-	public long getIndex() {
-		return index;
+	public BigInteger getIndex() {
+		return Numeric.decodeQuantity(this.index);
 	}
 	
-	public void setIndex(long index) {
+	public void setIndex(String index) {
 		this.index = index;
 	}
 	
@@ -120,10 +120,10 @@ public class Receipt {
 	}
 	
 	public short getOutcomeStatus() {
-		return outcomeStatus;
+		return Numeric.decodeQuantity(this.outcomeStatus).shortValueExact();
 	}
 	
-	public void setOutcomeStatus(short outcomeStatus) {
+	public void setOutcomeStatus(String outcomeStatus) {
 		this.outcomeStatus = outcomeStatus;
 	}
 }

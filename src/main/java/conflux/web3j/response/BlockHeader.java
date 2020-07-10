@@ -14,7 +14,7 @@ public class BlockHeader {
 	private String deferredStateRoot;
 	private String deferredReceiptsRoot;
 	private String deferredLogsBloomHash;
-	private long blame;
+	private String blame;
 	private String transactionsRoot;
 	private String epochNumber;
 	private String gasLimit;
@@ -81,11 +81,11 @@ public class BlockHeader {
 		this.deferredLogsBloomHash = deferredLogsBloomHash;
 	}
 	
-	public long getBlame() {
-		return blame;
+	public BigInteger getBlame() {
+		return Numeric.decodeQuantity(this.blame);
 	}
 	
-	public void setBlame(long blame) {
+	public void setBlame(String blame) {
 		this.blame = blame;
 	}
 	
