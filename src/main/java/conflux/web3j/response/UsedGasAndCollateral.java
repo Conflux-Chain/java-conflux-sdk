@@ -5,6 +5,9 @@ import java.math.BigInteger;
 import org.web3j.utils.Numeric;
 
 public class UsedGasAndCollateral {
+	
+	public static class Response extends CfxResponse<UsedGasAndCollateral> {}
+	
 	private String gasUsed;
 	private String storageCollateralized;
 	

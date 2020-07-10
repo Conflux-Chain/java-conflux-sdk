@@ -7,6 +7,9 @@ import java.util.Optional;
 import org.web3j.utils.Numeric;
 
 public class Log {
+	
+	public static class Response extends CfxListResponse<Log> {}
+	
 	private String address;
 	private List<String> topics;
 	private String data;

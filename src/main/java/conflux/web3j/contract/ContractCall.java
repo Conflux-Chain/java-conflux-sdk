@@ -14,7 +14,6 @@ import conflux.web3j.request.Call;
 import conflux.web3j.request.Epoch;
 import conflux.web3j.response.StringResponse;
 import conflux.web3j.response.UsedGasAndCollateral;
-import conflux.web3j.response.UsedGasAndCollateralResponse;
 
 public class ContractCall {
 	
@@ -57,7 +56,7 @@ public class ContractCall {
 		return this;
 	}
 	
-	public Request<UsedGasAndCollateral, UsedGasAndCollateralResponse> estimateGasAndCollateral(String method, Type<?>... args) {
+	public Request<UsedGasAndCollateral, UsedGasAndCollateral.Response> estimateGasAndCollateral(String method, Type<?>... args) {
 		this.buildData(method, args);
 		
 		return this.epoch == null

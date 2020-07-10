@@ -12,19 +12,12 @@ import conflux.web3j.request.Epoch;
 import conflux.web3j.request.LogFilter;
 import conflux.web3j.response.BigIntResponse;
 import conflux.web3j.response.Block;
-import conflux.web3j.response.BlockResponse;
 import conflux.web3j.response.BlockSummary;
-import conflux.web3j.response.BlockSummaryResponse;
-import conflux.web3j.response.BlocksResponse;
 import conflux.web3j.response.Log;
-import conflux.web3j.response.LogsResponse;
 import conflux.web3j.response.Receipt;
-import conflux.web3j.response.ReceiptResponse;
 import conflux.web3j.response.StringResponse;
 import conflux.web3j.response.Transaction;
-import conflux.web3j.response.TransactionResponse;
 import conflux.web3j.response.UsedGasAndCollateral;
-import conflux.web3j.response.UsedGasAndCollateralResponse;
 
 /**
  * JSON-RPC Request object building factory.
@@ -93,26 +86,26 @@ class Web3j implements Cfx {
 	}
 	
 	@Override
-	public Request<Optional<BlockSummary>, BlockSummaryResponse> getBlockSummaryByHash(String blockHash) {
-		return new Request<>(this.service, "cfx_getBlockByHash", BlockSummaryResponse.class, blockHash, false)
+	public Request<Optional<BlockSummary>, BlockSummary.Response> getBlockSummaryByHash(String blockHash) {
+		return new Request<>(this.service, "cfx_getBlockByHash", BlockSummary.Response.class, blockHash, false)
 				.withRetry(this.retry, this.intervalMillis);
 	}
 
 	@Override
-	public Request<Optional<Block>, BlockResponse> getBlockByHash(String blockHash) {
-		return new Request<>(this.service, "cfx_getBlockByHash", BlockResponse.class, blockHash, true)
+	public Request<Optional<Block>, Block.Response> getBlockByHash(String blockHash) {
+		return new Request<>(this.service, "cfx_getBlockByHash", Block.Response.class, blockHash, true)
 				.withRetry(this.retry, this.intervalMillis);
 	}
 
 	@Override
-	public Request<Optional<BlockSummary>, BlockSummaryResponse> getBlockSummaryByEpoch(Epoch epoch) {
-		return new Request<>(this.service, "cfx_getBlockByEpochNumber", BlockSummaryResponse.class, epoch.getValue(), false)
+	public Request<Optional<BlockSummary>, BlockSummary.Response> getBlockSummaryByEpoch(Epoch epoch) {
+		return new Request<>(this.service, "cfx_getBlockByEpochNumber", BlockSummary.Response.class, epoch.getValue(), false)
 				.withRetry(this.retry, this.intervalMillis);
 	}
 	
 	@Override
-	public Request<Optional<Block>, BlockResponse> getBlockByEpoch(Epoch epoch) {
-		return new Request<>(this.service, "cfx_getBlockByEpochNumber", BlockResponse.class, epoch.getValue(), true)
+	public Request<Optional<Block>, Block.Response> getBlockByEpoch(Epoch epoch) {
+		return new Request<>(this.service, "cfx_getBlockByEpochNumber", Block.Response.class, epoch.getValue(), true)
 				.withRetry(this.retry, this.intervalMillis);
 	}
 
@@ -151,37 +144,37 @@ class Web3j implements Cfx {
 	}
 
 	@Override
-	public Request<List<Log>, LogsResponse> getLogs(LogFilter filter) {
-		return new Request<>(this.service, "cfx_getLogs", LogsResponse.class, filter)
+	public Request<List<Log>, Log.Response> getLogs(LogFilter filter) {
+		return new Request<>(this.service, "cfx_getLogs", Log.Response.class, filter)
 				.withRetry(this.retry, this.intervalMillis);
 	}
 
 	@Override
-	public Request<Optional<Transaction>, TransactionResponse> getTransactionByHash(String txHash) {
-		return new Request<>(this.service, "cfx_getTransactionByHash", TransactionResponse.class, txHash)
+	public Request<Optional<Transaction>, Transaction.Response> getTransactionByHash(String txHash) {
+		return new Request<>(this.service, "cfx_getTransactionByHash", Transaction.Response.class, txHash)
 				.withRetry(this.retry, this.intervalMillis);
 	}
 
 	@Override
-	public Request<UsedGasAndCollateral, UsedGasAndCollateralResponse> estimateGasAndCollateral(Call request, Epoch... epoch) {
+	public Request<UsedGasAndCollateral, UsedGasAndCollateral.Response> estimateGasAndCollateral(Call request, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_estimateGasAndCollateral", UsedGasAndCollateralResponse.class, request)
+			return new Request<>(this.service, "cfx_estimateGasAndCollateral", UsedGasAndCollateral.Response.class, request)
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_estimateGasAndCollateral", UsedGasAndCollateralResponse.class, request, epoch[0].getValue())
+			return new Request<>(this.service, "cfx_estimateGasAndCollateral", UsedGasAndCollateral.Response.class, request, epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
 
 	@Override
-	public Request<List<String>, BlocksResponse> getBlocksByEpoch(Epoch epoch) {
-		return new Request<>(this.service, "cfx_getBlocksByEpoch", BlocksResponse.class, epoch.getValue())
+	public Request<List<String>, Block.ListResponse> getBlocksByEpoch(Epoch epoch) {
+		return new Request<>(this.service, "cfx_getBlocksByEpoch", Block.ListResponse.class, epoch.getValue())
 				.withRetry(this.retry, this.intervalMillis);
 	}
 
 	@Override
-	public Request<Optional<Receipt>, ReceiptResponse> getTransactionReceipt(String txHash) {
-		return new Request<>(this.service, "cfx_getTransactionReceipt", ReceiptResponse.class, txHash)
+	public Request<Optional<Receipt>, Receipt.Response> getTransactionReceipt(String txHash) {
+		return new Request<>(this.service, "cfx_getTransactionReceipt", Receipt.Response.class, txHash)
 				.withRetry(this.retry, this.intervalMillis);
 	}
 }

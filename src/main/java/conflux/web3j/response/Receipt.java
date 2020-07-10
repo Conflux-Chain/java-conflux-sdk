@@ -7,6 +7,9 @@ import java.util.Optional;
 import org.web3j.utils.Numeric;
 
 public class Receipt {
+	
+	public static class Response extends CfxNullableResponse<Receipt> {}
+	
 	private String transactionHash;
 	private long index;
 	private String blockHash;

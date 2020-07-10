@@ -6,6 +6,9 @@ import java.util.Optional;
 import org.web3j.utils.Numeric;
 
 public class Transaction {
+	
+	public static class Response extends CfxNullableResponse<Transaction> {}
+	
 	private String hash;
 	private String nonce;
 	private String blockHash;
