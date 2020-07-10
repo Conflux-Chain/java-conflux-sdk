@@ -312,7 +312,7 @@ class Web3j implements Cfx {
 	
 	@Override
 	public Request<List<RewardInfo>, RewardInfo.Response> getReward(Epoch epoch) {
-		return new Request<>(this.service, "cfx_getBlockRewardInfo", RewardInfo.Response.class)
+		return new Request<>(this.service, "cfx_getBlockRewardInfo", RewardInfo.Response.class, epoch.getValue())
 				.withRetry(this.retry, this.intervalMillis);
 	}
 	
