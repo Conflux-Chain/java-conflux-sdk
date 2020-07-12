@@ -21,6 +21,14 @@ public interface Epoch extends HasValue<String> {
 		return DefaultEpoch.LATEST_MINED;
 	}
 	
+	static Epoch latestCheckpoint() {
+		return DefaultEpoch.LATEST_CHECKPOINT;
+	}
+	
+	static Epoch latestConfirmed() {
+		return DefaultEpoch.LATEST_CONFIRMED;
+	}
+	
 	static Epoch numberOf(long number) {
 		String value = Numeric.encodeQuantity(BigInteger.valueOf(number));
 		return new EpochByValue(value);
@@ -39,7 +47,9 @@ public interface Epoch extends HasValue<String> {
 enum DefaultEpoch implements Epoch {
 	EARLIEST("earliest"),
 	LATEST_STATE("latest_state"),
-	LATEST_MINED("latest_mined");
+	LATEST_MINED("latest_mined"),
+	LATEST_CHECKPOINT("latest_checkpoint"),
+	LATEST_CONFIRMED("latest_confirmed");
 	
 	private String value;
 	
