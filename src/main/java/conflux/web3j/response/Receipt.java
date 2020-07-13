@@ -48,7 +48,7 @@ public class Receipt {
 	}
 	
 	public BigInteger getEpochNumber() {
-		return new BigInteger(this.epochNumber);
+		return Numeric.decodeQuantity(this.epochNumber);
 	}
 	
 	public void setEpochNumber(String epochNumber) {
