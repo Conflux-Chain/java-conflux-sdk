@@ -6,27 +6,13 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
+import conflux.web3j.response.*;
 import org.web3j.protocol.Web3jService;
 
 import conflux.web3j.request.Call;
 import conflux.web3j.request.Epoch;
 import conflux.web3j.request.LogFilter;
-import conflux.web3j.response.AccountInfo;
-import conflux.web3j.response.BigIntNullableResponse;
-import conflux.web3j.response.BigIntResponse;
-import conflux.web3j.response.Block;
-import conflux.web3j.response.BlockRevertRateResponse;
-import conflux.web3j.response.BlockSummary;
-import conflux.web3j.response.Log;
-import conflux.web3j.response.Receipt;
-import conflux.web3j.response.RewardInfo;
-import conflux.web3j.response.SponsorInfo;
-import conflux.web3j.response.Status;
-import conflux.web3j.response.StorageRoot;
-import conflux.web3j.response.StringNullableResponse;
-import conflux.web3j.response.StringResponse;
-import conflux.web3j.response.Transaction;
-import conflux.web3j.response.UsedGasAndCollateral;
+import org.web3j.protocol.core.Response;
 
 /**
  * JSON-RPC Request object building factory.
@@ -321,5 +307,10 @@ class Web3j implements Cfx {
 		return new Request<>(this.service, "cfx_clientVersion", StringResponse.class)
 				.withRetry(this.retry, this.intervalMillis);
 	}
-	
+
+	@Override
+	public <T,R extends Response<?> & HasValue<T>> Request<T, R> getCustomizedRequest(Class<R> responseType, String method, Object... params){
+		return new Request<>(this.service, method, responseType, params)
+				.withRetry(this.retry, this.intervalMillis);
+	}
 }
