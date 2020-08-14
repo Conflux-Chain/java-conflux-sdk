@@ -8,6 +8,7 @@ import org.web3j.abi.datatypes.generated.Uint256;
 
 import conflux.web3j.Account;
 import conflux.web3j.RpcException;
+import conflux.web3j.Account.Option;
 
 public class ERC777Executor {
 	
@@ -19,28 +20,28 @@ public class ERC777Executor {
 		this.contract = erc777Address;
 	}
 	
-	public String send(BigInteger gasLimit, BigInteger storageLimit, String recipient, BigInteger amount, byte[] data) throws Exception {
-		return this.account.call(this.contract, gasLimit, storageLimit, "send", new Address(recipient), new Uint256(amount), new DynamicBytes(data));
+	public String send(Option option, String recipient, BigInteger amount, byte[] data) throws Exception {
+		return this.account.call(option, this.contract, "send", new Address(recipient), new Uint256(amount), new DynamicBytes(data));
 	}
 	
-	public String burn(BigInteger gasLimit, BigInteger storageLimit, BigInteger amount, byte[] data) throws Exception {
-		return this.account.call(this.contract, gasLimit, storageLimit, "burn", new Uint256(amount), new DynamicBytes(data));
+	public String burn(Option option, BigInteger amount, byte[] data) throws Exception {
+		return this.account.call(option, this.contract, "burn", new Uint256(amount), new DynamicBytes(data));
 	}
 	
-	public String authorizeOperator(BigInteger gasLimit, BigInteger storageLimit, String operator) throws Exception {
-		return this.account.call(this.contract, gasLimit, storageLimit, "authorizeOperator", new Address(operator));
+	public String authorizeOperator(Option option, String operator) throws Exception {
+		return this.account.call(option, this.contract, "authorizeOperator", new Address(operator));
 	}
 	
-	public String revokeOperator(BigInteger gasLimit, BigInteger storageLimit, String operator) throws Exception {
-		return this.account.call(this.contract, gasLimit, storageLimit, "revokeOperator", new Address(operator));
+	public String revokeOperator(Option option, String operator) throws Exception {
+		return this.account.call(option, this.contract, "revokeOperator", new Address(operator));
 	}
 	
-	public String operatorSend(BigInteger gasLimit, BigInteger storageLimit, String sender, String recipient, BigInteger amount, byte[] data, byte[] operatorData) throws Exception {
-		return this.account.call(this.contract, gasLimit, storageLimit, "operatorSend", new Address(sender), new Address(recipient), new Uint256(amount), new DynamicBytes(data), new DynamicBytes(operatorData));
+	public String operatorSend(Option option, String sender, String recipient, BigInteger amount, byte[] data, byte[] operatorData) throws Exception {
+		return this.account.call(option, this.contract, "operatorSend", new Address(sender), new Address(recipient), new Uint256(amount), new DynamicBytes(data), new DynamicBytes(operatorData));
 	}
 	
-	public String operatorBurn(BigInteger gasLimit, BigInteger storageLimit, String account, BigInteger amount, byte[] data, byte[] operatorData) throws Exception {
-		return this.account.call(this.contract, gasLimit, storageLimit, "operatorBurn", new Address(account), new Uint256(amount), new DynamicBytes(data), new DynamicBytes(operatorData));
+	public String operatorBurn(Option option, String account, BigInteger amount, byte[] data, byte[] operatorData) throws Exception {
+		return this.account.call(option, this.contract, "operatorBurn", new Address(account), new Uint256(amount), new DynamicBytes(data), new DynamicBytes(operatorData));
 	}
 
 }
