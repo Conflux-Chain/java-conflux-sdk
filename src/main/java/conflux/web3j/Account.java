@@ -20,8 +20,6 @@ import conflux.web3j.types.SendTransactionResult;
 
 public class Account {
 	
-	public static BigInteger DefaultStorageLimit = BigInteger.valueOf(10000);
-	
 	private Cfx cfx;
 	private String address;
 	private BigInteger nonce;
@@ -130,21 +128,21 @@ public class Account {
 		return this.mustSend(tx);
 	}
 	
-	public String deploy(BigInteger gasLimit, String bytecodes) throws Exception {
-		return this.deploy(gasLimit, BigInteger.ZERO, bytecodes);
+	public String deploy(BigInteger gasLimit, BigInteger storageLimit, String bytecodes) throws Exception {
+		return this.deploy(gasLimit, storageLimit, BigInteger.ZERO, bytecodes);
 	}
 	
-	public String deploy(BigInteger gasLimit, BigInteger value, String bytecodes) throws Exception {
+	public String deploy(BigInteger gasLimit, BigInteger storageLimit, BigInteger value, String bytecodes) throws Exception {
 		BigInteger currentEpoch = this.cfx.getEpochNumber().sendAndGet();
-		RawTransaction tx = RawTransaction.deploy(this.nonce, gasLimit, value, DefaultStorageLimit, currentEpoch, bytecodes);
+		RawTransaction tx = RawTransaction.deploy(this.nonce, gasLimit, value, storageLimit, currentEpoch, bytecodes);
 		return this.mustSend(tx);
 	}
 	
-	public String call(String contract, BigInteger gasLimit, String method, Type<?>... inputs) throws Exception {
-		return this.call(contract, gasLimit, BigInteger.ZERO, method, inputs);
+	public String call(String contract, BigInteger gasLimit, BigInteger storageLimit, String method, Type<?>... inputs) throws Exception {
+		return this.call(contract, gasLimit, storageLimit, BigInteger.ZERO, method, inputs);
 	}
 	
-	public String call(String contract, BigInteger gasLimit, BigInteger value, String method, Type<?>... inputs) throws Exception {
+	public String call(String contract, BigInteger gasLimit, BigInteger storageLimit, BigInteger value, String method, Type<?>... inputs) throws Exception {
 		String data = "";
 		
 		if (method != null && !method.isEmpty()) {
@@ -152,16 +150,16 @@ public class Account {
 			data = FunctionEncoder.encode(function);
 		}
 		
-		return this.call(contract, gasLimit, value, data);
+		return this.call(contract, gasLimit, storageLimit, value, data);
 	}
 	
-	public String call(String contract, BigInteger gasLimit, String data) throws Exception {
-		return this.call(contract, gasLimit, BigInteger.ZERO, data);
+	public String call(String contract, BigInteger gasLimit, BigInteger storageLimit, String data) throws Exception {
+		return this.call(contract, gasLimit, storageLimit, BigInteger.ZERO, data);
 	}
 	
-	public String call(String contract, BigInteger gasLimit, BigInteger value, String data) throws Exception {
+	public String call(String contract, BigInteger gasLimit, BigInteger storageLimit, BigInteger value, String data) throws Exception {
 		BigInteger currentEpoch = this.cfx.getEpochNumber().sendAndGet();
-		RawTransaction tx = RawTransaction.create(this.nonce, gasLimit, contract, value, DefaultStorageLimit, currentEpoch, data);
+		RawTransaction tx = RawTransaction.create(this.nonce, gasLimit, contract, value, storageLimit, currentEpoch, data);
 		return this.mustSend(tx);
 	}
 	

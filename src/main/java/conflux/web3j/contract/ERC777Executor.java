@@ -19,28 +19,28 @@ public class ERC777Executor {
 		this.contract = erc777Address;
 	}
 	
-	public String send(BigInteger gasLimit, String recipient, BigInteger amount, byte[] data) throws Exception {
-		return this.account.call(this.contract, gasLimit, "send", new Address(recipient), new Uint256(amount), new DynamicBytes(data));
+	public String send(BigInteger gasLimit, BigInteger storageLimit, String recipient, BigInteger amount, byte[] data) throws Exception {
+		return this.account.call(this.contract, gasLimit, storageLimit, "send", new Address(recipient), new Uint256(amount), new DynamicBytes(data));
 	}
 	
-	public String burn(BigInteger gasLimit, BigInteger amount, byte[] data) throws Exception {
-		return this.account.call(this.contract, gasLimit, "burn", new Uint256(amount), new DynamicBytes(data));
+	public String burn(BigInteger gasLimit, BigInteger storageLimit, BigInteger amount, byte[] data) throws Exception {
+		return this.account.call(this.contract, gasLimit, storageLimit, "burn", new Uint256(amount), new DynamicBytes(data));
 	}
 	
-	public String authorizeOperator(BigInteger gasLimit, String operator) throws Exception {
-		return this.account.call(this.contract, gasLimit, "authorizeOperator", new Address(operator));
+	public String authorizeOperator(BigInteger gasLimit, BigInteger storageLimit, String operator) throws Exception {
+		return this.account.call(this.contract, gasLimit, storageLimit, "authorizeOperator", new Address(operator));
 	}
 	
-	public String revokeOperator(BigInteger gasLimit, String operator) throws Exception {
-		return this.account.call(this.contract, gasLimit, "revokeOperator", new Address(operator));
+	public String revokeOperator(BigInteger gasLimit, BigInteger storageLimit, String operator) throws Exception {
+		return this.account.call(this.contract, gasLimit, storageLimit, "revokeOperator", new Address(operator));
 	}
 	
-	public String operatorSend(BigInteger gasLimit, String sender, String recipient, BigInteger amount, byte[] data, byte[] operatorData) throws Exception {
-		return this.account.call(this.contract, gasLimit, "operatorSend", new Address(sender), new Address(recipient), new Uint256(amount), new DynamicBytes(data), new DynamicBytes(operatorData));
+	public String operatorSend(BigInteger gasLimit, BigInteger storageLimit, String sender, String recipient, BigInteger amount, byte[] data, byte[] operatorData) throws Exception {
+		return this.account.call(this.contract, gasLimit, storageLimit, "operatorSend", new Address(sender), new Address(recipient), new Uint256(amount), new DynamicBytes(data), new DynamicBytes(operatorData));
 	}
 	
-	public String operatorBurn(BigInteger gasLimit, String account, BigInteger amount, byte[] data, byte[] operatorData) throws Exception {
-		return this.account.call(this.contract, gasLimit, "operatorBurn", new Address(account), new Uint256(amount), new DynamicBytes(data), new DynamicBytes(operatorData));
+	public String operatorBurn(BigInteger gasLimit, BigInteger storageLimit, String account, BigInteger amount, byte[] data, byte[] operatorData) throws Exception {
+		return this.account.call(this.contract, gasLimit, storageLimit, "operatorBurn", new Address(account), new Uint256(amount), new DynamicBytes(data), new DynamicBytes(operatorData));
 	}
 
 }

@@ -17,16 +17,16 @@ public class ERC20Executor {
 		this.contract = erc20Address;
 	}
 	
-	public String transfer(BigInteger gasLimit, String recipient, BigInteger amount) throws Exception {
-		return this.account.call(this.contract, gasLimit, "transfer", new Address(recipient), new Uint256(amount));
+	public String transfer(BigInteger gasLimit, BigInteger storageLimit, String recipient, BigInteger amount) throws Exception {
+		return this.account.call(this.contract, gasLimit, storageLimit, "transfer", new Address(recipient), new Uint256(amount));
 	}
 	
-	public String approve(BigInteger gasLimit, String spender, BigInteger amount) throws Exception {
-		return this.account.call(this.contract, gasLimit, "approve", new Address(spender), new Uint256(amount));
+	public String approve(BigInteger gasLimit, BigInteger storageLimit, String spender, BigInteger amount) throws Exception {
+		return this.account.call(this.contract, gasLimit, storageLimit, "approve", new Address(spender), new Uint256(amount));
 	}
 	
-	public String transferFrom(BigInteger gasLimit, String sender, String recipient, BigInteger amount) throws Exception {
-		return this.account.call(this.contract, gasLimit, "transferFrom", new Address(sender), new Address(recipient), new Uint256(amount));
+	public String transferFrom(BigInteger gasLimit, BigInteger storageLimit, String sender, String recipient, BigInteger amount) throws Exception {
+		return this.account.call(this.contract, gasLimit, storageLimit, "transferFrom", new Address(sender), new Address(recipient), new Uint256(amount));
 	}
 
 }
