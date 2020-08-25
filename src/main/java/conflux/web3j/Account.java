@@ -135,6 +135,7 @@ public class Account {
 		option.apply(this.cfx);
 		RawTransaction tx = RawTransaction.transfer(this.nonce, to, value, option.epochHeight);
 		option.updatePriceAndChainId(tx);
+		option.updateGasLimit(tx);
 		return this.mustSend(tx);
 	}
 	
@@ -302,6 +303,12 @@ public class Account {
 			
 			if (this.chainId != null) {
 				tx.setChainId(this.chainId);
+			}
+		}
+
+		private void updateGasLimit(RawTransaction tx) {
+			if (this.gasLimit != null) {
+				tx.setGas(this.gasLimit);
 			}
 		}
 	}
