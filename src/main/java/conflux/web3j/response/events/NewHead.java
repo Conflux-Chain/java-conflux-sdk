@@ -1,9 +1,11 @@
 package conflux.web3j.response.events;
 
 import java.util.List;
+import java.math.BigInteger;
+import org.web3j.utils.Numeric;
 
 public class NewHead {
-    private String adaptive;
+    private boolean adaptive;
     private int blame;
     private String deferredLogsBloomHash;
     private String deferredReceiptsRoot;
@@ -21,7 +23,7 @@ public class NewHead {
     private String timestamp;
     private String transactionsRoot;
 
-    public String getAdaptive() {
+    public boolean getAdaptive() {
         return adaptive;
     }
 
@@ -41,20 +43,18 @@ public class NewHead {
         return deferredStateRoot;
     }
 
-    public String getDifficulty() {
-        return difficulty;
+    public BigInteger getDifficulty() { return Numeric.decodeQuantity(difficulty); }
+
+    public BigInteger getEpochNumber() {
+        return Numeric.decodeQuantity(epochNumber);
     }
 
-    public String getEpochNumber() {
-        return epochNumber;
+    public BigInteger getGasLimit() {
+        return Numeric.decodeQuantity(gasLimit);
     }
 
-    public String getGasLimit() {
-        return gasLimit;
-    }
-
-    public String getHeight() {
-        return height;
+    public BigInteger getHeight() {
+        return Numeric.decodeQuantity(height);
     }
 
     public String getHash() {
@@ -65,23 +65,23 @@ public class NewHead {
         return miner;
     }
 
-    public String getNonce() {
-        return nonce;
+    public BigInteger getNonce() {
+        return Numeric.decodeQuantity(nonce);
     }
 
     public String getParentHash() {
         return parentHash;
     }
 
-    public String getPowQuality() {
-        return powQuality;
+    public BigInteger getPowQuality() {
+        return Numeric.decodeQuantity(powQuality);
     }
 
     public List<String> getRefereeHashes() {
         return refereeHashes;
     }
 
-    public String getTimestamp() { return timestamp; }
+    public BigInteger getTimestamp() { return Numeric.decodeQuantity(timestamp); }
 
     public String getTransactionsRoot() {
         return transactionsRoot;
