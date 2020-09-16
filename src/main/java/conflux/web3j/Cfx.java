@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import conflux.web3j.response.*;
+import org.web3j.protocol.Web3jService;
 import org.web3j.protocol.core.Response;
 import org.web3j.protocol.http.HttpService;
 
@@ -16,10 +17,14 @@ import conflux.web3j.request.LogFilter;
 import conflux.web3j.types.SendTransactionResult;
 
 /** Core Conflux JSON-RPC API. */
-public interface Cfx extends Closeable {
+public interface Cfx extends Closeable, CfxPubSub {
 	
 	static Cfx create(String url) {
 		return new Web3j(new HttpService(url));
+	}
+
+	static Cfx create(Web3jService service) {
+		return new Web3j(service);
 	}
 	
 	static Cfx create(String url, int retry) {

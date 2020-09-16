@@ -3,16 +3,23 @@ package conflux.web3j;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import conflux.web3j.response.*;
+import conflux.web3j.response.events.EpochNotification;
+import conflux.web3j.response.events.LogNotification;
+import conflux.web3j.response.events.NewHeadsNotification;
+import io.reactivex.Flowable;
 import org.web3j.protocol.Web3jService;
 
 import conflux.web3j.request.Call;
 import conflux.web3j.request.Epoch;
 import conflux.web3j.request.LogFilter;
 import org.web3j.protocol.core.Response;
+
 
 /**
  * JSON-RPC Request object building factory.
@@ -312,5 +319,41 @@ class Web3j implements Cfx {
 	public <T,R extends Response<?> & HasValue<T>> Request<T, R> getCustomizedRequest(Class<R> responseType, String method, Object... params){
 		return new Request<>(this.service, method, responseType, params)
 				.withRetry(this.retry, this.intervalMillis);
+	}
+
+	@Override
+	public Flowable<NewHeadsNotification> newHeadsNotifications() {
+		return service.subscribe(
+				new org.web3j.protocol.core.Request<>(
+						"cfx_subscribe",
+						Collections.singletonList("newHeads"),
+						service,
+						Subscribe.class),
+				"cfx_unsubscribe",
+				NewHeadsNotification.class);
+	}
+
+	@Override
+	public Flowable<LogNotification> logsNotifications(LogFilter filter) {
+		return service.subscribe(
+				new org.web3j.protocol.core.Request<>(
+						"cfx_subscribe",
+						Arrays.asList("logs", filter),
+						service,
+						Subscribe.class),
+				"cfx_unsubscribe",
+				LogNotification.class);
+	}
+
+	@Override
+	public Flowable<EpochNotification> epochsNotifications() {
+		return service.subscribe(
+				new org.web3j.protocol.core.Request<>(
+						"cfx_subscribe",
+						Collections.singletonList("epochs"),
+						service,
+						Subscribe.class),
+				"cfx_unsubscribe",
+				EpochNotification.class);
 	}
 }
