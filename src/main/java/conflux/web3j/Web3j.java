@@ -322,7 +322,7 @@ class Web3j implements Cfx {
 	}
 
 	@Override
-	public Flowable<NewHeadsNotification> newHeadsNotifications() {
+	public Flowable<NewHeadsNotification> subscribeNewHeads() {
 		return service.subscribe(
 				new org.web3j.protocol.core.Request<>(
 						"cfx_subscribe",
@@ -334,7 +334,7 @@ class Web3j implements Cfx {
 	}
 
 	@Override
-	public Flowable<LogNotification> logsNotifications(LogFilter filter) {
+	public Flowable<LogNotification> subscribeLogs(LogFilter filter) {
 		return service.subscribe(
 				new org.web3j.protocol.core.Request<>(
 						"cfx_subscribe",
@@ -346,7 +346,7 @@ class Web3j implements Cfx {
 	}
 
 	@Override
-	public Flowable<EpochNotification> epochsNotifications() {
+	public Flowable<EpochNotification> subscribeEpochs() {
 		return service.subscribe(
 				new org.web3j.protocol.core.Request<>(
 						"cfx_subscribe",

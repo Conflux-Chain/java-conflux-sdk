@@ -11,21 +11,21 @@ public interface CfxPubSub {
      *
      * @return a {@link Flowable} instance that emits a notification for every new header
      */
-    Flowable<NewHeadsNotification> newHeadsNotifications();
+    Flowable<NewHeadsNotification> subscribeNewHeads();
 
     /**
-     * Creates aa {@link Flowable} instance that emits notifications for logs included in new
+     * Creates a {@link Flowable} instance that emits notifications for logs included in new
      * imported blocks.
      *
      * @param filter only return logs match this filter
      * @return a {@link Flowable} instance that emits logs included in new blocks
      */
-    Flowable<LogNotification> logsNotifications(LogFilter filter);
+    Flowable<LogNotification> subscribeLogs(LogFilter filter);
 
     /**
-     * Creates aa {@link Flowable} instance that emits notifications for epochs
+     * Creates a {@link Flowable} instance that emits notifications for epochs
      *
      * @return a {@link Flowable} instance that emits new epochs
      */
-    Flowable<EpochNotification> epochsNotifications();
+    Flowable<EpochNotification> subscribeEpochs();
 }

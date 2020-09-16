@@ -4,7 +4,7 @@ import java.util.List;
 
 public class NewHead {
     private String adaptive;
-    private String blame;
+    private int blame;
     private String deferredLogsBloomHash;
     private String deferredReceiptsRoot;
     private String deferredStateRoot;
@@ -21,12 +21,11 @@ public class NewHead {
     private String timestamp;
     private String transactionsRoot;
 
-
     public String getAdaptive() {
         return adaptive;
     }
 
-    public String getBlame() {
+    public int getBlame() {
         return blame;
     }
 
