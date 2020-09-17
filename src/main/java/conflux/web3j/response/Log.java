@@ -116,3 +116,5 @@ public class Log {
 		this.transactionLogIndex = transactionLogIndex;
 	}
 }
+
+
