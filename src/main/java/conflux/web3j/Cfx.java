@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import conflux.web3j.response.*;
+import org.web3j.protocol.Web3jService;
 import org.web3j.protocol.core.Response;
 import org.web3j.protocol.http.HttpService;
 
@@ -21,13 +22,21 @@ public interface Cfx extends Closeable {
 	static Cfx create(String url) {
 		return new Web3j(new HttpService(url));
 	}
-	
+
 	static Cfx create(String url, int retry) {
 		return new Web3j(new HttpService(url), retry, 0);
 	}
 	
 	static Cfx create(String url, int retry, long intervalMillis) {
 		return new Web3j(new HttpService(url), retry, intervalMillis);
+	}
+
+	static Cfx create(Web3jService service) {
+		return new Web3j(service);
+	}
+
+	static Cfx create(Web3jService service, int retry, long intervalMillis) {
+		return new Web3j(service, retry, intervalMillis);
 	}
 	
 	Request<BigInteger, BigIntResponse> getGasPrice();
