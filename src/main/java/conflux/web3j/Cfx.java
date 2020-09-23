@@ -23,16 +23,20 @@ public interface Cfx extends Closeable, CfxPubSub {
 		return new Web3j(new HttpService(url));
 	}
 
-	static Cfx create(Web3jService service) {
-		return new Web3j(service);
-	}
-	
 	static Cfx create(String url, int retry) {
 		return new Web3j(new HttpService(url), retry, 0);
 	}
 	
 	static Cfx create(String url, int retry, long intervalMillis) {
 		return new Web3j(new HttpService(url), retry, intervalMillis);
+	}
+
+	static Cfx create(Web3jService service) {
+		return new Web3j(service);
+	}
+
+	static Cfx create(Web3jService service, int retry, long intervalMillis) {
+		return new Web3j(service, retry, intervalMillis);
 	}
 	
 	Request<BigInteger, BigIntResponse> getGasPrice();
