@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 
+import conflux.web3j.HasValue;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
@@ -14,6 +15,8 @@ import conflux.web3j.request.Call;
 import conflux.web3j.request.Epoch;
 import conflux.web3j.response.StringResponse;
 import conflux.web3j.response.UsedGasAndCollateral;
+import org.web3j.protocol.core.Response;
+import conflux.web3j.contract.abi.DecodeUtil;
 
 public class ContractCall {
 	
@@ -81,5 +84,12 @@ public class ContractCall {
 				? this.cfx.call(this.call)
 				: this.cfx.call(this.call, this.epoch);
 	}
+
+	public <D, T extends Type<D>> D callAndGet(Class<T> returnType, String method, Type<?>... args) {
+		String rawData = this.call(method, args).sendAndGet();
+		return DecodeUtil.decode(rawData, returnType);
+	}
+
+
 
 }

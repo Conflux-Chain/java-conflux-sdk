@@ -61,6 +61,27 @@ The underlying library `Web3j` also provides API to convert address to a checksu
 Keys.toChecksumAddress(String address)
 ```
 
+## Websocket and PubSub
+The `conflux-rust` fullnode [support PubSub](https://developer.conflux-chain.org/docs/conflux-doc/docs/pubsub) through websocket, the default port is 12535, you need open it manually.
+Now the SDK provide three methods `subscribeNewHeads`, `subscribeLogs`, `subscribeEpochs` you can use to sub respect events.
+```java
+// initiate a WebSocketService and connect, then use it to create a Cfx
+WebSocketService wsService = new WebSocketService("ws://localhost:12535/", false);
+wsService.connect();
+Cfx cfx = Cfx.create(wsService);
+// Invoke cfx method 
+BigInteger epoch = cfx.getEpochNumber().sendAndGet();
+System.out.println("Current epoch: " + epoch);
+// PubSub Subscribe to incoming events and process incoming events
+final Flowable<NewHeadsNotification> events = cfx.subscribeNewHeads();
+final Disposable disposable = events.subscribe(event -> {
+    // You can get the detail through getters
+    System.out.println(event.getParams().getResult());
+});
+// close
+disposable.dispose();
+```
+
 ## Additional Tools
 Conflux Java SDK also provides some helpful tools:
 - `Account`: used for a single account to send multiple transactions and manage `nonce` automatically.

@@ -17,7 +17,7 @@ import conflux.web3j.request.LogFilter;
 import conflux.web3j.types.SendTransactionResult;
 
 /** Core Conflux JSON-RPC API. */
-public interface Cfx extends Closeable {
+public interface Cfx extends Closeable, CfxPubSub {
 	
 	static Cfx create(String url) {
 		return new Web3j(new HttpService(url));
