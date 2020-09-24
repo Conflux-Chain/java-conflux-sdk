@@ -27,5 +27,5 @@ dependencies {
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
     
-    compile 'org.web3j:core:4.5.5'
+    compile 'org.web3j:core:4.6.3'
 }
