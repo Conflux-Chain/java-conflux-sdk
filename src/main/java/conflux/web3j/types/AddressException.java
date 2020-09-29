@@ -4,10 +4,10 @@ public class AddressException extends RuntimeException {
 
 	private static final long serialVersionUID = 2338294090416527939L;
 
-	public static final AddressException INVALID_PREFIX = new AddressException("HEX prefix 0x missed");
-	public static final AddressException INVALID_LENGTH = new AddressException("wrong length");
-	public static final AddressException INVALID_TYPE = new AddressException("wrong type");
-	public static final AddressException INVALID_HEX = new AddressException("wrong HEX format");
+	public static final String INVALID_PREFIX = "HEX prefix 0x missed";
+	public static final String INVALID_LENGTH = "wrong length";
+	public static final String INVALID_TYPE = "wrong type";
+	public static final String INVALID_HEX = "wrong HEX format";
 
 	private String reason;
 
