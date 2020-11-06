@@ -22,6 +22,7 @@ public class Receipt {
 	private String logsBloom;
 	private String stateRoot;
 	private String outcomeStatus;
+	private String txExecErrorMsg;
 	
 	public String getTransactionHash() {
 		return transactionHash;
@@ -125,5 +126,9 @@ public class Receipt {
 	
 	public void setOutcomeStatus(String outcomeStatus) {
 		this.outcomeStatus = outcomeStatus;
+	}
+
+	public String getTxExecErrorMsg() {
+		return txExecErrorMsg;
 	}
 }
