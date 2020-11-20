@@ -109,6 +109,7 @@ Keys.toChecksumAddress(String address)
 ## Websocket and PubSub
 The `conflux-rust` fullnode [support PubSub](https://developer.conflux-chain.org/docs/conflux-doc/docs/pubsub) through websocket, the default port is 12535, you need open it manually.
 Now the SDK provide three methods `subscribeNewHeads`, `subscribeLogs`, `subscribeEpochs` you can use to sub respect events.
+
 ```java
 // initiate a WebSocketService and connect, then use it to create a Cfx
 WebSocketService wsService = new WebSocketService("ws://localhost:12535/", false);
@@ -125,6 +126,8 @@ final Disposable disposable = events.subscribe(event -> {
 });
 // close
 disposable.dispose();
+```
+
 ## Call Contract methods
 
 To simple call a contract method you can use the ContractCall class

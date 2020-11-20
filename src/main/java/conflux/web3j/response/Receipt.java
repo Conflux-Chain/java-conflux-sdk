@@ -133,4 +133,6 @@ public class Receipt {
 	}
 
 	public void setTxExecErrorMsg(String errorMsg) {this.txExecErrorMsg = errorMsg;}
+		return txExecErrorMsg;
+	}
 }
