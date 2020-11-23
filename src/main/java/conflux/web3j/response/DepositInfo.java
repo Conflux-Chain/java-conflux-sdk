@@ -1,23 +1,25 @@
 package conflux.web3j.response;
 
+import org.web3j.utils.Numeric;
+
 import java.math.BigInteger;
 
 public class DepositInfo {
     public static class ListResponse extends CfxListResponse<DepositInfo> {}
 
     private String amount;
-    private long depositTime;
+    private String depositTime;
     private String accumulatedInterestRate;
 
-    public String getAmount() {return amount;}
+    public BigInteger getAmount() {return Numeric.decodeQuantity(amount);}
 
     public void setAmount(String amount) {this.amount = amount;}
 
-    public long getDepositTime() {return depositTime;}
+    public BigInteger getDepositTime() {return Numeric.decodeQuantity(depositTime);}
 
-    public void setDepositTime(long time) {this.depositTime = time;}
+    public void setDepositTime(String time) {this.depositTime = time;}
 
-    public String getAccumulatedInterestRate() {return accumulatedInterestRate;}
+    public BigInteger getAccumulatedInterestRate() {return Numeric.decodeQuantity(accumulatedInterestRate);}
 
     public void setAccumulatedInterestRate(String rate) {this.accumulatedInterestRate = rate;}
 }

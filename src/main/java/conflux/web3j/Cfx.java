@@ -106,6 +106,8 @@ public interface Cfx extends Closeable, CfxPubSub {
 
 	Request<List<VoteStakeInfo>, VoteStakeInfo.ListResponse> getVoteList(String address, Epoch... epoch);
 
+	Request<TokenSupplyInfo, TokenSupplyInfo.Response> getTokenSupplyInfo(Epoch... epoch);
+
 	<T,R extends Response<?> & HasValue<T>> Request<T, R> getCustomizedRequest(Class<R> responseType, String method, Object... params);
 	
 	default Receipt waitForReceipt(String txHash) throws InterruptedException {

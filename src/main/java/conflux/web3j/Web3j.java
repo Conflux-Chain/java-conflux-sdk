@@ -344,6 +344,17 @@ class Web3j implements Cfx {
 	}
 
 	@Override
+	public Request<TokenSupplyInfo, TokenSupplyInfo.Response> getTokenSupplyInfo(Epoch... epoch) {
+		if (epoch.length == 0) {
+			return new Request<>(this.service, "cfx_getTokenSupplyInfo", TokenSupplyInfo.Response.class)
+					.withRetry(this.retry, this.intervalMillis);
+		} else {
+			return new Request<>(this.service, "cfx_getTokenSupplyInfo", TokenSupplyInfo.Response.class, epoch[0].getValue())
+					.withRetry(this.retry, this.intervalMillis);
+		}
+	}
+
+	@Override
 	public <T,R extends Response<?> & HasValue<T>> Request<T, R> getCustomizedRequest(Class<R> responseType, String method, Object... params){
 		return new Request<>(this.service, method, responseType, params)
 				.withRetry(this.retry, this.intervalMillis);

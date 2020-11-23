@@ -1,5 +1,7 @@
 package conflux.web3j.response;
 
+import org.web3j.utils.Numeric;
+
 import java.math.BigInteger;
 
 public class StorageChange {
@@ -16,8 +18,8 @@ public class StorageChange {
         this.address = address;
     }
 
-    public String getCollaterals () {
-        return collaterals;
+    public BigInteger getCollaterals () {
+        return Numeric.decodeQuantity(collaterals);
     }
 
     public void setCollaterals(String collaterals) {
