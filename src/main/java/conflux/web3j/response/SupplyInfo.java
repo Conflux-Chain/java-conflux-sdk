@@ -4,8 +4,8 @@ import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 
-public class TokenSupplyInfo {
-    public static class Response extends CfxResponse<TokenSupplyInfo> {}
+public class SupplyInfo {
+    public static class Response extends CfxResponse<SupplyInfo> {}
 
     private String totalIssued;
     private String totalStaking;

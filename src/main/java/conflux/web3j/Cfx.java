@@ -106,7 +106,7 @@ public interface Cfx extends Closeable, CfxPubSub {
 
 	Request<List<VoteStakeInfo>, VoteStakeInfo.ListResponse> getVoteList(String address, Epoch... epoch);
 
-	Request<TokenSupplyInfo, TokenSupplyInfo.Response> getTokenSupplyInfo(Epoch... epoch);
+	Request<SupplyInfo, SupplyInfo.Response> getSupplyInfo(Epoch... epoch);
 
 	<T,R extends Response<?> & HasValue<T>> Request<T, R> getCustomizedRequest(Class<R> responseType, String method, Object... params);
 	
