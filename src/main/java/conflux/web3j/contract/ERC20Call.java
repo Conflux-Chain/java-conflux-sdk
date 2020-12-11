@@ -30,4 +30,7 @@ public class ERC20Call extends ContractCall {
 		return DecodeUtil.decode(encodedResult, Uint256.class);
 	}
 
+
+
+
 }
