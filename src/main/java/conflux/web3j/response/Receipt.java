@@ -23,6 +23,11 @@ public class Receipt {
 	private String stateRoot;
 	private String outcomeStatus;
 	private String txExecErrorMsg;
+	private boolean gasCoveredBySponsor;
+	private boolean storageCoveredBySponsor;
+	private String storageCollateralized;
+	private List<StorageChange> storageReleased;
+
 	
 	public String getTransactionHash() {
 		return transactionHash;
@@ -133,4 +138,36 @@ public class Receipt {
 	}
 
 	public void setTxExecErrorMsg(String errorMsg) {this.txExecErrorMsg = errorMsg;}
+
+	public boolean getGasCoveredBySponsor() {
+		return gasCoveredBySponsor;
+	}
+
+	public void setGasCoveredBySponsor(boolean gasCovered) {
+		this.gasCoveredBySponsor = gasCovered;
+	}
+
+	public boolean getStorageCoveredBySponsor() {
+		return storageCoveredBySponsor;
+	}
+
+	public void setStorageCoveredBySponsor(boolean storageCovered) {
+		this.storageCoveredBySponsor = storageCovered;
+	}
+
+	public BigInteger getStorageCollateralized() {
+		return Numeric.decodeQuantity(storageCollateralized);
+	}
+
+	public void setStorageCollateralized(String collateralized) {
+		this.storageCollateralized = collateralized;
+	}
+
+	public List<StorageChange> getStorageReleased() {
+		return this.storageReleased;
+	}
+
+	public void setStorageReleased(List<StorageChange> change) {
+		this.storageReleased = change;
+	}
 }

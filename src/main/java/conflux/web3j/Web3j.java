@@ -315,11 +315,53 @@ class Web3j implements Cfx {
 				.withRetry(this.retry, this.intervalMillis);
 	}
 
+	/*
+	Request<List<DepositInfo>, DepositInfo.ListResponse> getDepositList();
+
+	Request<List<VoteStakeInfo>, VoteStakeInfo.ListResponse> getVoteList();
+	* */
+
+	@Override
+	public Request<List<DepositInfo>, DepositInfo.ListResponse> getDepositList(String address, Epoch... epoch) {
+		if (epoch.length == 0) {
+			return new Request<>(this.service, "cfx_getDepositList", DepositInfo.ListResponse.class, address)
+					.withRetry(this.retry, this.intervalMillis);
+		} else {
+			return new Request<>(this.service, "cfx_getDepositList", DepositInfo.ListResponse.class, address, epoch[0].getValue())
+					.withRetry(this.retry, this.intervalMillis);
+		}
+	}
+
+	@Override
+	public Request<List<VoteStakeInfo>, VoteStakeInfo.ListResponse> getVoteList(String address, Epoch... epoch) {
+		if (epoch.length == 0) {
+			return new Request<>(this.service, "cfx_getVoteList", VoteStakeInfo.ListResponse.class, address)
+					.withRetry(this.retry, this.intervalMillis);
+		} else {
+			return new Request<>(this.service, "cfx_getVoteList", VoteStakeInfo.ListResponse.class, address, epoch[0].getValue())
+					.withRetry(this.retry, this.intervalMillis);
+		}
+	}
+
+	@Override
+	public Request<SupplyInfo, SupplyInfo.Response> getSupplyInfo(Epoch... epoch) {
+		if (epoch.length == 0) {
+			return new Request<>(this.service, "cfx_getSupplyInfo", SupplyInfo.Response.class)
+					.withRetry(this.retry, this.intervalMillis);
+		} else {
+			return new Request<>(this.service, "cfx_getSupplyInfo", SupplyInfo.Response.class, epoch[0].getValue())
+					.withRetry(this.retry, this.intervalMillis);
+		}
+	}
+
 	@Override
 	public <T,R extends Response<?> & HasValue<T>> Request<T, R> getCustomizedRequest(Class<R> responseType, String method, Object... params){
 		return new Request<>(this.service, method, responseType, params)
 				.withRetry(this.retry, this.intervalMillis);
 	}
+
+
+
 
 	@Override
 	public Flowable<NewHeadsNotification> subscribeNewHeads() {
