@@ -26,19 +26,19 @@ public class Staking extends ContractCall {
         this.account = account;
     }
 
-    public String getStakingBalance(String address) throws RpcException {
+    public BigInteger getStakingBalance(String address) throws RpcException {
         String encodedResult = this.call("getStakingBalance", new Address(address)).sendAndGet();
-        return DecodeUtil.decode(encodedResult, Address.class);
+        return DecodeUtil.decode(encodedResult, Uint256.class);
     }
 
-    public String getLockedStakingBalance(String address, BigInteger blockNumber) throws RpcException {
+    public BigInteger getLockedStakingBalance(String address, BigInteger blockNumber) throws RpcException {
         String encodedResult = this.call("getLockedStakingBalance", new Address(address), new Uint256(blockNumber)).sendAndGet();
-        return DecodeUtil.decode(encodedResult, Address.class);
+        return DecodeUtil.decode(encodedResult, Uint256.class);
     }
 
-    public String getVotePower(String address, BigInteger blockNumber) throws RpcException {
+    public BigInteger getVotePower(String address, BigInteger blockNumber) throws RpcException {
         String encodedResult = this.call("getVotePower", new Address(address), new Uint256(blockNumber)).sendAndGet();
-        return DecodeUtil.decode(encodedResult, Address.class);
+        return DecodeUtil.decode(encodedResult, Uint256.class);
     }
 
     public void deposit(Account.Option option, BigInteger amount) throws Exception {
