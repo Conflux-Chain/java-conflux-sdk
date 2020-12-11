@@ -34,4 +34,9 @@ public class SupplyInfo {
     public void setTotalCollateral(String totalCollateral) {
         this.totalCollateral = totalCollateral;
     }
+
+    @Override
+    public String toString() {
+        return String.format("{totalIssued = %s, totalStaking = %s, totalCollateral = %s}", this.getTotalIssued(), this.getTotalStaking(), this.getTotalCollateral());
+    }
 }

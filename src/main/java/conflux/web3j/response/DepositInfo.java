@@ -15,7 +15,7 @@ public class DepositInfo {
 
     public void setAmount(String amount) {this.amount = amount;}
 
-    public BigInteger getDepositTime() {return Numeric.decodeQuantity(depositTime);}
+    public long getDepositTime() {return Long.valueOf(depositTime);}
 
     public void setDepositTime(String time) {this.depositTime = time;}
 

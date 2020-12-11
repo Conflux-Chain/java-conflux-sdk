@@ -155,8 +155,8 @@ public class Receipt {
 		this.storageCoveredBySponsor = storageCovered;
 	}
 
-	public String getStorageCollateralized() {
-		return storageCollateralized;
+	public BigInteger getStorageCollateralized() {
+		return Numeric.decodeQuantity(storageCollateralized);
 	}
 
 	public void setStorageCollateralized(String collateralized) {
