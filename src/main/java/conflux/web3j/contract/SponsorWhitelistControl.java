@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import conflux.web3j.Cfx;
 import conflux.web3j.RpcException;
 import conflux.web3j.contract.abi.DecodeUtil;
 import org.apache.commons.math3.analysis.function.Add;
@@ -20,7 +21,15 @@ public class SponsorWhitelistControl extends ContractCall {
     private Account account;
 
     public SponsorWhitelistControl(Account account) {
-        super(account.getCfx(), this.contract);
+        super(account.getCfx(), SponsorWhitelistControl.contract);
+        this.account = account;
+    }
+
+    public SponsorWhitelistControl(Cfx cfx) {
+        super(cfx, SponsorWhitelistControl.contract);
+    }
+
+    public void setAccount(Account account) {
         this.account = account;
     }
 
@@ -59,15 +68,15 @@ public class SponsorWhitelistControl extends ContractCall {
         return DecodeUtil.decode(encodedResult, Bool.class);
     }
 
-    public void addPrivilege(Account.Option option, String[] addresses) throws Exception {
-        List<Address> list = Arrays.stream(addresses).map(a -> new Address(a)).collect(Collectors.toList());
-        account.call(option, contract, "addPrivilege", new DynamicArray<Address>(Address.class, list));
-    }
-
-    public void removePrivilege(Account.Option option, String[] addresses) throws Exception {
-        List<Address> list = Arrays.stream(addresses).map(a -> new Address(a)).collect(Collectors.toList());
-        account.call(option, contract, "removePrivilege", new DynamicArray<Address>(Address.class, list));
-    }
+//    public void addPrivilege(Account.Option option, String[] addresses) throws Exception {
+//        List<Address> list = Arrays.stream(addresses).map(a -> new Address(a)).collect(Collectors.toList());
+//        account.call(option, contract, "addPrivilege", new DynamicArray<Address>(Address.class, list));
+//    }
+//
+//    public void removePrivilege(Account.Option option, String[] addresses) throws Exception {
+//        List<Address> list = Arrays.stream(addresses).map(a -> new Address(a)).collect(Collectors.toList());
+//        account.call(option, contract, "removePrivilege", new DynamicArray<Address>(Address.class, list));
+//    }
 
     public void setSponsorForCollateral(Account.Option option, String address) throws Exception {
         account.call(option, contract, "setSponsorForCollateral", new Address(address));

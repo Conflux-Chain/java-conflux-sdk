@@ -8,6 +8,7 @@ import org.web3j.abi.datatypes.generated.Uint256;
 import conflux.web3j.Account;
 import conflux.web3j.Account.Option;
 
+@Deprecated
 public class ERC20Executor {
 	
 	private Account account;

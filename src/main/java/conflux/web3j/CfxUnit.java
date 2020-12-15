@@ -13,7 +13,7 @@ public class CfxUnit {
 	public static final BigInteger GDRIP_TEN = BigInteger.TEN.pow(10);
 	public static final BigInteger CFX_ONE = BigInteger.TEN.pow(18);
 	
-	public static final BigInteger DEFAULT_GAS_PRICE = GDRIP_TEN;
+	public static final BigInteger DEFAULT_GAS_PRICE = BigInteger.ONE;
 	public static final BigInteger DEFAULT_GAS_LIMIT = BigInteger.valueOf(21000);
 	
 	public static BigInteger cfx2Drip(long cfx) {

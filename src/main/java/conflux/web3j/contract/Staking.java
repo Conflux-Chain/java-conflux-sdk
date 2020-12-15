@@ -14,12 +14,12 @@ public class Staking extends ContractCall {
     private Account account;
 
     public Staking(Account account) {
-        super(account.getCfx(), this.contract);
+        super(account.getCfx(), Staking.contract);
         this.account = account;
     }
 
     public Staking(Cfx cfx) {
-        super(cfx, this.contract);
+        super(cfx, Staking.contract);
     }
 
     public void setAccount(Account account) {

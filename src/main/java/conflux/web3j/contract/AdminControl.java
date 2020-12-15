@@ -12,12 +12,12 @@ public class AdminControl extends ContractCall {
     private Account account;  // if account not set, can only use getAdmin method
 
     public AdminControl(Account account) {
-        super(account.getCfx(), contract);
+        super(account.getCfx(), AdminControl.contract);
         this.account = account;
     }
 
     public AdminControl(Cfx cfx) {
-        super(cfx, this.contract);
+        super(cfx, AdminControl.contract);
     }
 
     public void setAccount(Account account) {
