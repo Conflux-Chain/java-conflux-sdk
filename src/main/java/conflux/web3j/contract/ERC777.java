@@ -29,38 +29,33 @@ public class ERC777 extends ContractCall {
     }
 
     public String name() throws RpcException {
-        String encodedResult = this.call("name").sendAndGet();
-        return DecodeUtil.decode(encodedResult, Utf8String.class);
+        return this.callAndGet(Utf8String.class, "name");
     }
 
     public String symbol() throws RpcException {
-        String encodedResult = this.call("symbol").sendAndGet();
-        return DecodeUtil.decode(encodedResult, Utf8String.class);
+        return this.callAndGet(Utf8String.class, "symbol");
     }
 
     public BigInteger granularity() throws RpcException {
-        String encodedResult = this.call("granularity").sendAndGet();
-        return DecodeUtil.decode(encodedResult, Uint256.class);
+        return this.callAndGet(Uint256.class, "granularity");
     }
 
     public BigInteger totalSupply() throws RpcException {
-        String encodedResult = this.call("totalSupply").sendAndGet();
-        return DecodeUtil.decode(encodedResult, Uint256.class);
+        return this.callAndGet(Uint256.class, "totalSupply");
     }
 
     public BigInteger balanceOf(String owner) throws RpcException {
-        String encodedResult = this.call("balanceOf", new Address(owner)).sendAndGet();
-        return DecodeUtil.decode(encodedResult, Uint256.class);
+        return this.callAndGet(Uint256.class, "balanceOf", new Address(owner));
     }
 
     public boolean isOperatorFor(String operator, String tokenHolder) throws RpcException {
-        String encodedResult = this.call("isOperatorFor", new Address(operator), new Address(tokenHolder)).sendAndGet();
-        return DecodeUtil.decode(encodedResult, Bool.class);
+        return this.callAndGet(Bool.class, "isOperatorFor", new Address(operator), new Address(tokenHolder));
     }
 
     public List<String> defaultOperators() throws RpcException {
         String encodedResult = this.call("defaultOperators").sendAndGet();
         List<Address> operators = DecodeUtil.decode(encodedResult, TYPE_DYNAMIC_ARRAY_ADDRESS);
+
         return operators.stream()
                 .map(address -> address.getValue())
                 .collect(Collectors.toList());

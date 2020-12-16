@@ -24,18 +24,15 @@ public class ERC20 extends ContractCall{
     }
 
     public BigInteger totalSupply() throws RpcException {
-        String encodedResult = this.call("totalSupply").sendAndGet();
-        return DecodeUtil.decode(encodedResult, Uint256.class);
+        return this.callAndGet(Uint256.class, "totalSupply");
     }
 
     public BigInteger balanceOf(String account) throws RpcException {
-        String encodedResult = this.call("balanceOf", new Address(account)).sendAndGet();
-        return DecodeUtil.decode(encodedResult, Uint256.class);
+        return this.callAndGet(Uint256.class, "balanceOf", new Address(account));
     }
 
     public BigInteger allowance(String owner, String spender) throws RpcException {
-        String encodedResult = this.call("allowance", new Address(owner), new Address(spender)).sendAndGet();
-        return DecodeUtil.decode(encodedResult, Uint256.class);
+        return this.callAndGet(Uint256. class, "allowance", new Address(owner), new Address(spender));
     }
 
     public String transfer(Account.Option option, String recipient, BigInteger amount) throws Exception {
