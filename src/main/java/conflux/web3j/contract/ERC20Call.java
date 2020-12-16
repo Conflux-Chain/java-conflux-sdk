@@ -9,6 +9,7 @@ import conflux.web3j.Cfx;
 import conflux.web3j.RpcException;
 import conflux.web3j.contract.abi.DecodeUtil;
 
+@Deprecated
 public class ERC20Call extends ContractCall {
 
 	public ERC20Call(Cfx cfx, String erc20Address) {
@@ -29,5 +30,8 @@ public class ERC20Call extends ContractCall {
 		String encodedResult = this.call("allowance", new Address(owner), new Address(spender)).sendAndGet();
 		return DecodeUtil.decode(encodedResult, Uint256.class);
 	}
+
+
+
 
 }

@@ -15,6 +15,7 @@ import conflux.web3j.Cfx;
 import conflux.web3j.RpcException;
 import conflux.web3j.contract.abi.DecodeUtil;
 
+@Deprecated
 public class ERC777Call extends ContractCall {
 	
 	private static final TypeReference<DynamicArray<Address>> TYPE_DYNAMIC_ARRAY_ADDRESS = new TypeReference<DynamicArray<Address>>() {};

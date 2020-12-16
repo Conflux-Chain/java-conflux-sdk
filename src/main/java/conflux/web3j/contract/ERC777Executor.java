@@ -10,6 +10,7 @@ import conflux.web3j.Account;
 import conflux.web3j.RpcException;
 import conflux.web3j.Account.Option;
 
+@Deprecated
 public class ERC777Executor {
 	
 	private Account account;
