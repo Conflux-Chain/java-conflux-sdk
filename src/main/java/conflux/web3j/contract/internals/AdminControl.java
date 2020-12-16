@@ -31,16 +31,16 @@ public class AdminControl extends ContractCall {
 
     public String destroy (Option option, String contractAddr) throws Exception {
         String admin = getAdmin(contractAddr);
-        if (admin != account.getAddress()) {
-            throw new Exception("Not admin");
+        if (!admin.equalsIgnoreCase(account.getAddress())) {
+            throw new Exception("Administrator privilege required");
         }
         return this.account.call(option, contract, "destroy", new Address(contractAddr));
     }
 
     public String setAdmin(Option option, String contractAddr, String newAdmin) throws Exception {
         String admin = getAdmin(contractAddr);
-        if (admin != account.getAddress()) {
-            throw new Exception("Not admin");
+        if (!admin.equalsIgnoreCase(account.getAddress())) {
+            throw new Exception("Administrator privilege required");
         }
         return this.account.call(option, contract, "setAdmin", new Address(contractAddr), new Address(newAdmin));
     }

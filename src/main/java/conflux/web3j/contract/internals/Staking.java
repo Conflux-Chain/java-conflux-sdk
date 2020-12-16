@@ -27,8 +27,8 @@ public class Staking extends ContractCall {
         this.account = account;
     }
 
-    public BigInteger getStakingBalance(String blockNumber) throws RpcException {
-        return this.callAndGet(Uint256.class, "getStakingBalance", new Address(blockNumber));
+    public BigInteger getStakingBalance(String user) throws RpcException {
+        return this.callAndGet(Uint256.class, "getStakingBalance", new Address(user));
     }
 
     public BigInteger getLockedStakingBalance(String user, BigInteger blockNumber) throws RpcException {
