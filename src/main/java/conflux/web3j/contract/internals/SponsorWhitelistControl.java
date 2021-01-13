@@ -1,20 +1,19 @@
 package conflux.web3j.contract.internals;
 
-import conflux.web3j.Account;
-
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import conflux.web3j.Cfx;
-import conflux.web3j.RpcException;
-import conflux.web3j.contract.ContractCall;
-import conflux.web3j.contract.abi.DecodeUtil;
 import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.Bool;
 import org.web3j.abi.datatypes.DynamicArray;
 import org.web3j.abi.datatypes.generated.Uint256;
+
+import conflux.web3j.Account;
+import conflux.web3j.Cfx;
+import conflux.web3j.RpcException;
+import conflux.web3j.contract.ContractCall;
 
 public class SponsorWhitelistControl extends ContractCall {
     private final static String contract = "0x0888000000000000000000000000000000000001";

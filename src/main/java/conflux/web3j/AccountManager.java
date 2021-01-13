@@ -235,6 +235,25 @@ public class AccountManager {
 	}
 	
 	/**
+	 * Export private key for the specified account address.
+	 * @param address account address to export private key.
+	 * @param password to decrypt the original key file.
+	 * @return private key if account exists. Otherwise, <code>null</code>.
+	 */
+	public String exportPrivateKey(String address, String password) throws Exception {
+		List<Path> files = Files.list(Paths.get(this.dir))
+				.filter(path -> this.parseAddressFromFilename(path.getFileName().toString()).equalsIgnoreCase(address))
+				.collect(Collectors.toList());
+		
+		if (files.isEmpty()) {
+			return null;
+		}
+		
+		ECKeyPair ecKeyPair = WalletUtils.loadCredentials(password, files.get(0).toString()).getEcKeyPair();
+		return "0x" + ecKeyPair.getPrivateKey().toString(16);
+	}
+	
+	/**
 	 * Unlock the specified account for a period to allow signing multiple transactions at a time.
 	 * @param address account address to unlock.
 	 * @param password decrypt the key file.
