@@ -1,14 +1,14 @@
 package conflux.web3j.contract.internals;
 
+import java.math.BigInteger;
+
+import org.web3j.abi.datatypes.Address;
+import org.web3j.abi.datatypes.generated.Uint256;
+
 import conflux.web3j.Account;
 import conflux.web3j.Cfx;
 import conflux.web3j.RpcException;
 import conflux.web3j.contract.ContractCall;
-import conflux.web3j.contract.abi.DecodeUtil;
-import org.web3j.abi.datatypes.Address;
-import org.web3j.abi.datatypes.generated.Uint256;
-
-import java.math.BigInteger;
 
 public class Staking extends ContractCall {
     private final static String contract = "0x0888000000000000000000000000000000000002";
