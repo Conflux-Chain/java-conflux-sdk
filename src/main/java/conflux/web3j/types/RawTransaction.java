@@ -79,7 +79,7 @@ public class RawTransaction {
 		return create(nonce, gas, to, BigInteger.ZERO, storageLimit, epochHeight, data);
 	}
 	
-	public String sign(ECKeyPair ecKeyPair) {
+	public String sign(ECKeyPair ecKeyPair) throws Exception {
 		RlpType rlpTx = this.toRlp();
 		
 		byte[] encoded = RlpEncoder.encode(rlpTx);
@@ -98,7 +98,7 @@ public class RawTransaction {
 		return Numeric.toHexString(signedTx);
 	}
 	
-	public RlpType toRlp() {
+	public RlpType toRlp() throws Exception {
 		List<RlpType> values = new ArrayList<RlpType>();
 
 		values.add(RlpString.create(this.nonce));
@@ -106,7 +106,8 @@ public class RawTransaction {
 		values.add(RlpString.create(this.gas));
 
 		if (this.to != null && !this.to.isEmpty()) {
-			values.add(RlpString.create(Numeric.hexStringToByteArray(this.to)));
+			String to = CfxAddress.normalizeHexAddress(this.to);
+			values.add(RlpString.create(Numeric.hexStringToByteArray(to)));
 		} else {
 			values.add(RlpString.create(""));
 		}

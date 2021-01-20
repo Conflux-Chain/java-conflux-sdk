@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 
+import conflux.web3j.types.*;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
@@ -17,25 +18,24 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import conflux.web3j.request.Call;
 import conflux.web3j.response.UsedGasAndCollateral;
-import conflux.web3j.types.AddressType;
-import conflux.web3j.types.RawTransaction;
-import conflux.web3j.types.SendTransactionError;
-import conflux.web3j.types.SendTransactionResult;
-import conflux.web3j.types.TransactionBuilder;
 
 public class Account {
 	
 	private Cfx cfx;
-	private String address;
+	private CfxAddress address;
 	private BigInteger nonce;
 	
 	private AccountManager am;
 	private ECKeyPair ecKeyPair;
 	
-	private Account(Cfx cfx, String address) {
+	private Account(Cfx cfx, String address) throws Exception {
 		this.cfx = cfx;
-		this.address = address;
-		this.nonce = cfx.getNonce(address).sendAndGet();
+		if (CfxAddress.haveNetworkPrefix(address)) {
+			this.address = new CfxAddress(address);
+		} else {
+			this.address = new CfxAddress(address, cfx.getChainId().intValue());
+		}
+		this.nonce = cfx.getNonce(this.address.getAddress()).sendAndGet();
 	}
 	
 	public static Account unlock(Cfx cfx, AccountManager am, String address, String password) throws Exception {
@@ -53,12 +53,10 @@ public class Account {
 		return account;
 	}
 	
-	public static Account create(Cfx cfx, String privateKey) {
+	public static Account create(Cfx cfx, String privateKey) throws Exception {
 		Credentials credentials = Credentials.create(privateKey);
-		
 		Account account = new Account(cfx, AddressType.User.normalize(credentials.getAddress()));
 		account.ecKeyPair = credentials.getEcKeyPair();
-		
 		return account;
 	}
 	
@@ -68,7 +66,11 @@ public class Account {
 	}
 	
 	public String getAddress() {
-		return address;
+		return address.getAddress();
+	}
+
+	public String getHexAddress() throws Exception {
+		return this.address.getHexAddress();
 	}
 	
 	public BigInteger getNonce() {
@@ -81,7 +83,7 @@ public class Account {
 	
 	public String sign(RawTransaction tx) throws Exception {
 		return this.ecKeyPair == null
-				? this.am.signTransaction(tx, this.address)
+				? this.am.signTransaction(tx, this.getAddress())
 				: tx.sign(this.ecKeyPair);
 	}
 	
@@ -144,7 +146,7 @@ public class Account {
 	}
 	
 	public String deploy(Option option, String bytecodes) throws Exception {
-		option.apply(this.cfx, this.address, "", bytecodes);
+		option.apply(this.cfx, this.getAddress(), "", bytecodes);
 		RawTransaction tx = RawTransaction.deploy(this.nonce, option.gasLimit, option.value, option.storageLimit, option.epochHeight, bytecodes);
 		option.updatePriceAndChainId(tx);
 		return this.mustSend(tx);
@@ -170,18 +172,18 @@ public class Account {
 	}
 	
 	public String call(Option option, String contract, String data) throws Exception {
-		option.apply(this.cfx, this.address, contract, data);
+		option.apply(this.cfx, this.getAddress(), contract, data);
 		RawTransaction tx = RawTransaction.create(this.nonce, option.gasLimit, contract, option.value, option.storageLimit, option.epochHeight, data);
 		option.updatePriceAndChainId(tx);
 		return this.mustSend(tx);
 	}
 	
 	public void waitForNonceUpdated() throws InterruptedException {
-		this.cfx.waitForNonce(this.address, this.nonce);
+		this.cfx.waitForNonce(this.getAddress(), this.nonce);
 	}
 	
 	public void waitForNonceUpdated(long intervalMillis) throws InterruptedException {
-		this.cfx.waitForNonce(this.address, this.nonce, intervalMillis);
+		this.cfx.waitForNonce(this.getAddress(), this.nonce, intervalMillis);
 	}
 	
 	public static class Option {

@@ -38,6 +38,8 @@ public interface Cfx extends Closeable, CfxPubSub {
 	static Cfx create(Web3jService service, int retry, long intervalMillis) {
 		return new Web3j(service, retry, intervalMillis);
 	}
+
+	BigInteger getChainId();
 	
 	Request<BigInteger, BigIntResponse> getGasPrice();
 	
@@ -144,3 +146,5 @@ public interface Cfx extends Closeable, CfxPubSub {
 	}
 	
 }
+
+
