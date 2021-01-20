@@ -28,6 +28,7 @@ class Web3j implements Cfx {
 	private Web3jService service;
 	private int retry;
 	private long intervalMillis;
+	private BigInteger chainId;
 	
 	public Web3j(Web3jService service) {
 		this(service, 0, 0);
@@ -37,8 +38,14 @@ class Web3j implements Cfx {
 		this.service = service;
 		this.retry = retry;
 		this.intervalMillis = intervalMillis;
+		Status status = this.getStatus().sendAndGet();
+		this.chainId = status.getChainId();
 	}
-	
+
+	public BigInteger getChainId() {
+		return this.chainId;
+	}
+
 	@Override
 	public void close() throws IOException {
 		this.service.close();

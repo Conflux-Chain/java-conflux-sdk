@@ -5,6 +5,7 @@ The Conflux Java SDK allows any Java client to interact with a local or remote C
 ## Docs
 
 * [API](https://conflux-chain.github.io/java-conflux-sdk/index.html)
+* [changelog](./CHANGELOG.md)
 
 
 ## Manage Accounts
