@@ -4,6 +4,10 @@ import java.util.Optional;
 
 import org.web3j.utils.Numeric;
 
+/**
+ * Used to validate a hex40 address
+ * @deprecated
+ */
 public class Address {
 	
 	private static final int HEX_LENGTH_WITH_PREFIX = 42;

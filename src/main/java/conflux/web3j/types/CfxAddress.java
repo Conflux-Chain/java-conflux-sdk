@@ -13,7 +13,7 @@ public class CfxAddress {
     private final String addressType;
 
     /*
-    * Pass a new Conflux address
+    * @param address {string} Pass a new Conflux address
     * */
     public CfxAddress(String address) throws Exception {
         String hexAddress = CfxAddress.decode(address);

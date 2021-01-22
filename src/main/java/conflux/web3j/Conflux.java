@@ -3,6 +3,7 @@ package conflux.web3j;
 import conflux.web3j.request.Epoch;
 import conflux.web3j.response.*;
 import conflux.web3j.types.CfxAddress;
+import org.web3j.protocol.http.HttpService;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -10,6 +11,10 @@ import java.util.Optional;
 
 
 public interface Conflux extends Cfx {
+    static Conflux create(String url) {
+        return new ConfluxWeb3(new HttpService(url));
+    }
+
     Request<BigInteger, BigIntResponse> getBalance(CfxAddress address, Epoch... epoch);
 
     Request<Optional<String>, StringNullableResponse> getAdmin(CfxAddress address, Epoch... epoch);

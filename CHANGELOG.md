@@ -2,7 +2,9 @@
 
 1. Add a new address type: CfxAddress
 2. Add a new Interface `Conflux` which provide several new method use new CfxAddress
+3. Add a new Class ConfluxWeb3 which implement `Conflux` Interface   
 3. Account, AccountManager support CIP37 address 
+4. Account.getAddress() will return new CIP37 address
 
 
 

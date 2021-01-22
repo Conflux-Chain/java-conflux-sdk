@@ -9,7 +9,7 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
-public class ConfluxWeb3 extends Web3j implements Cfx {
+public class ConfluxWeb3 extends Web3j implements Conflux {
     public ConfluxWeb3(Web3jService service) {
         super(service);
     }
