@@ -1,13 +1,13 @@
 package conflux.web3j.contract;
 
-import conflux.web3j.Account;
-import conflux.web3j.Cfx;
-import conflux.web3j.RpcException;
-import conflux.web3j.contract.abi.DecodeUtil;
+import java.math.BigInteger;
+
 import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.generated.Uint256;
 
-import java.math.BigInteger;
+import conflux.web3j.Account;
+import conflux.web3j.Cfx;
+import conflux.web3j.RpcException;
 
 public class ERC20 extends ContractCall{
     private Account account;

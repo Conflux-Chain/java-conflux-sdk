@@ -1,12 +1,12 @@
 package conflux.web3j.contract.internals;
 
+import org.web3j.abi.datatypes.Address;
+
 import conflux.web3j.Account;
 import conflux.web3j.Account.Option;
+import conflux.web3j.Cfx;
 import conflux.web3j.RpcException;
 import conflux.web3j.contract.ContractCall;
-import conflux.web3j.contract.abi.DecodeUtil;
-import org.web3j.abi.datatypes.Address;
-import conflux.web3j.Cfx;
 
 public class AdminControl extends ContractCall {
     private final static String contract = "0x0888000000000000000000000000000000000000";

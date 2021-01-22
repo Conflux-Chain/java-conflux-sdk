@@ -4,19 +4,17 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 
-import conflux.web3j.HasValue;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 
 import conflux.web3j.Cfx;
 import conflux.web3j.Request;
+import conflux.web3j.contract.abi.DecodeUtil;
 import conflux.web3j.request.Call;
 import conflux.web3j.request.Epoch;
 import conflux.web3j.response.StringResponse;
 import conflux.web3j.response.UsedGasAndCollateral;
-import org.web3j.protocol.core.Response;
-import conflux.web3j.contract.abi.DecodeUtil;
 
 public class ContractCall {
 	
@@ -69,6 +67,7 @@ public class ContractCall {
 	
 	private void buildData(String method, Type<?>... args) {
 		if (method == null || method.isEmpty()) {
+			this.call.setData(null);
 			return;
 		}
 		
