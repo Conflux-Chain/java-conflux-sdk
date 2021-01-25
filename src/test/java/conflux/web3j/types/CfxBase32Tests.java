@@ -14,7 +14,7 @@ public class CfxBase32Tests {
     @DisplayName("CfxBase32Encode")
     void cfxBase32() throws Exception {
         byte[] testBytes = "123456".getBytes();
-        assertEquals("64t36d1n6s", ConfluxBase32.encode(testBytes), "");
-        assertEquals(true, Arrays.equals(ConfluxBase32.decode("64t36d1n6s"), testBytes), "");
+        assertEquals("ge3dgrbzg2", ConfluxBase32.encode(testBytes), "");
+        assertEquals(true, Arrays.equals(ConfluxBase32.decode("ge3dgrbzg2"), testBytes), "");
     }
 }

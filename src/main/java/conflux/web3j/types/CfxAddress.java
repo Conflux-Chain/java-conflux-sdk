@@ -7,33 +7,33 @@ import conflux.web3j.crypto.ConfluxBase32;
 import java.util.Arrays;
 
 public class CfxAddress {
-    private final String address;
+    private final String address;  // base32Check address
     private final byte[] addressBuffer;
-    private final int chainId;
+    private final int netId;
     private final String addressType;
 
     /*
     * @param address {string} Pass a new Conflux address
     * */
-    public CfxAddress(String address) throws Exception {
+    public CfxAddress(String address) throws AddressException {
         String hexAddress = CfxAddress.decode(address);
         this.address = address;
         this.addressBuffer = addressBufferFromHex(hexAddress);
         this.addressType = CfxAddress.addressType(this.addressBuffer);
-        this.chainId = CfxAddress.decodeNetId(address.split(CfxAddress.DELIMITER)[0]);
+        this.netId = CfxAddress.decodeNetId(address.split(CfxAddress.DELIMITER)[0]);
     }
 
-    public CfxAddress(String hexAddress, int chainId) throws Exception {
-        this.address = CfxAddress.encode(hexAddress, chainId);
+    public CfxAddress(String hexAddress, int netId) throws AddressException {
+        this.address = CfxAddress.encode(hexAddress, netId);
         this.addressType = CfxAddress.addressType(hexAddress);
-        this.chainId = chainId;
+        this.netId = netId;
         this.addressBuffer = addressBufferFromHex(hexAddress);
     }
 
-    public CfxAddress(byte[] addressBuffer, int chainId) throws Exception {
-        this.address = CfxAddress.encode(addressBuffer, chainId);
+    public CfxAddress(byte[] addressBuffer, int netId) throws AddressException {
+        this.address = CfxAddress.encode(addressBuffer, netId);
         this.addressType = CfxAddress.addressType(addressBuffer);
-        this.chainId = chainId;
+        this.netId = netId;
         this.addressBuffer = addressBuffer;
     }
 
@@ -41,8 +41,8 @@ public class CfxAddress {
         return address;
     }
 
-    public int getChainId() {
-        return chainId;
+    public int getNetworkId() {
+        return netId;
     }
 
     public String getType() {
@@ -73,15 +73,15 @@ public class CfxAddress {
     private static final int HEX_PREFIX_LEN = 2;
     private static final String HEX_PREFIX = "0X";
     private static final String DELIMITER = ":";
-    private static final String CHECKSUM_TEMPLATE = "00000000";
+    private static final byte[] CHECKSUM_TEMPLATE = new byte[]{0, 0, 0, 0, 0, 0, 0, 0};
     private static final long NET_ID_LIMIT = 4294967295L;  // 0xFFFFFFFF
     private static final int CFX_ADDRESS_CHAR_LENGTH = 42;
 
-    public static String encode(byte[] hexBuf, int chainId) throws Exception {
+    public static String encode(byte[] hexBuf, int netId) throws AddressException {
         if(hexBuf == null || hexBuf.length != HEX_BUFFER_LEN) {
-            throw new IllegalArgumentException();
+            throw new AddressException("Invalid argument");
         }
-        String chainPrefix = encodeNetId(chainId);
+        String chainPrefix = encodeNetId(netId);
         String payload = ConfluxBase32.encode(encodePayload(hexBuf));
         String sum = createCheckSum(chainPrefix, payload);
         return chainPrefix +
@@ -90,14 +90,14 @@ public class CfxAddress {
                 sum;
     }
 
-    public static String encode(String hexAddress, int chainId) throws Exception {
+    public static String encode(String hexAddress, int netId) throws AddressException {
         if(hexAddress == null) {
-            throw new IllegalArgumentException();
+            throw new AddressException("Invalid argument");
         }
-        return encode(addressBufferFromHex(hexAddress), chainId);
+        return encode(addressBufferFromHex(hexAddress), netId);
     }
 
-    public static String encode(String hexString, int chainId, boolean verbose)  throws Exception {
+    public static String encode(String hexString, int chainId, boolean verbose)  throws AddressException {
         String shortAddress = encode(hexString, chainId);
         if (!verbose) {
             return shortAddress;
@@ -107,9 +107,9 @@ public class CfxAddress {
         return String.join(DELIMITER, parts[0], typeStr , parts[1]).toUpperCase();
     }
 
-    public static String decode(String cfxAddress) throws Exception {
-        if(cfxAddress == null || !haveAddressPrefix(cfxAddress)) {
-            throw new IllegalArgumentException();
+    public static String decode(String cfxAddress) throws AddressException {
+        if(cfxAddress == null || !haveNetworkPrefix(cfxAddress)) {
+            throw new AddressException("Invalid argument");
         }
         cfxAddress = cfxAddress.toLowerCase();
         String[] parts = cfxAddress.split(DELIMITER);
@@ -143,22 +143,23 @@ public class CfxAddress {
         }
     }
 
-    public static boolean haveAddressPrefix(String cfxAddressStr) {
+    public static boolean haveNetworkPrefix(String cfxAddressStr) {
+        cfxAddressStr = cfxAddressStr.toLowerCase();
         return cfxAddressStr != null && (cfxAddressStr.startsWith(NETWORK_MAIN) || cfxAddressStr.startsWith(NETWORK_TEST) || cfxAddressStr.startsWith(NETWORK_LOCAL_PREFIX));
     }
 
-    public static String normalize(String address, int chainId) throws Exception {
+    public static String normalizeBase32Address(String address, int netId) throws Exception {
         if(verify(address)) {
             return address;
         }
-        return encode(address, chainId);
+        return encode(address, netId);
     }
 
-    public static String normalizeHexAddress(String address) throws Exception {
+    public static String normalizeHexAddress(String address) throws AddressException {
         if(address == null) {
-            throw new IllegalArgumentException();
+            throw new AddressException("Invalid argument");
         }
-        if(haveAddressPrefix(address)) {
+        if(haveNetworkPrefix(address)) {
             return decode(address);
         }
         return address;
@@ -168,14 +169,14 @@ public class CfxAddress {
         return Bytes.concat(new byte[]{VERSION_BYTE}, addressBuf);
     }
 
-    private static byte[] decodePayload(byte[] payload) throws Exception {
+    private static byte[] decodePayload(byte[] payload) throws AddressException {
         if(payload.length <= 1 || payload[0] != VERSION_BYTE) {
             throw new AddressException("Can not recognize version byte");
         }
         return Arrays.copyOfRange(payload, 1, payload.length);
     }
 
-    private static byte[] addressBufferFromHex(String hexAddress) throws Exception {
+    private static byte[] addressBufferFromHex(String hexAddress) throws AddressException {
         hexAddress = hexAddress.toUpperCase();
         if (hexAddress.startsWith(HEX_PREFIX)) {
             hexAddress = hexAddress.substring(HEX_PREFIX_LEN);
@@ -195,16 +196,15 @@ public class CfxAddress {
         return result;
     }
 
-    private static String createCheckSum(String chainPrefix, String payload) throws Exception {
+    private static String createCheckSum(String chainPrefix, String payload) throws AddressException {
         byte[] prefixBuf = prefixToWords(chainPrefix);
-        byte[] delimiterBuf = ConfluxBase32.decodeWords("0");  // use 0 FOR DELIMITER
+        byte[] delimiterBuf = new byte[]{0};  // use 0
         byte[] payloadBuf = ConfluxBase32.decodeWords(payload);
-        byte[] sumTemplateBuf = ConfluxBase32.decodeWords(CHECKSUM_TEMPLATE);
-        long n = polyMod(Bytes.concat(prefixBuf, delimiterBuf, payloadBuf, sumTemplateBuf));
+        long n = polyMod(Bytes.concat(prefixBuf, delimiterBuf, payloadBuf, CHECKSUM_TEMPLATE));
         return ConfluxBase32.encode(checksumBytes(n));
     }
 
-    private static String encodeNetId(int netId) throws Exception {
+    private static String encodeNetId(int netId) throws AddressException {
         if(netId <= 0) {
             throw new AddressException("chainId should be passed as in range [1, 0xFFFFFFFF]");
         }
@@ -215,7 +215,7 @@ public class CfxAddress {
         };
     }
 
-    private static int decodeNetId(String prefix) throws Exception {
+    private static int decodeNetId(String prefix) throws AddressException {
         prefix = prefix.toLowerCase();
         switch (prefix) {
             case NETWORK_MAIN:
@@ -234,12 +234,12 @@ public class CfxAddress {
         }
     }
 
-    private static String addressType(String hexAddress) throws Exception {
+    private static String addressType(String hexAddress) throws AddressException {
         byte[] buf = addressBufferFromHex(hexAddress);
         return addressType(buf);
     }
 
-    private static String addressType(byte[] addressBuffer) throws Exception {
+    private static String addressType(byte[] addressBuffer) throws AddressException {
         if (Arrays.equals(addressBuffer, ADDRESS_NULL)) return ADDRESS_TYPE_NULL;
         return switch (addressBuffer[0] & 0xf0) {
             case 0x00 -> ADDRESS_TYPE_BUILTIN;

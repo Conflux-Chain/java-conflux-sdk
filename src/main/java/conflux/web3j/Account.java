@@ -30,7 +30,7 @@ public class Account {
 	
 	private Account(Cfx cfx, String address) throws Exception {
 		this.cfx = cfx;
-		if (CfxAddress.haveAddressPrefix(address)) {
+		if (CfxAddress.haveNetworkPrefix(address)) {
 			this.address = new CfxAddress(address);
 		} else {
 			this.address = new CfxAddress(address, cfx.getChainId().intValue());
