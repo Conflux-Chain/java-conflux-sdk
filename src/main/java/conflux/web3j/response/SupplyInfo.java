@@ -10,6 +10,7 @@ public class SupplyInfo {
     private String totalIssued;
     private String totalStaking;
     private String totalCollateral;
+    private String totalCirculating;
 
     public BigInteger getTotalIssued() {
         return Numeric.decodeQuantity(totalIssued);
@@ -35,8 +36,17 @@ public class SupplyInfo {
         this.totalCollateral = totalCollateral;
     }
 
+    public BigInteger getTotalCirculating () {
+        return Numeric.decodeQuantity(totalCirculating);
+    }
+
+    public void setTotalCirculating(String totalCirculating) {
+        this.totalCirculating = totalCirculating;
+    }
+
     @Override
     public String toString() {
-        return String.format("{totalIssued = %s, totalStaking = %s, totalCollateral = %s}", this.getTotalIssued(), this.getTotalStaking(), this.getTotalCollateral());
+        String formatStr = "{totalIssued = %s, totalStaking = %s, totalCollateral = %s, totalCirculating = %s}";
+        return String.format(formatStr, this.getTotalIssued(), this.getTotalStaking(), this.getTotalCollateral(), this.getTotalCirculating());
     }
 }
