@@ -41,11 +41,11 @@ public enum AddressType {
 	public static Optional<AddressType> parse(char ch) {
 		switch (ch) {
 			case '0':
-				Optional.of(Builtin);
+				return Optional.of(Builtin);
 			case '1':
-				Optional.of(User);
+				return Optional.of(User);
 			case '8':
-				Optional.of(Contract);
+				return Optional.of(Contract);
 		}
 		return Optional.empty();
 	}

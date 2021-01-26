@@ -3,10 +3,11 @@ package conflux.web3j.types;
 import com.google.common.io.BaseEncoding;
 import com.google.common.primitives.Bytes;
 import conflux.web3j.crypto.ConfluxBase32;
+import org.web3j.abi.datatypes.Type;
 
 import java.util.Arrays;
 
-public class Address {
+public class Address implements Type<String> {
     private final String address;  // base32Check address
     private final String hexAddress;
     private final int netId;
@@ -56,6 +57,14 @@ public class Address {
     public String toString() {
         String formatStr = "{netId = %d, hexAddress = %s, address = %s}";
         return String.format(formatStr, this.netId, this.hexAddress, this.address);
+    }
+
+    public String getValue() {
+        return hexAddress;
+    }
+
+    public String getTypeAsString() {
+        return "address";
     }
 
     // CIP37 specification: https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-37.md
