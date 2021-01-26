@@ -32,7 +32,7 @@ public class Status {
 	}
 
 	public BigInteger getNetworkId() {
-		return Numeric.decodeQuantity(this.networkId);
+		return Numeric.decodeQuantity(this.chainId);
 	}
 
 	public void setNetworkId(String networkId) {

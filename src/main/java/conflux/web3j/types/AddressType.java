@@ -1,5 +1,6 @@
 package conflux.web3j.types;
 
+import java.util.HashMap;
 import java.util.Optional;
 
 import org.web3j.utils.Numeric;
@@ -9,6 +10,13 @@ public enum AddressType {
 	Builtin("builtin", new AddressException("builtin address type required")),
 	User("user", new AddressException("user address type required")),
 	Contract("contract", new AddressException("contract address type required"));
+
+	private static final HashMap<String, Character> TYPE_MAP = new HashMap<>();
+	static {
+		TYPE_MAP.put("builtin", '0');
+		TYPE_MAP.put("user", '1');
+		TYPE_MAP.put("contract", '8');
+	}
 
 	private String value;
 	private AddressException typeMismatchException;
@@ -27,7 +35,7 @@ public enum AddressType {
 	}
 	
 	public String normalize(String hexAddress) {
-		return String.format("0x%s%s", this.value, Numeric.cleanHexPrefix(hexAddress).substring(1));
+		return String.format("0x%s%s", TYPE_MAP.get(this.value), Numeric.cleanHexPrefix(hexAddress).substring(1));
 	}
 
 	public static Optional<AddressType> parse(char ch) {
