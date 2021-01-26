@@ -135,7 +135,7 @@ public class AccountManager {
 		String address = filename.substring(keyfilePrefix.length(), filename.length() - keyfileExt.length());
 		
 		try {
-			AddressType.validate(address, AddressType.User);
+			AddressType.validateHexAddress(address, AddressType.User);
 		} catch (Exception e) {
 			return "";
 		}

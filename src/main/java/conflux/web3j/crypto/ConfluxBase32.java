@@ -11,25 +11,19 @@ public class ConfluxBase32 {
     private static final String STANDARD_CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
     private static final char PADDING_CHAR = '=';
 
-    private static final HashMap<Character, Integer> CONFLUX_CHAR_MAP = new HashMap<Character, Integer>(){{
-        put('a', 0); put('b', 1); put('c', 2); put('d', 3); put('e', 4);
-        put('f', 5); put('g', 6); put('h', 7); put('j', 8); put('k', 9);
-        put('m', 10); put('n', 11); put('p', 12); put('r', 13); put('s', 14);
-        put('t', 15); put('u', 16); put('v', 17); put('w', 18); put('x', 19);
-        put('y', 20); put('z', 21);
-        put('0', 22); put('1', 23); put('2', 24); put('3', 25); put('4', 26);
-        put('5', 27); put('6', 28); put('7', 29); put('8', 30); put('9', 31);
-    }};
+    private static final HashMap<Character, Integer> CONFLUX_CHAR_MAP = new HashMap<>();
+    static {
+        for (int i = 0; i < CONFLUX_CHARSET.length(); i++) {
+            CONFLUX_CHAR_MAP.put(CONFLUX_CHARSET.charAt(i), i);
+        }
+    }
 
-    private static final HashMap<Character, Integer> STANDARD_CHAR_MAP = new HashMap<Character, Integer>(){{
-        put('A', 0); put('B', 1); put('C', 2); put('D', 3); put('E', 4);
-        put('F', 5); put('G', 6); put('H', 7); put('I', 8); put('J', 9);
-        put('K', 10); put('L', 11); put('M', 12); put('N', 13); put('O', 14);
-        put('P', 15); put('Q', 16); put('R', 17); put('S', 18); put('T', 19);
-        put('U', 20); put('V', 21); put('W', 22); put('X', 23); put('Y', 24);
-        put('Z', 25); put('2', 26); put('3', 27); put('4', 28); put('5', 29);
-        put('6', 30); put('7', 31);
-    }};
+    private static final HashMap<Character, Integer> STANDARD_CHAR_MAP = new HashMap<>();
+    static {
+        for (int i = 0; i < STANDARD_CHARSET.length(); i++) {
+            STANDARD_CHAR_MAP.put(STANDARD_CHARSET.charAt(i), i);
+        }
+    }
 
     public static String encode(byte[] buffer) throws ConfluxBase32Exception {
         if (buffer == null) {

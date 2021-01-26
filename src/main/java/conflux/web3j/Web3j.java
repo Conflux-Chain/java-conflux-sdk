@@ -30,6 +30,7 @@ class Web3j implements Cfx {
 	private int retry;
 	private long intervalMillis;
 	private BigInteger networkId;
+	private BigInteger chainId;
 	
 	public Web3j(Web3jService service) {
 		this(service, 0, 0);
@@ -39,12 +40,20 @@ class Web3j implements Cfx {
 		this.service = service;
 		this.retry = retry;
 		this.intervalMillis = intervalMillis;
+
 		Status status = this.getStatus().sendAndGet();
-		this.networkId = status.getChainId();
+		this.networkId = status.getNetworkId();
+		this.chainId = status.getChainId();
 	}
 
 	public BigInteger getNetworkId() {
 		return this.networkId;
+	}
+	public int getIntNetworkId() {
+		return this.networkId.intValue();
+	}
+	public BigInteger getChainId() {
+		return this.chainId;
 	}
 
 	@Override

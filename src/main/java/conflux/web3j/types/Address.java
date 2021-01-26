@@ -53,14 +53,15 @@ public class Address {
         return hexAddress;
     }
 
+    public String toString() {
+        String formatStr = "{netId = %d, hexAddress = %s, address = %s}";
+        return String.format(formatStr, this.netId, this.hexAddress, this.address);
+    }
+
     // CIP37 specification: https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-37.md
     // static methods used to convert from hex to cfx address and vice
     public static final int NETWORK_ID_MAINNET = 1029;
     public static final int NETWORK_ID_TESTNET = 1;
-    public static final String ADDRESS_TYPE_BUILTIN = "builtin";
-    public static final String ADDRESS_TYPE_USER = "user";
-    public static final String ADDRESS_TYPE_CONTRACT = "contract";
-    public static final String ADDRESS_TYPE_NULL = "null";
 
     public static final String NETWORK_MAIN = "cfx";
     public static final String NETWORK_TEST = "cfxtest";
@@ -86,6 +87,7 @@ public class Address {
         String chainPrefix = encodeNetId(netId);
         String payload = ConfluxBase32.encode(encodePayload(hexBuf));
         strBuilder.append(chainPrefix);
+        strBuilder.append(DELIMITER);
         strBuilder.append(payload);
         strBuilder.append(createCheckSum(chainPrefix, payload));
         return strBuilder.toString();
@@ -210,9 +212,9 @@ public class Address {
             throw new AddressException("chainId should be passed as in range [1, 0xFFFFFFFF]");
         }
         switch (netId) {
-            case 1029:
+            case NETWORK_ID_MAINNET:
                 return NETWORK_MAIN;
-            case 1:
+            case NETWORK_ID_TESTNET:
                 return NETWORK_TEST;
             default:
                 return NETWORK_LOCAL_PREFIX + netId;
@@ -223,9 +225,9 @@ public class Address {
         prefix = prefix.toLowerCase();
         switch (prefix) {
             case NETWORK_MAIN:
-                return 1029;
+                return NETWORK_ID_MAINNET;
             case NETWORK_TEST:
-                return 1;
+                return NETWORK_ID_TESTNET;
             default:
                 if(!prefix.startsWith(NETWORK_LOCAL_PREFIX)) {
                     throw new AddressException("netId prefix should be passed by 'cfx', 'cfxtest' or 'net[n]'");

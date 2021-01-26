@@ -44,11 +44,11 @@ public enum AddressType {
 
 	private static final int HEX_LENGTH_WITH_PREFIX = 42;
 
-	public static void validate(String hexValue) throws AddressException {
-		validate(hexValue, null);
+	public static void validateHexAddress(String hexValue) throws AddressException {
+		validateHexAddress(hexValue, null);
 	}
 
-	public static void validate(String hexValue, AddressType expectedType) throws AddressException {
+	public static void validateHexAddress(String hexValue, AddressType expectedType) throws AddressException {
 		if (!Numeric.containsHexPrefix(hexValue)) {
 			throw new AddressException(AddressException.INVALID_PREFIX);
 		}

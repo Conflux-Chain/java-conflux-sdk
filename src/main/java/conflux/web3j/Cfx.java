@@ -41,6 +41,10 @@ public interface Cfx extends Closeable, CfxPubSub {
 	}
 
 	BigInteger getNetworkId();
+
+	int getIntNetworkId();
+
+	BigInteger getChainId();
 	
 	Request<BigInteger, BigIntResponse> getGasPrice();
 	
