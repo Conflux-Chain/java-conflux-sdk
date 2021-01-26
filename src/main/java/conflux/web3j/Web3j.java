@@ -12,6 +12,7 @@ import conflux.web3j.response.*;
 import conflux.web3j.response.events.EpochNotification;
 import conflux.web3j.response.events.LogNotification;
 import conflux.web3j.response.events.NewHeadsNotification;
+import conflux.web3j.types.Address;
 import io.reactivex.Flowable;
 import org.web3j.protocol.Web3jService;
 
@@ -28,7 +29,7 @@ class Web3j implements Cfx {
 	private Web3jService service;
 	private int retry;
 	private long intervalMillis;
-	private BigInteger chainId;
+	private BigInteger networkId;
 	
 	public Web3j(Web3jService service) {
 		this(service, 0, 0);
@@ -39,11 +40,11 @@ class Web3j implements Cfx {
 		this.retry = retry;
 		this.intervalMillis = intervalMillis;
 		Status status = this.getStatus().sendAndGet();
-		this.chainId = status.getChainId();
+		this.networkId = status.getChainId();
 	}
 
-	public BigInteger getChainId() {
-		return this.chainId;
+	public BigInteger getNetworkId() {
+		return this.networkId;
 	}
 
 	@Override
@@ -73,89 +74,89 @@ class Web3j implements Cfx {
 	}
 
 	@Override
-	public Request<BigInteger, BigIntResponse> getBalance(String address, Epoch... epoch) {
+	public Request<BigInteger, BigIntResponse> getBalance(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getBalance", BigIntResponse.class, address)
+			return new Request<>(this.service, "cfx_getBalance", BigIntResponse.class, address.getAddress())
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getBalance", BigIntResponse.class, address, epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getBalance", BigIntResponse.class, address.getAddress(), epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
 	
 	@Override
-	public Request<Optional<String>, StringNullableResponse> getAdmin(String address, Epoch... epoch) {
+	public Request<Optional<String>, StringNullableResponse> getAdmin(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getAdmin", StringNullableResponse.class, address)
+			return new Request<>(this.service, "cfx_getAdmin", StringNullableResponse.class, address.getAddress())
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getAdmin", StringNullableResponse.class, address, epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getAdmin", StringNullableResponse.class, address.getAddress(), epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
 	
 	@Override
-	public Request<SponsorInfo, SponsorInfo.Response> getSponsorInfo(String address, Epoch... epoch) {
+	public Request<SponsorInfo, SponsorInfo.Response> getSponsorInfo(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getSponsorInfo", SponsorInfo.Response.class, address)
+			return new Request<>(this.service, "cfx_getSponsorInfo", SponsorInfo.Response.class, address.getAddress())
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getSponsorInfo", SponsorInfo.Response.class, address, epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getSponsorInfo", SponsorInfo.Response.class, address.getAddress(), epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
 	
 	@Override
-	public Request<BigInteger, BigIntResponse> getStakingBalance(String address, Epoch... epoch) {
+	public Request<BigInteger, BigIntResponse> getStakingBalance(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getStakingBalance", BigIntResponse.class, address)
+			return new Request<>(this.service, "cfx_getStakingBalance", BigIntResponse.class, address.getAddress())
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getStakingBalance", BigIntResponse.class, address, epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getStakingBalance", BigIntResponse.class, address.getAddress(), epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
 	
 	@Override
-	public Request<BigInteger, BigIntResponse> getCollateralForStorage(String address, Epoch... epoch) {
+	public Request<BigInteger, BigIntResponse> getCollateralForStorage(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getCollateralForStorage", BigIntResponse.class, address)
+			return new Request<>(this.service, "cfx_getCollateralForStorage", BigIntResponse.class, address.getAddress())
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getCollateralForStorage", BigIntResponse.class, address, epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getCollateralForStorage", BigIntResponse.class, address.getAddress(), epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
 
 	@Override
-	public Request<String, StringResponse> getCode(String address, Epoch... epoch) {
+	public Request<String, StringResponse> getCode(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getCode", StringResponse.class, address)
+			return new Request<>(this.service, "cfx_getCode", StringResponse.class, address.getAddress())
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getCode", StringResponse.class, address, epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getCode", StringResponse.class, address.getAddress(), epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
 	
 	@Override
-	public Request<Optional<String>, StringNullableResponse> getStorageAt(String address, String pos, Epoch... epoch) {
+	public Request<Optional<String>, StringNullableResponse> getStorageAt(Address address, String pos, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getStorageAt", StringNullableResponse.class, address, pos)
+			return new Request<>(this.service, "cfx_getStorageAt", StringNullableResponse.class, address.getAddress(), pos)
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getStorageAt", StringNullableResponse.class, address, pos, epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getStorageAt", StringNullableResponse.class, address.getAddress(), pos, epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
 	
 	@Override
-	public Request<Optional<StorageRoot>, StorageRoot.Response> getStorageRoot(String address, Epoch... epoch) {
+	public Request<Optional<StorageRoot>, StorageRoot.Response> getStorageRoot(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getStorageRoot", StorageRoot.Response.class, address)
+			return new Request<>(this.service, "cfx_getStorageRoot", StorageRoot.Response.class, address.getAddress())
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getStorageRoot", StorageRoot.Response.class, address, epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getStorageRoot", StorageRoot.Response.class, address.getAddress(), epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
@@ -190,6 +191,23 @@ class Web3j implements Cfx {
 				.withRetry(this.retry, this.intervalMillis);
 	}
 
+	@Override
+	public Request<BigInteger, BigIntResponse> getNonce(Address address, Epoch... epoch) {
+		if (epoch.length == 0) {
+			return new Request<>(this.service, "cfx_getNextNonce", BigIntResponse.class, address.getAddress())
+					.withRetry(this.retry, this.intervalMillis);
+		} else {
+			return new Request<>(this.service, "cfx_getNextNonce", BigIntResponse.class, address.getAddress(), epoch[0].getValue())
+					.withRetry(this.retry, this.intervalMillis);
+		}
+	}
+
+	/**
+	 * @deprecated
+	 * @param address
+	 * @param epoch
+	 * @return
+	 */
 	@Override
 	public Request<BigInteger, BigIntResponse> getNonce(String address, Epoch... epoch) {
 		if (epoch.length == 0) {
@@ -260,12 +278,12 @@ class Web3j implements Cfx {
 	}
 	
 	@Override
-	public Request<AccountInfo, AccountInfo.Response> getAccount(String address, Epoch... epoch) {
+	public Request<AccountInfo, AccountInfo.Response> getAccount(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getAccount", AccountInfo.Response.class, address)
+			return new Request<>(this.service, "cfx_getAccount", AccountInfo.Response.class, address.getAddress())
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getAccount", AccountInfo.Response.class, address, epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getAccount", AccountInfo.Response.class, address.getAddress(), epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
@@ -329,23 +347,23 @@ class Web3j implements Cfx {
 	* */
 
 	@Override
-	public Request<List<DepositInfo>, DepositInfo.ListResponse> getDepositList(String address, Epoch... epoch) {
+	public Request<List<DepositInfo>, DepositInfo.ListResponse> getDepositList(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getDepositList", DepositInfo.ListResponse.class, address)
+			return new Request<>(this.service, "cfx_getDepositList", DepositInfo.ListResponse.class, address.getAddress())
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getDepositList", DepositInfo.ListResponse.class, address, epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getDepositList", DepositInfo.ListResponse.class, address.getAddress(), epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
 
 	@Override
-	public Request<List<VoteStakeInfo>, VoteStakeInfo.ListResponse> getVoteList(String address, Epoch... epoch) {
+	public Request<List<VoteStakeInfo>, VoteStakeInfo.ListResponse> getVoteList(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getVoteList", VoteStakeInfo.ListResponse.class, address)
+			return new Request<>(this.service, "cfx_getVoteList", VoteStakeInfo.ListResponse.class, address.getAddress())
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getVoteList", VoteStakeInfo.ListResponse.class, address, epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getVoteList", VoteStakeInfo.ListResponse.class, address.getAddress(), epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}

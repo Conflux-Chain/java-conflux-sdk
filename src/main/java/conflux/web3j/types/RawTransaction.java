@@ -106,7 +106,7 @@ public class RawTransaction {
 		values.add(RlpString.create(this.gas));
 
 		if (this.to != null && !this.to.isEmpty()) {
-			String to = CfxAddress.normalizeHexAddress(this.to);
+			String to = Address.normalizeHexAddress(this.to);
 			values.add(RlpString.create(Numeric.hexStringToByteArray(to)));
 		} else {
 			values.add(RlpString.create(""));

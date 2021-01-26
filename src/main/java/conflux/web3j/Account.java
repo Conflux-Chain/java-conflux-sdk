@@ -22,20 +22,20 @@ import conflux.web3j.response.UsedGasAndCollateral;
 public class Account {
 	
 	private Cfx cfx;
-	private CfxAddress address;
+	private Address address;
 	private BigInteger nonce;
 	
 	private AccountManager am;
 	private ECKeyPair ecKeyPair;
 	
-	private Account(Cfx cfx, String address) throws Exception {
+	private Account(Cfx cfx, String address) throws AddressException {
 		this.cfx = cfx;
-		if (CfxAddress.haveNetworkPrefix(address)) {
-			this.address = new CfxAddress(address);
+		if (Address.haveNetworkPrefix(address)) {
+			this.address = new Address(address);
 		} else {
-			this.address = new CfxAddress(address, cfx.getChainId().intValue());
+			this.address = new Address(address, cfx.getNetworkId().intValue());
 		}
-		this.nonce = cfx.getNonce(this.address.getAddress()).sendAndGet();
+		this.nonce = cfx.getNonce(this.address).sendAndGet();
 	}
 	
 	public static Account unlock(Cfx cfx, AccountManager am, String address, String password) throws Exception {
@@ -53,7 +53,7 @@ public class Account {
 		return account;
 	}
 	
-	public static Account create(Cfx cfx, String privateKey) throws Exception {
+	public static Account create(Cfx cfx, String privateKey) throws AddressException {
 		Credentials credentials = Credentials.create(privateKey);
 		Account account = new Account(cfx, AddressType.User.normalize(credentials.getAddress()));
 		account.ecKeyPair = credentials.getEcKeyPair();
@@ -179,11 +179,11 @@ public class Account {
 	}
 	
 	public void waitForNonceUpdated() throws InterruptedException {
-		this.cfx.waitForNonce(this.getAddress(), this.nonce);
+		this.cfx.waitForNonce(this.address, this.nonce);
 	}
 	
 	public void waitForNonceUpdated(long intervalMillis) throws InterruptedException {
-		this.cfx.waitForNonce(this.getAddress(), this.nonce, intervalMillis);
+		this.cfx.waitForNonce(this.address, this.nonce, intervalMillis);
 	}
 	
 	public static class Option {

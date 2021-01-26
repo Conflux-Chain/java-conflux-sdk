@@ -5,18 +5,20 @@ import java.util.Optional;
 import org.web3j.utils.Numeric;
 
 public enum AddressType {
-	User('1', new AddressException("user address type required")),
-	Contract('8', new AddressException("contract address type required"));
+	Null("null", new AddressException("null address type required")),
+	Builtin("builtin", new AddressException("builtin address type required")),
+	User("user", new AddressException("user address type required")),
+	Contract("contract", new AddressException("contract address type required"));
 
-	private char value;
+	private String value;
 	private AddressException typeMismatchException;
 
-	private AddressType(char value, AddressException ae) {
+	private AddressType(String value, AddressException ae) {
 		this.value = value;
 		this.typeMismatchException = ae;
 	}
 
-	public char getValue() {
+	public String getValue() {
 		return this.value;
 	}
 
@@ -24,18 +26,51 @@ public enum AddressType {
 		return typeMismatchException;
 	}
 	
-	public String normalize(String address) {
-		return String.format("0x%s%s", this.value, Numeric.cleanHexPrefix(address).substring(1));
+	public String normalize(String hexAddress) {
+		return String.format("0x%s%s", this.value, Numeric.cleanHexPrefix(hexAddress).substring(1));
 	}
 
 	public static Optional<AddressType> parse(char ch) {
-		for (AddressType type : AddressType.values()) {
-			if (type.value == ch) {
-				return Optional.of(type);
-			}
+		switch (ch) {
+			case '0':
+				Optional.of(Builtin);
+			case '1':
+				Optional.of(User);
+			case '8':
+				Optional.of(Contract);
 		}
-
 		return Optional.empty();
 	}
 
+	private static final int HEX_LENGTH_WITH_PREFIX = 42;
+
+	public static void validate(String hexValue) throws AddressException {
+		validate(hexValue, null);
+	}
+
+	public static void validate(String hexValue, AddressType expectedType) throws AddressException {
+		if (!Numeric.containsHexPrefix(hexValue)) {
+			throw new AddressException(AddressException.INVALID_PREFIX);
+		}
+
+		if (hexValue.length() != HEX_LENGTH_WITH_PREFIX) {
+			throw new AddressException(AddressException.INVALID_LENGTH);
+		}
+
+		Optional<AddressType> type = AddressType.parse(hexValue.charAt(2));
+		if (!type.isPresent()) {
+			throw new AddressException(AddressException.INVALID_TYPE);
+		}
+
+		if (expectedType != null && !type.get().equals(expectedType)) {
+			throw expectedType.getTypeMismatchException();
+		}
+
+		for (int i = 2; i < HEX_LENGTH_WITH_PREFIX; i++) {
+			char ch = hexValue.charAt(i);
+			if (ch < '0' || (ch > '9' && ch < 'A') || (ch > 'Z' && ch < 'a') || ch > 'z') {
+				throw new AddressException(AddressException.INVALID_HEX);
+			}
+		}
+	}
 }
