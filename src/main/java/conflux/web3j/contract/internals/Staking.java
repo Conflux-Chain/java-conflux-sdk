@@ -2,7 +2,6 @@ package conflux.web3j.contract.internals;
 
 import java.math.BigInteger;
 
-//import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.generated.Uint256;
 
 import conflux.web3j.Account;
