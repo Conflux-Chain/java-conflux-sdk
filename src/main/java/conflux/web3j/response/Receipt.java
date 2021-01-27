@@ -18,7 +18,7 @@ public class Receipt {
 	private Address from;
 	private Address to;
 	private String gasUsed;
-	private String contractCreated;
+	private Address contractCreated;
 	private List<Log> logs;
 	private String logsBloom;
 	private String stateRoot;
@@ -90,15 +90,15 @@ public class Receipt {
 		this.gasUsed = gasUsed;
 	}
 	
-	public Optional<String> getContractCreated() {
-		if (this.contractCreated == null || this.contractCreated.isEmpty()) {
+	public Optional<Address> getContractCreated() {
+		if (this.contractCreated == null) {
 			return Optional.empty();
 		} else {
 			return Optional.of(this.contractCreated);
 		}
 	}
 	
-	public void setContractCreated(String contractCreated) {
+	public void setContractCreated(Address contractCreated) {
 		this.contractCreated = contractCreated;
 	}
 	

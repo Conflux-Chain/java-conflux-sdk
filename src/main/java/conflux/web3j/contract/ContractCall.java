@@ -86,8 +86,6 @@ public class ContractCall {
 	}
 
 	public <D, T extends Type<D>> D callAndGet(Class<T> returnType, String method, Type<?>... args) {
-		System.out.println(method);
-		System.out.println(args);
 		String rawData = this.call(method, args).sendAndGet();
 		return DecodeUtil.decode(rawData, returnType);
 	}

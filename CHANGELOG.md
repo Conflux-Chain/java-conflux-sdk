@@ -1,11 +1,11 @@
 ### 1.0.0
 
-1. Add a new address type: CfxAddress
-2. Add a new Interface `Conflux` which provide several new method use new CfxAddress
-3. Add a new Class ConfluxWeb3 which implement `Conflux` Interface   
-3. Account, AccountManager support CIP37 address 
-4. Account.getAddress() will return new CIP37 address
-
+1. Class Address support new CIP37 address
+2. Where ever need an address, you should pass an `Address` instance, String address will not work
+3. `getStatus` return a new field `networkId`
+4. `getSupplyInfo` return a new field `totalCirculating`
+5. `Address.validate` has been moved to `AddressType.validateHexAddress`
+6. ERC20Call, ERC20Executor, ERC777Call, ERC777Executor has been removed.
 
 
 ### 0.9.0

@@ -18,10 +18,10 @@ public class Address implements Type<String> {
     * */
     public Address(String address) throws AddressException {
         String hexAddress = Address.decode(address);
-        this.address = address;
         this.hexAddress = hexAddress;
         this.addressType = Address.addressType(hexAddress);
         this.netId = Address.decodeNetId(address.split(Address.DELIMITER)[0]);
+        this.address = encode(hexAddress, this.netId);
     }
 
     public Address(String hexAddress, int netId) throws AddressException {
@@ -40,6 +40,10 @@ public class Address implements Type<String> {
 
     public String getAddress() {
         return address;
+    }
+
+    public String getVerboseAddress() {
+        return encode(hexAddress, netId, true);
     }
 
     public int getNetworkId() {
@@ -81,10 +85,7 @@ public class Address implements Type<String> {
     public static final String NETWORK_TEST = "cfxtest";
     public static final String NETWORK_LOCAL_PREFIX = "net";
 
-    public static final byte[] ADDRESS_NULL = new byte[]{
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-    };
+    public static final byte[] ADDRESS_NULL = new byte[20];
 
     private static final byte VERSION_BYTE = 0x00;
     private static final int CHECKSUM_LEN = 8;

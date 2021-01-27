@@ -121,8 +121,8 @@ public class AccountManager {
 		return Files.list(Paths.get(this.dir))
 				.map(path -> this.parseAddressFromFilename(path.getFileName().toString()))
 				.filter(path -> !path.isEmpty())
-				.map(hexAddress -> new Address(hexAddress, this.networkId))
 				.sorted()
+				.map(hexAddress -> new Address(hexAddress, this.networkId))
 				.collect(Collectors.toList());
 	}
 	
@@ -296,7 +296,7 @@ public class AccountManager {
 	 * @param address account address to lock.
 	 * @return <code>true</code> if the specified account has already been unlocked and not expired. Otherwise, <code>false</code>.
 	 */
-	public boolean lock(Address address) throws Exception {
+	public boolean lock(Address address) {
 		UnlockedItem item = this.unlocked.remove(address.getHexAddress());
 		return item != null && !item.expired();
 	}

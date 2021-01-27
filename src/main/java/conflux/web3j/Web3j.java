@@ -220,7 +220,6 @@ class Web3j implements Cfx {
 	@Override
 	public Request<String, StringResponse> call(Call request, Epoch... epoch) {
 		if (epoch.length == 0) {
-			System.out.println(request);
 			return new Request<>(this.service, "cfx_call", StringResponse.class, request)
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
