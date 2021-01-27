@@ -42,13 +42,15 @@ public class AccountManager {
 	private String dir;
 	// unlocked accounts: map<address, item>
 	private ConcurrentHashMap<String, UnlockedItem> unlocked;
+
+	private int networkId;
 	
 	/**
 	 * Create a AccountManager instance with default directory.
 	 * @throws IOException if failed to create the default directory.
 	 */
-	public AccountManager() {
-		this(getDefaultDirectory());
+	public AccountManager(int networkId) {
+		this(getDefaultDirectory(), networkId);
 	}
 	
 	/**
@@ -56,7 +58,7 @@ public class AccountManager {
 	 * @param dir directory to store key files.
 	 * @throws IOException if failed to create directories.
 	 */
-	public AccountManager(String dir) {
+	public AccountManager(String dir, int networkId) {
 		try {
 			Files.createDirectories(Paths.get(dir));
 		} catch (IOException e) {
@@ -64,6 +66,7 @@ public class AccountManager {
 		}
 		
 		this.dir = dir;
+		this.networkId = networkId;
 		this.unlocked = new ConcurrentHashMap<String, UnlockedItem>();
 	}
 	
@@ -95,11 +98,11 @@ public class AccountManager {
 	 * @param password used to encrypt the key file.
 	 * @return address of new created account.
 	 */
-	public String create(String password) throws Exception {
+	public Address create(String password) throws Exception {
 		return this.createKeyFile(password, Keys.createEcKeyPair());
 	}
 	
-	private String createKeyFile(String password, ECKeyPair ecKeyPair) throws Exception {
+	private Address createKeyFile(String password, ECKeyPair ecKeyPair) throws Exception {
 		WalletFile walletFile = Wallet.createStandard(password, ecKeyPair);
 		walletFile.setAddress(AddressType.User.normalize(walletFile.getAddress()));
 
@@ -107,17 +110,18 @@ public class AccountManager {
 		File keyfile = new File(this.dir, filename);
 		objectMapper.writeValue(keyfile, walletFile);
 
-		return walletFile.getAddress();
+		return new Address(walletFile.getAddress(), this.networkId);
 	}
 	
 	/**
 	 * List all managed accounts.
 	 * @return list of addresses of all managed accounts.
 	 */
-	public List<String> list() throws IOException {
+	public List<Address> list() throws IOException {
 		return Files.list(Paths.get(this.dir))
 				.map(path -> this.parseAddressFromFilename(path.getFileName().toString()))
 				.filter(path -> !path.isEmpty())
+				.map(hexAddress -> new Address(hexAddress, this.networkId))
 				.sorted()
 				.collect(Collectors.toList());
 	}
@@ -132,19 +136,20 @@ public class AccountManager {
 			return "";
 		}
 		
-		String address = filename.substring(keyfilePrefix.length(), filename.length() - keyfileExt.length());
+		String hexAddress = filename.substring(keyfilePrefix.length(), filename.length() - keyfileExt.length());
 		
 		try {
-			AddressType.validateHexAddress(address, AddressType.User);
+			AddressType.validateHexAddress(hexAddress, AddressType.User);
 		} catch (Exception e) {
 			return "";
 		}
 		
-		return address;
+		return hexAddress;
 	}
 	
-	private Optional<String> imports(Credentials credentials, String password) throws Exception {
-		String address = AddressType.User.normalize(credentials.getAddress());
+	private Optional<Address> imports(Credentials credentials, String password) throws Exception {
+		String hexAddress = AddressType.User.normalize(credentials.getAddress());
+		Address address = new Address(hexAddress, this.networkId);
 		if (this.exists(address)) {
 			return Optional.empty();
 		}
@@ -161,7 +166,7 @@ public class AccountManager {
 	 * @param newPassword encrypt the new created/managed key file.
 	 * @return imported account address if not exists. Otherwise, return <code>Optional.empty()</code>.
 	 */
-	public Optional<String> imports(String keyFile, String password, String newPassword) throws Exception {
+	public Optional<Address> imports(String keyFile, String password, String newPassword) throws Exception {
 		Credentials importedCredentials = WalletUtils.loadCredentials(password, keyFile);
 		return this.imports(importedCredentials, newPassword);
 	}
@@ -172,7 +177,7 @@ public class AccountManager {
 	 * @param password encrypt the new created/managed key file.
 	 * @return imported account address if not exists. Otherwise, return <code>Optional.empty()</code>.
 	 */
-	public Optional<String> imports(String privateKey, String password) throws Exception {
+	public Optional<Address> imports(String privateKey, String password) throws Exception {
 		return this.imports(Credentials.create(privateKey), password);
 	}
 	
@@ -181,11 +186,10 @@ public class AccountManager {
 	 * @param address account address.
 	 * @return <code>true</code> if the specified account address is managed. Otherwise, <code>false</code>.
 	 */
-	public boolean exists(String address) throws Exception {
-		String finalAddress = Address.normalizeHexAddress(address);
+	public boolean exists(Address address) throws Exception {
 		return Files.list(Paths.get(this.dir))
 				.map(path -> this.parseAddressFromFilename(path.getFileName().toString()))
-				.anyMatch(path -> path.equalsIgnoreCase(finalAddress));
+				.anyMatch(path -> path.equalsIgnoreCase(address.getHexAddress()));
 	}
 	
 	/**
@@ -194,10 +198,10 @@ public class AccountManager {
 	 * @param address account address to delete.
 	 * @return <code>false</code> if the specified account not found. Otherwise, <code>true</code>.
 	 */
-	public boolean delete(String address) throws Exception {
-		String finalAddress = Address.normalizeHexAddress(address);
+	public boolean delete(Address address) throws Exception {
+		String hexAddress = address.getHexAddress();
 		List<Path> files = Files.list(Paths.get(this.dir))
-				.filter(path -> this.parseAddressFromFilename(path.getFileName().toString()).equalsIgnoreCase(finalAddress))
+				.filter(path -> this.parseAddressFromFilename(path.getFileName().toString()).equalsIgnoreCase(hexAddress))
 				.collect(Collectors.toList());
 		
 		if (files.isEmpty()) {
@@ -208,7 +212,7 @@ public class AccountManager {
 			Files.delete(file);
 		}
 		
-		this.unlocked.remove(address);
+		this.unlocked.remove(hexAddress);
 		
 		return true;
 	}
@@ -220,10 +224,9 @@ public class AccountManager {
 	 * @param newPassword password to encrypt the new key file.
 	 * @return <code>false</code> if the specified account not found. Otherwise, <code>true</code>.
 	 */
-	public boolean update(String address, String password, String newPassword) throws Exception {
-		String finalAddress = Address.normalizeHexAddress(address);
+	public boolean update(Address address, String password, String newPassword) throws Exception {
 		List<Path> files = Files.list(Paths.get(this.dir))
-				.filter(path -> this.parseAddressFromFilename(path.getFileName().toString()).equalsIgnoreCase(finalAddress))
+				.filter(path -> this.parseAddressFromFilename(path.getFileName().toString()).equalsIgnoreCase(address.getHexAddress()))
 				.collect(Collectors.toList());
 		
 		if (files.isEmpty()) {
@@ -243,9 +246,9 @@ public class AccountManager {
 	 * @param password to decrypt the original key file.
 	 * @return private key if account exists. Otherwise, <code>null</code>.
 	 */
-	public String exportPrivateKey(String address, String password) throws Exception {
+	public String exportPrivateKey(Address address, String password) throws Exception {
 		List<Path> files = Files.list(Paths.get(this.dir))
-				.filter(path -> this.parseAddressFromFilename(path.getFileName().toString()).equalsIgnoreCase(address))
+				.filter(path -> this.parseAddressFromFilename(path.getFileName().toString()).equalsIgnoreCase(address.getHexAddress()))
 				.collect(Collectors.toList());
 		
 		if (files.isEmpty()) {
@@ -263,10 +266,10 @@ public class AccountManager {
 	 * @param timeout a period of time to unlock the account. Empty timeout indicates unlock the account indefinitely.
 	 * @return <code>false</code> if the specified account not found. Otherwise, <code>true</code>.
 	 */
-	public boolean unlock(String address, String password, Duration... timeout) throws Exception {
-		String finalAddress = Address.normalizeHexAddress(address);
+	public boolean unlock(Address address, String password, Duration... timeout) throws Exception {
+		String hexAddress = address.getHexAddress();
 		List<Path> files = Files.list(Paths.get(this.dir))
-				.filter(path -> this.parseAddressFromFilename(path.getFileName().toString()).equalsIgnoreCase(finalAddress))
+				.filter(path -> this.parseAddressFromFilename(path.getFileName().toString()).equalsIgnoreCase(hexAddress))
 				.collect(Collectors.toList());
 		
 		if (files.isEmpty()) {
@@ -283,7 +286,7 @@ public class AccountManager {
 			item = new UnlockedItem(credentials.getEcKeyPair(), Optional.empty());
 		}
 		
-		this.unlocked.put(address, item);
+		this.unlocked.put(hexAddress, item);
 		
 		return true;
 	}
@@ -293,8 +296,8 @@ public class AccountManager {
 	 * @param address account address to lock.
 	 * @return <code>true</code> if the specified account has already been unlocked and not expired. Otherwise, <code>false</code>.
 	 */
-	public boolean lock(String address) throws Exception {
-		UnlockedItem item = this.unlocked.remove(Address.normalizeHexAddress(address));
+	public boolean lock(Address address) throws Exception {
+		UnlockedItem item = this.unlocked.remove(address.getHexAddress());
 		return item != null && !item.expired();
 	}
 	
@@ -306,12 +309,13 @@ public class AccountManager {
 	 * @return signed and RLP encoded transaction.
 	 * @exception IllegalArgumentException if account not found, or password not specified for locked account, or password expired for unlocked account.
 	 */
-	public String signTransaction(RawTransaction tx, String address, String... password) throws Exception {
-		ECKeyPair ecKeyPair = this.getEcKeyPair(Address.normalizeHexAddress(address), password);
+	public String signTransaction(RawTransaction tx, Address address, String... password) throws Exception {
+		ECKeyPair ecKeyPair = this.getEcKeyPair(address, password);
 		return tx.sign(ecKeyPair);
 	}
 	
-	private ECKeyPair getEcKeyPair(String address, String... password) throws IOException, CipherException {
+	private ECKeyPair getEcKeyPair(Address cfxAddress, String... password) throws IOException, CipherException {
+		String address = cfxAddress.getHexAddress();
 		UnlockedItem item = this.unlocked.get(address);
 		
 		if (password == null || password.length == 0 || password[0] == null || password[0].isEmpty()) {	
@@ -346,8 +350,8 @@ public class AccountManager {
 		}
 	}
 	
-	public String signMessage(byte[] message, boolean needToHash, String address, String... password) throws Exception {
-		ECKeyPair ecKeyPair = this.getEcKeyPair(Address.normalizeHexAddress(address), password);
+	public String signMessage(byte[] message, boolean needToHash, Address address, String... password) throws Exception {
+		ECKeyPair ecKeyPair = this.getEcKeyPair(address, password);
 		return signMessage(message, needToHash, ecKeyPair);
 	}
 	

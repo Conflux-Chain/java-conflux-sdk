@@ -2,31 +2,32 @@ package conflux.web3j.response;
 
 import java.math.BigInteger;
 
+import conflux.web3j.types.Address;
 import org.web3j.utils.Numeric;
 
 public class SponsorInfo {
 	
 	public static class Response extends CfxResponse<SponsorInfo> {}
 	
-    private String sponsorForGas;
-    private String sponsorForCollateral;
+    private Address sponsorForGas;
+    private Address sponsorForCollateral;
     private String sponsorGasBound;
     private String sponsorBalanceForGas;
     private String sponsorBalanceForCollateral;
     
-	public String getSponsorForGas() {
+	public Address getSponsorForGas() {
 		return sponsorForGas;
 	}
 	
-	public void setSponsorForGas(String sponsorForGas) {
+	public void setSponsorForGas(Address sponsorForGas) {
 		this.sponsorForGas = sponsorForGas;
 	}
 	
-	public String getSponsorForCollateral() {
+	public Address getSponsorForCollateral() {
 		return sponsorForCollateral;
 	}
 	
-	public void setSponsorForCollateral(String sponsorForCollateral) {
+	public void setSponsorForCollateral(Address sponsorForCollateral) {
 		this.sponsorForCollateral = sponsorForCollateral;
 	}
 	

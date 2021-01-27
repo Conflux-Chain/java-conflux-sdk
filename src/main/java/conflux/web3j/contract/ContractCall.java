@@ -10,6 +10,7 @@ import org.web3j.abi.datatypes.Type;
 
 import conflux.web3j.Cfx;
 import conflux.web3j.Request;
+import conflux.web3j.types.Address;
 import conflux.web3j.contract.abi.DecodeUtil;
 import conflux.web3j.request.Call;
 import conflux.web3j.request.Epoch;
@@ -23,12 +24,12 @@ public class ContractCall {
 	private Cfx cfx;
 	private Epoch epoch;
 	
-	public ContractCall(Cfx cfx, String contractAddress) {
+	public ContractCall(Cfx cfx, Address contractAddress) {
 		this.cfx = cfx;
 		this.call.setTo(contractAddress);
 	}
 	
-	public ContractCall buildFrom(String from) {
+	public ContractCall buildFrom(Address from) {
 		this.call.setFrom(from);
 		BigInteger nonce = this.epoch == null
 				? this.cfx.getNonce(from).sendAndGet()
@@ -85,10 +86,10 @@ public class ContractCall {
 	}
 
 	public <D, T extends Type<D>> D callAndGet(Class<T> returnType, String method, Type<?>... args) {
+		System.out.println(method);
+		System.out.println(args);
 		String rawData = this.call(method, args).sendAndGet();
 		return DecodeUtil.decode(rawData, returnType);
 	}
-
-
 
 }

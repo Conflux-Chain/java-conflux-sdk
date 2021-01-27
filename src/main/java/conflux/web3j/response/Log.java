@@ -4,13 +4,14 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
+import conflux.web3j.types.Address;
 import org.web3j.utils.Numeric;
 
 public class Log {
 	
 	public static class Response extends CfxListResponse<Log> {}
 	
-	private String address;
+	private Address address;
 	private List<String> topics;
 	private String data;
 	private String blockHash;
@@ -20,11 +21,11 @@ public class Log {
 	private String logIndex;
 	private String transactionLogIndex;
 	
-	public String getAddress() {
+	public Address getAddress() {
 		return address;
 	}
 
-	public void setAddress(String address) {
+	public void setAddress(Address address) {
 		this.address = address;
 	}
 

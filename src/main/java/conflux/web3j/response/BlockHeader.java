@@ -4,13 +4,14 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
+import conflux.web3j.types.Address;
 import org.web3j.utils.Numeric;
 
 public class BlockHeader {
 	private String hash;
 	private String parentHash;
 	private String height;
-	private String miner;
+	private Address miner;
 	private String deferredStateRoot;
 	private String deferredReceiptsRoot;
 	private String deferredLogsBloomHash;
@@ -49,11 +50,11 @@ public class BlockHeader {
 		this.height = height;
 	}
 	
-	public String getMiner() {
+	public Address getMiner() {
 		return miner;
 	}
 	
-	public void setMiner(String miner) {
+	public void setMiner(Address miner) {
 		this.miner = miner;
 	}
 	

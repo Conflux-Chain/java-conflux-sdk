@@ -2,6 +2,7 @@ package conflux.web3j.response;
 
 import java.math.BigInteger;
 
+import conflux.web3j.types.Address;
 import org.web3j.utils.Numeric;
 
 public class RewardInfo {
@@ -9,7 +10,7 @@ public class RewardInfo {
 	public static class Response extends CfxListResponse<RewardInfo> {}
 	
     private String blockHash;
-    private String author;
+    private Address author;
     private String totalReward;
     private String baseReward;
     private String txFee;
@@ -22,11 +23,11 @@ public class RewardInfo {
 		this.blockHash = blockHash;
 	}
     
-    public String getAuthor() {
+    public Address getAuthor() {
 		return author;
 	}
     
-    public void setAuthor(String author) {
+    public void setAuthor(Address author) {
 		this.author = author;
 	}
     

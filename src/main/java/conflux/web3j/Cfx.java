@@ -78,14 +78,6 @@ public interface Cfx extends Closeable, CfxPubSub {
 	
 	Request<BigInteger, BigIntResponse> getNonce(Address address, Epoch... epoch);
 
-	/**
-	 * @deprecated
-	 * @param address
-	 * @param epoch
-	 * @return
-	 */
-	Request<BigInteger, BigIntResponse> getNonce(String address, Epoch... epoch);
-	
 	Request<String, StringResponse> sendRawTransaction(String hexEncoded);
 	
 	Request<String, StringResponse> call(Call request, Epoch... epoch);

@@ -2,10 +2,11 @@ package conflux.web3j.contract.internals;
 
 import java.math.BigInteger;
 
-import org.web3j.abi.datatypes.Address;
+//import org.web3j.abi.datatypes.Address;
 import org.web3j.abi.datatypes.generated.Uint256;
 
 import conflux.web3j.Account;
+import conflux.web3j.types.Address;
 import conflux.web3j.Cfx;
 import conflux.web3j.RpcException;
 import conflux.web3j.contract.ContractCall;
@@ -13,41 +14,44 @@ import conflux.web3j.contract.ContractCall;
 public class Staking extends ContractCall {
     private final static String contract = "0x0888000000000000000000000000000000000002";
     private Account account;
+    private conflux.web3j.types.Address contractAddress;
 
-    public Staking(Account account) {
-        super(account.getCfx(), Staking.contract);
+    public Staking(Account account, int networkId) {
+        super(account.getCfx(), new Address(Staking.contract, networkId));
         this.account = account;
+        this.contractAddress = new Address(Staking.contract, networkId);
     }
 
     public Staking(Cfx cfx) {
-        super(cfx, Staking.contract);
+        super(cfx, new Address(Staking.contract, cfx.getIntNetworkId()));
+        this.contractAddress = new Address(Staking.contract, cfx.getIntNetworkId());
     }
 
     public void setAccount(Account account) {
         this.account = account;
     }
 
-    public BigInteger getStakingBalance(String user) throws RpcException {
-        return this.callAndGet(Uint256.class, "getStakingBalance", new Address(user));
+    public BigInteger getStakingBalance(Address user) throws RpcException {
+        return this.callAndGet(Uint256.class, "getStakingBalance", user.getABIAddress());
     }
 
-    public BigInteger getLockedStakingBalance(String user, BigInteger blockNumber) throws RpcException {
-        return this.callAndGet(Uint256.class,"getLockedStakingBalance", new Address(user), new Uint256(blockNumber));
+    public BigInteger getLockedStakingBalance(Address user, BigInteger blockNumber) throws RpcException {
+        return this.callAndGet(Uint256.class,"getLockedStakingBalance", user.getABIAddress(), new Uint256(blockNumber));
     }
 
-    public BigInteger getVotePower(String user, BigInteger blockNumber) throws RpcException {
-        return this.callAndGet(Uint256.class, "getVotePower", new Address(user), new Uint256(blockNumber));
+    public BigInteger getVotePower(Address user, BigInteger blockNumber) throws RpcException {
+        return this.callAndGet(Uint256.class, "getVotePower", user.getABIAddress(), new Uint256(blockNumber));
     }
 
     public String deposit(Account.Option option, BigInteger amount) throws Exception {
-        return account.call(option, contract, "deposit", new Uint256(amount));
+        return account.call(option, this.contractAddress, "deposit", new Uint256(amount));
     }
 
     public String voteLock(Account.Option option, BigInteger amount, BigInteger unlockBlockNumber) throws Exception {
-        return account.call(option, contract, "voteLock", new Uint256(amount), new Uint256(unlockBlockNumber));
+        return account.call(option, this.contractAddress, "voteLock", new Uint256(amount), new Uint256(unlockBlockNumber));
     }
 
     public String withdraw(Account.Option option, BigInteger amount) throws Exception {
-        return account.call(option, contract, "withdraw", new Uint256(amount));
+        return account.call(option, this.contractAddress, "withdraw", new Uint256(amount));
     }
 }

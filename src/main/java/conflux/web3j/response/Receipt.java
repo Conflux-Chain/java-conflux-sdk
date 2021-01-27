@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
+import conflux.web3j.types.Address;
 import org.web3j.utils.Numeric;
 
 public class Receipt {
@@ -14,8 +15,8 @@ public class Receipt {
 	private String index;
 	private String blockHash;
 	private String epochNumber;
-	private String from;
-	private String to;
+	private Address from;
+	private Address to;
 	private String gasUsed;
 	private String contractCreated;
 	private List<Log> logs;
@@ -61,23 +62,23 @@ public class Receipt {
 		this.epochNumber = epochNumber;
 	}
 	
-	public String getFrom() {
+	public Address getFrom() {
 		return from;
 	}
 	
-	public void setFrom(String from) {
+	public void setFrom(Address from) {
 		this.from = from;
 	}
 	
-	public Optional<String> getTo() {
-		if (this.to == null || this.to.isEmpty()) {
+	public Optional<Address> getTo() {
+		if (this.to == null) {
 			return Optional.empty();
 		} else {
 			return Optional.of(this.to);
 		}
 	}
 	
-	public void setTo(String to) {
+	public void setTo(Address to) {
 		this.to = to;
 	}
 	

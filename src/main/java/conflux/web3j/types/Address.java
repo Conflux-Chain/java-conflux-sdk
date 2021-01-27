@@ -54,9 +54,14 @@ public class Address implements Type<String> {
         return hexAddress;
     }
 
+    public org.web3j.abi.datatypes.Address getABIAddress() {
+        return new org.web3j.abi.datatypes.Address(this.hexAddress);
+    }
+
     public String toString() {
-        String formatStr = "{netId = %d, hexAddress = %s, address = %s}";
-        return String.format(formatStr, this.netId, this.hexAddress, this.address);
+//        String formatStr = "{netId = %d, hexAddress = %s, address = %s}";
+//        return String.format(formatStr, this.netId, this.hexAddress, this.address);
+        return this.address;
     }
 
     public String getValue() {
@@ -76,7 +81,10 @@ public class Address implements Type<String> {
     public static final String NETWORK_TEST = "cfxtest";
     public static final String NETWORK_LOCAL_PREFIX = "net";
 
-    public static final byte[] ADDRESS_NULL = "0x0000000000000000000000000000000000000000".getBytes();
+    public static final byte[] ADDRESS_NULL = new byte[]{
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+    };
 
     private static final byte VERSION_BYTE = 0x00;
     private static final int CHECKSUM_LEN = 8;
@@ -157,10 +165,10 @@ public class Address implements Type<String> {
 
     public static boolean haveNetworkPrefix(String cfxAddressStr) {
         cfxAddressStr = cfxAddressStr.toLowerCase();
-        return cfxAddressStr != null && (cfxAddressStr.startsWith(NETWORK_MAIN) || cfxAddressStr.startsWith(NETWORK_TEST) || cfxAddressStr.startsWith(NETWORK_LOCAL_PREFIX));
+        return cfxAddressStr.startsWith(NETWORK_MAIN) || cfxAddressStr.startsWith(NETWORK_TEST) || cfxAddressStr.startsWith(NETWORK_LOCAL_PREFIX);
     }
 
-    public static String normalizeBase32Address(String address, int netId) throws Exception {
+    public static String normalizeBase32Address(String address, int netId) throws AddressException {
         if(isValid(address)) {
             return address;
         }

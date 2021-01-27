@@ -211,23 +211,6 @@ class Web3j implements Cfx {
 		}
 	}
 
-	/**
-	 * @deprecated
-	 * @param address
-	 * @param epoch
-	 * @return
-	 */
-	@Override
-	public Request<BigInteger, BigIntResponse> getNonce(String address, Epoch... epoch) {
-		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getNextNonce", BigIntResponse.class, address)
-					.withRetry(this.retry, this.intervalMillis);
-		} else {
-			return new Request<>(this.service, "cfx_getNextNonce", BigIntResponse.class, address, epoch[0].getValue())
-					.withRetry(this.retry, this.intervalMillis);
-		}
-	}
-
 	@Override
 	public Request<String, StringResponse> sendRawTransaction(String hexEncoded) {
 		return new Request<>(this.service, "cfx_sendRawTransaction", StringResponse.class, hexEncoded)
@@ -237,6 +220,7 @@ class Web3j implements Cfx {
 	@Override
 	public Request<String, StringResponse> call(Call request, Epoch... epoch) {
 		if (epoch.length == 0) {
+			System.out.println(request);
 			return new Request<>(this.service, "cfx_call", StringResponse.class, request)
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
