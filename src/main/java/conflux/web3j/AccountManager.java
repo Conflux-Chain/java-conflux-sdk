@@ -47,18 +47,20 @@ public class AccountManager {
 	
 	/**
 	 * Create a AccountManager instance with default directory.
-	 * @throws IOException if failed to create the default directory.
+	 * @param networkId networkId
+	 * @throws Exception if failed to create directories.
 	 */
-	public AccountManager(int networkId) {
+	public AccountManager(int networkId) throws Exception {
 		this(getDefaultDirectory(), networkId);
 	}
 	
 	/**
 	 * Create a AccountManager instance with specified directory.
 	 * @param dir directory to store key files.
-	 * @throws IOException if failed to create directories.
+	 * @param networkId networkId
+	 * @throws Exception if failed to create directories.
 	 */
-	public AccountManager(String dir, int networkId) {
+	public AccountManager(String dir, int networkId) throws Exception {
 		try {
 			Files.createDirectories(Paths.get(dir));
 		} catch (IOException e) {
@@ -72,6 +74,7 @@ public class AccountManager {
 	
 	/**
 	 * Get the directory to store key files.
+	 * @return directory path.
 	 */
 	public String getDirectory() {
 		return this.dir;
@@ -97,6 +100,7 @@ public class AccountManager {
 	 * Create a new account with specified password.
 	 * @param password used to encrypt the key file.
 	 * @return address of new created account.
+	 * @throws Exception if failed to create file
 	 */
 	public Address create(String password) throws Exception {
 		return this.createKeyFile(password, Keys.createEcKeyPair());
@@ -116,6 +120,7 @@ public class AccountManager {
 	/**
 	 * List all managed accounts.
 	 * @return list of addresses of all managed accounts.
+	 * @throws IOException if read files failed
 	 */
 	public List<Address> list() throws IOException {
 		return Files.list(Paths.get(this.dir))
@@ -165,6 +170,7 @@ public class AccountManager {
 	 * @param password decrypt the external key file.
 	 * @param newPassword encrypt the new created/managed key file.
 	 * @return imported account address if not exists. Otherwise, return <code>Optional.empty()</code>.
+	 * @throws Exception if load keyFile failed
 	 */
 	public Optional<Address> imports(String keyFile, String password, String newPassword) throws Exception {
 		Credentials importedCredentials = WalletUtils.loadCredentials(password, keyFile);
@@ -176,6 +182,7 @@ public class AccountManager {
 	 * @param privateKey private key to import.
 	 * @param password encrypt the new created/managed key file.
 	 * @return imported account address if not exists. Otherwise, return <code>Optional.empty()</code>.
+	 * @throws Exception if create file failed
 	 */
 	public Optional<Address> imports(String privateKey, String password) throws Exception {
 		return this.imports(Credentials.create(privateKey), password);
@@ -185,6 +192,7 @@ public class AccountManager {
 	 * Check whether the specified account address is managed.
 	 * @param address account address.
 	 * @return <code>true</code> if the specified account address is managed. Otherwise, <code>false</code>.
+	 * @throws Exception if read file failed
 	 */
 	public boolean exists(Address address) throws Exception {
 		return Files.list(Paths.get(this.dir))
@@ -197,6 +205,7 @@ public class AccountManager {
 	 * It will also clear the record if the specified account is unlocked.
 	 * @param address account address to delete.
 	 * @return <code>false</code> if the specified account not found. Otherwise, <code>true</code>.
+	 * @throws Exception  if file delete failed
 	 */
 	public boolean delete(Address address) throws Exception {
 		String hexAddress = address.getHexAddress();
@@ -223,6 +232,7 @@ public class AccountManager {
 	 * @param password password to decrypt the original key file.
 	 * @param newPassword password to encrypt the new key file.
 	 * @return <code>false</code> if the specified account not found. Otherwise, <code>true</code>.
+	 * @throws Exception if file read failed
 	 */
 	public boolean update(Address address, String password, String newPassword) throws Exception {
 		List<Path> files = Files.list(Paths.get(this.dir))
@@ -245,6 +255,7 @@ public class AccountManager {
 	 * @param address account address to export private key.
 	 * @param password to decrypt the original key file.
 	 * @return private key if account exists. Otherwise, <code>null</code>.
+	 * @throws Exception if file read failed
 	 */
 	public String exportPrivateKey(Address address, String password) throws Exception {
 		List<Path> files = Files.list(Paths.get(this.dir))
@@ -265,6 +276,7 @@ public class AccountManager {
 	 * @param password decrypt the key file.
 	 * @param timeout a period of time to unlock the account. Empty timeout indicates unlock the account indefinitely.
 	 * @return <code>false</code> if the specified account not found. Otherwise, <code>true</code>.
+	 * @throws Exception if file read failed
 	 */
 	public boolean unlock(Address address, String password, Duration... timeout) throws Exception {
 		String hexAddress = address.getHexAddress();
@@ -308,6 +320,7 @@ public class AccountManager {
 	 * @param password decrypt the key file. If empty, the account should be unlocked already.
 	 * @return signed and RLP encoded transaction.
 	 * @exception IllegalArgumentException if account not found, or password not specified for locked account, or password expired for unlocked account.
+	 * @throws Exception if get keypair failed
 	 */
 	public String signTransaction(RawTransaction tx, Address address, String... password) throws Exception {
 		ECKeyPair ecKeyPair = this.getEcKeyPair(address, password);
