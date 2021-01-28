@@ -58,15 +58,10 @@ public class AccountManager {
 	 * Create a AccountManager instance with specified directory.
 	 * @param dir directory to store key files.
 	 * @param networkId networkId
-	 * @throws Exception if failed to create directories.
+	 * @throws IOException if failed to create directories.
 	 */
-	public AccountManager(String dir, int networkId) throws Exception {
-		try {
-			Files.createDirectories(Paths.get(dir));
-		} catch (IOException e) {
-			throw new IllegalArgumentException(e);
-		}
-		
+	public AccountManager(String dir, int networkId) throws IOException {
+		Files.createDirectories(Paths.get(dir));
 		this.dir = dir;
 		this.networkId = networkId;
 		this.unlocked = new ConcurrentHashMap<String, UnlockedItem>();

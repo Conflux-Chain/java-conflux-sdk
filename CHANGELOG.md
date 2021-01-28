@@ -6,6 +6,7 @@
 4. `getSupplyInfo` return a new field `totalCirculating`
 5. `Address.validate` has been moved to `AddressType.validateHexAddress`
 6. ERC20Call, ERC20Executor, ERC777Call, ERC777Executor has been removed, you can use the new ERC20, ERC777
+7. AccountManager's constructor add a new parameter `networkId`
 
 
 ### 0.9.0
