@@ -5,6 +5,7 @@ The Conflux Java SDK allows any Java client to interact with a local or remote C
 ## Docs
 
 * [API](https://conflux-chain.github.io/java-conflux-sdk/index.html)
+* [SDK updates for CIP37](./docs/cfx-address.md)
 * [changelog](./CHANGELOG.md)
 
 ## Conflux Address
@@ -43,7 +44,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         String privateKey = "0xxxxxx";
         // Initialize a accountManager
-        AccountManager am = new AccountManager();
+        AccountManager am = new AccountManager(testNetId);
         // import private key
         am.imports(privateKey, "123456");
         // import a keystore file

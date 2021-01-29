@@ -1,5 +1,6 @@
 package conflux.web3j.types;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.io.BaseEncoding;
 import com.google.common.primitives.Bytes;
 import conflux.web3j.crypto.ConfluxBase32;
@@ -38,6 +39,7 @@ public class Address implements Type<String> {
         this.hexAddress = "0x" + BaseEncoding.base16().encode(addressBuffer).toLowerCase();
     }
 
+    @JsonValue
     public String getAddress() {
         return address;
     }

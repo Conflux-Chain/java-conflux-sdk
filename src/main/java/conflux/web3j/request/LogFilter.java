@@ -11,7 +11,7 @@ public class LogFilter {
 	private Epoch fromEpoch;
 	private Epoch toEpoch;
 	private List<String> blockHashes;
-	private List<String> address;
+	private List<Address> address;
 	private List<List<String>> topics;
 	private Long limit;
 	
@@ -39,12 +39,12 @@ public class LogFilter {
 		this.blockHashes = blockHashes;
 	}
 	
-	public List<String> getAddress() {
+	public List<Address> getAddress() {
 		return address;
 	}
 	
 	public void setAddress(List<Address> address) {
-		this.address = address.stream().map(a -> a.getAddress()).collect(Collectors.toList());
+		this.address = address;
 	}
 
 	public List<List<String>> getTopics() {
