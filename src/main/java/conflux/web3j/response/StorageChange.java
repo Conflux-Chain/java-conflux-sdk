@@ -1,5 +1,6 @@
 package conflux.web3j.response;
 
+import conflux.web3j.types.Address;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
@@ -7,14 +8,14 @@ import java.math.BigInteger;
 public class StorageChange {
 //    public static class Response extends CfxResponse<StorageChange> {}
 
-    private String address;
+    private Address address;
     private String collaterals;
 
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 

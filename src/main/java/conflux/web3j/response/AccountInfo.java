@@ -2,6 +2,7 @@ package conflux.web3j.response;
 
 import java.math.BigInteger;
 
+import conflux.web3j.types.Address;
 import org.web3j.utils.Numeric;
 
 public class AccountInfo {
@@ -14,7 +15,7 @@ public class AccountInfo {
     private String stakingBalance;
     private String collateralForStorage;
     private String accumulatedInterestReturn;
-    private String admin;
+    private Address admin;
     
 	public BigInteger getBalance() {
 		return Numeric.decodeQuantity(this.balance);
@@ -64,12 +65,11 @@ public class AccountInfo {
 		this.accumulatedInterestReturn = accumulatedInterestReturn;
 	}
 	
-	public String getAdmin() {
+	public Address getAdmin() {
 		return admin;
 	}
 	
-	public void setAdmin(String admin) {
+	public void setAdmin(Address admin) {
 		this.admin = admin;
 	}
-
 }

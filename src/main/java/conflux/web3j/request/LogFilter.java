@@ -2,7 +2,9 @@ package conflux.web3j.request;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import conflux.web3j.types.Address;
 import org.web3j.utils.Numeric;
 
 public class LogFilter {
@@ -41,10 +43,10 @@ public class LogFilter {
 		return address;
 	}
 	
-	public void setAddress(List<String> address) {
-		this.address = address;
+	public void setAddress(List<Address> address) {
+		this.address = address.stream().map(a -> a.getAddress()).collect(Collectors.toList());
 	}
-	
+
 	public List<List<String>> getTopics() {
 		return topics;
 	}

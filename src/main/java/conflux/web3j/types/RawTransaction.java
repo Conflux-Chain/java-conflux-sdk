@@ -40,14 +40,14 @@ public class RawTransaction {
 	private BigInteger nonce;
 	private BigInteger gasPrice;
 	private BigInteger gas;
-	private String to;
+	private Address to;
 	private BigInteger value;
 	private BigInteger storageLimit;
 	private BigInteger epochHeight;
 	private BigInteger chainId;
 	private String data;
 	
-	public static RawTransaction create(BigInteger nonce, BigInteger gas, String to, BigInteger value, BigInteger storageLimit, BigInteger epochHeight, String data) {
+	public static RawTransaction create(BigInteger nonce, BigInteger gas, Address to, BigInteger value, BigInteger storageLimit, BigInteger epochHeight, String data) {
 		RawTransaction tx = new RawTransaction();
 		
 		tx.nonce = nonce;
@@ -63,19 +63,19 @@ public class RawTransaction {
 		return tx;
 	}
 	
-	public static RawTransaction transfer(BigInteger nonce, String to, BigInteger value, BigInteger epochHeight) {
+	public static RawTransaction transfer(BigInteger nonce, Address to, BigInteger value, BigInteger epochHeight) {
 		return create(nonce, CfxUnit.DEFAULT_GAS_LIMIT, to, value, BigInteger.ZERO, epochHeight, null);
 	}
 	
 	public static RawTransaction deploy(BigInteger nonce, BigInteger gas, BigInteger storageLimit, BigInteger epochHeight, String bytecodes) {
-		return create(nonce, gas, "", BigInteger.ZERO, storageLimit, epochHeight, bytecodes);
+		return create(nonce, gas, null, BigInteger.ZERO, storageLimit, epochHeight, bytecodes);
 	}
 	
 	public static RawTransaction deploy(BigInteger nonce, BigInteger gas, BigInteger value, BigInteger storageLimit, BigInteger epochHeight, String bytecodes) {
-		return create(nonce, gas, "", value, storageLimit, epochHeight, bytecodes);
+		return create(nonce, gas, null, value, storageLimit, epochHeight, bytecodes);
 	}
 	
-	public static RawTransaction call(BigInteger nonce, BigInteger gas, String to, BigInteger storageLimit, BigInteger epochHeight, String data) {
+	public static RawTransaction call(BigInteger nonce, BigInteger gas, Address to, BigInteger storageLimit, BigInteger epochHeight, String data) {
 		return create(nonce, gas, to, BigInteger.ZERO, storageLimit, epochHeight, data);
 	}
 	
@@ -105,8 +105,8 @@ public class RawTransaction {
 		values.add(RlpString.create(this.gasPrice));
 		values.add(RlpString.create(this.gas));
 
-		if (this.to != null && !this.to.isEmpty()) {
-			values.add(RlpString.create(Numeric.hexStringToByteArray(this.to)));
+		if (this.to != null) {
+			values.add(RlpString.create(Numeric.hexStringToByteArray(this.to.getHexAddress())));
 		} else {
 			values.add(RlpString.create(""));
 		}
@@ -144,11 +144,11 @@ public class RawTransaction {
 		this.gas = gas;
 	}
 	
-	public String getTo() {
+	public Address getTo() {
 		return to;
 	}
 	
-	public void setTo(String to) {
+	public void setTo(Address to) {
 		this.to = to;
 	}
 	

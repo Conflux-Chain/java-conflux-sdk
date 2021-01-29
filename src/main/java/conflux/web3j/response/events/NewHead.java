@@ -2,6 +2,8 @@ package conflux.web3j.response.events;
 
 import java.util.List;
 import java.math.BigInteger;
+
+import conflux.web3j.types.Address;
 import org.web3j.utils.Numeric;
 
 public class NewHead {
@@ -15,7 +17,7 @@ public class NewHead {
     private String gasLimit;
     private String hash;
     private String height;
-    private String miner;
+    private Address miner;
     private String nonce;
     private String parentHash;
     private String powQuality;
@@ -61,7 +63,7 @@ public class NewHead {
         return hash;
     }
 
-    public String getMiner() {
+    public Address getMiner() {
         return miner;
     }
 

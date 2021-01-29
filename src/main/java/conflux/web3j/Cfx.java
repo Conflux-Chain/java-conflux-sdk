@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import conflux.web3j.response.*;
+import conflux.web3j.types.Address;
 import org.web3j.protocol.Web3jService;
 import org.web3j.protocol.core.Response;
 import org.web3j.protocol.http.HttpService;
@@ -38,26 +39,32 @@ public interface Cfx extends Closeable, CfxPubSub {
 	static Cfx create(Web3jService service, int retry, long intervalMillis) {
 		return new Web3j(service, retry, intervalMillis);
 	}
+
+	BigInteger getNetworkId();
+
+	int getIntNetworkId();
+
+	BigInteger getChainId();
 	
 	Request<BigInteger, BigIntResponse> getGasPrice();
 	
 	Request<BigInteger, BigIntResponse> getEpochNumber(Epoch... epoch);
 	
-	Request<BigInteger, BigIntResponse> getBalance(String address, Epoch... epoch);
+	Request<BigInteger, BigIntResponse> getBalance(Address address, Epoch... epoch);
 	
-	Request<Optional<String>, StringNullableResponse> getAdmin(String address, Epoch... epoch);
+	Request<Optional<String>, StringNullableResponse> getAdmin(Address address, Epoch... epoch);
 	
-	Request<SponsorInfo, SponsorInfo.Response> getSponsorInfo(String address, Epoch... epoch);
+	Request<SponsorInfo, SponsorInfo.Response> getSponsorInfo(Address address, Epoch... epoch);
 	
-	Request<BigInteger, BigIntResponse> getStakingBalance(String address, Epoch... epoch);
+	Request<BigInteger, BigIntResponse> getStakingBalance(Address address, Epoch... epoch);
 	
-	Request<BigInteger, BigIntResponse> getCollateralForStorage(String address, Epoch... epoch);
+	Request<BigInteger, BigIntResponse> getCollateralForStorage(Address address, Epoch... epoch);
 	
-	Request<String, StringResponse> getCode(String address, Epoch... epoch);
+	Request<String, StringResponse> getCode(Address address, Epoch... epoch);
 	
-	Request<Optional<String>, StringNullableResponse> getStorageAt(String address, String pos, Epoch... epoch);
+	Request<Optional<String>, StringNullableResponse> getStorageAt(Address address, String pos, Epoch... epoch);
 	
-	Request<Optional<StorageRoot>, StorageRoot.Response> getStorageRoot(String address, Epoch... epoch);
+	Request<Optional<StorageRoot>, StorageRoot.Response> getStorageRoot(Address address, Epoch... epoch);
 	
 	Request<Optional<BlockSummary>, BlockSummary.Response> getBlockSummaryByHash(String blockHash);
 	
@@ -69,8 +76,8 @@ public interface Cfx extends Closeable, CfxPubSub {
 	
 	Request<String, StringResponse> getBestBlockHash();
 	
-	Request<BigInteger, BigIntResponse> getNonce(String address, Epoch... epoch);
-	
+	Request<BigInteger, BigIntResponse> getNonce(Address address, Epoch... epoch);
+
 	Request<String, StringResponse> sendRawTransaction(String hexEncoded);
 	
 	Request<String, StringResponse> call(Call request, Epoch... epoch);
@@ -87,13 +94,14 @@ public interface Cfx extends Closeable, CfxPubSub {
 	
 	Request<Optional<Receipt>, Receipt.Response> getTransactionReceipt(String txHash);
 	
-	Request<AccountInfo, AccountInfo.Response> getAccount(String address, Epoch... epoch);
+	Request<AccountInfo, AccountInfo.Response> getAccount(Address address, Epoch... epoch);
 	
 	Request<BigInteger, BigIntResponse> getInterestRate(Epoch... epoch);
 	
 	Request<BigInteger, BigIntResponse> getAccumulateInterestRate(Epoch... epoch);
 	
 	Request<Optional<BigInteger>, BigIntNullableResponse> getConfirmationRisk(String blockHash);
+
 	Request<BigDecimal, BlockRevertRateResponse> getBlockRevertRate(String blockHash);
 	
 	Request<Status, Status.Response> getStatus();
@@ -102,9 +110,9 @@ public interface Cfx extends Closeable, CfxPubSub {
 	
 	Request<String, StringResponse> getClientVersion();
 
-	Request<List<DepositInfo>, DepositInfo.ListResponse> getDepositList(String address, Epoch... epoch);
+	Request<List<DepositInfo>, DepositInfo.ListResponse> getDepositList(Address address, Epoch... epoch);
 
-	Request<List<VoteStakeInfo>, VoteStakeInfo.ListResponse> getVoteList(String address, Epoch... epoch);
+	Request<List<VoteStakeInfo>, VoteStakeInfo.ListResponse> getVoteList(Address address, Epoch... epoch);
 
 	Request<SupplyInfo, SupplyInfo.Response> getSupplyInfo(Epoch... epoch);
 
@@ -125,11 +133,11 @@ public interface Cfx extends Closeable, CfxPubSub {
 		return receipt.get();
 	}
 	
-	default void waitForNonce(String address, BigInteger nonceUntil) throws InterruptedException {
+	default void waitForNonce(Address address, BigInteger nonceUntil) throws InterruptedException {
 		this.waitForNonce(address, nonceUntil, 1000);
 	}
 	
-	default void waitForNonce(String address, BigInteger nonceUntil, long intervalMillis) throws InterruptedException {
+	default void waitForNonce(Address address, BigInteger nonceUntil, long intervalMillis) throws InterruptedException {
 		while (this.getNonce(address).sendAndGet().compareTo(nonceUntil) < 0) {
 			Thread.sleep(intervalMillis);
 		}
@@ -144,3 +152,5 @@ public interface Cfx extends Closeable, CfxPubSub {
 	}
 	
 }
+
+

@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 
+import conflux.web3j.types.*;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
@@ -17,48 +18,42 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import conflux.web3j.request.Call;
 import conflux.web3j.response.UsedGasAndCollateral;
-import conflux.web3j.types.AddressType;
-import conflux.web3j.types.RawTransaction;
-import conflux.web3j.types.SendTransactionError;
-import conflux.web3j.types.SendTransactionResult;
-import conflux.web3j.types.TransactionBuilder;
 
 public class Account {
 	
 	private Cfx cfx;
-	private String address;
+	private Address address;
 	private BigInteger nonce;
 	
 	private AccountManager am;
 	private ECKeyPair ecKeyPair;
 	
-	private Account(Cfx cfx, String address) {
+	private Account(Cfx cfx, Address address) {
 		this.cfx = cfx;
 		this.address = address;
-		this.nonce = cfx.getNonce(address).sendAndGet();
+		this.nonce = cfx.getNonce(this.address).sendAndGet();
 	}
 	
-	public static Account unlock(Cfx cfx, AccountManager am, String address, String password) throws Exception {
+	public static Account unlock(Cfx cfx, AccountManager am, Address address, String password) throws Exception {
 		return unlock(cfx, am, address, password, Duration.ZERO);
 	}
 	
-	public static Account unlock(Cfx cfx, AccountManager am, String address, String password, Duration unlockTimeout) throws Exception {
+	public static Account unlock(Cfx cfx, AccountManager am, Address address, String password, Duration unlockTimeout) throws Exception {
 		if (!am.unlock(address, password, unlockTimeout)) {
 			throw new Exception("account not found in keystore");
 		}
 		
 		Account account = new Account(cfx, address);
 		account.am = am;
-		
 		return account;
 	}
 	
-	public static Account create(Cfx cfx, String privateKey) {
+	public static Account create(Cfx cfx, String privateKey) throws AddressException {
 		Credentials credentials = Credentials.create(privateKey);
-		
-		Account account = new Account(cfx, AddressType.User.normalize(credentials.getAddress()));
+		String hexAddress = AddressType.User.normalize(credentials.getAddress());
+		Address address = new Address(hexAddress, cfx.getIntNetworkId());
+		Account account = new Account(cfx, address);
 		account.ecKeyPair = credentials.getEcKeyPair();
-		
 		return account;
 	}
 	
@@ -67,8 +62,12 @@ public class Account {
 		return cfx;
 	}
 	
-	public String getAddress() {
+	public Address getAddress() {
 		return address;
+	}
+
+	public String getHexAddress() {
+		return this.address.getHexAddress();
 	}
 	
 	public BigInteger getNonce() {
@@ -81,7 +80,7 @@ public class Account {
 	
 	public String sign(RawTransaction tx) throws Exception {
 		return this.ecKeyPair == null
-				? this.am.signTransaction(tx, this.address)
+				? this.am.signTransaction(tx, this.getAddress())
 				: tx.sign(this.ecKeyPair);
 	}
 	
@@ -127,11 +126,11 @@ public class Account {
 		return this.send(signedTx);
 	}
 	
-	public String transfer(String to, BigInteger value) throws Exception {
+	public String transfer(Address to, BigInteger value) throws Exception {
 		return this.transfer(new Option(), to, value);
 	}
 	
-	public String transfer(Option option, String to, BigInteger value) throws Exception {
+	public String transfer(Option option, Address to, BigInteger value) throws Exception {
 		option.apply(this.cfx);
 		RawTransaction tx = RawTransaction.transfer(this.nonce, to, value, option.epochHeight);
 		option.updatePriceAndChainId(tx);
@@ -144,17 +143,17 @@ public class Account {
 	}
 	
 	public String deploy(Option option, String bytecodes) throws Exception {
-		option.apply(this.cfx, this.address, "", bytecodes);
+		option.apply(this.cfx, this.getAddress(), null, bytecodes);
 		RawTransaction tx = RawTransaction.deploy(this.nonce, option.gasLimit, option.value, option.storageLimit, option.epochHeight, bytecodes);
 		option.updatePriceAndChainId(tx);
 		return this.mustSend(tx);
 	}
 	
-	public String call(String contract, String method, Type<?>... inputs) throws Exception {
+	public String call(Address contract, String method, Type<?>... inputs) throws Exception {
 		return this.call(new Option(), contract, method, inputs);
 	}
 	
-	public String call(Option option, String contract, String method, Type<?>... inputs) throws Exception {
+	public String call(Option option, Address contract, String method, Type<?>... inputs) throws Exception {
 		String data = "";
 		
 		if (!Strings.isEmpty(method)) {
@@ -165,12 +164,12 @@ public class Account {
 		return this.call(option, contract, data);
 	}
 	
-	public String call(String contract, String data) throws Exception {
+	public String call(Address contract, String data) throws Exception {
 		return this.call(new Option(), contract, data);
 	}
 	
-	public String call(Option option, String contract, String data) throws Exception {
-		option.apply(this.cfx, this.address, contract, data);
+	public String call(Option option, Address contract, String data) throws Exception {
+		option.apply(this.cfx, this.getAddress(), contract, data);
 		RawTransaction tx = RawTransaction.create(this.nonce, option.gasLimit, contract, option.value, option.storageLimit, option.epochHeight, data);
 		option.updatePriceAndChainId(tx);
 		return this.mustSend(tx);
@@ -260,7 +259,7 @@ public class Account {
 			}
 		}
 		
-		private void apply(Cfx cfx, String from, String to, String data) {
+		private void apply(Cfx cfx, Address from, Address to, String data) {
 			if (this.epochHeight == null) {
 				this.epochHeight = cfx.getEpochNumber().sendAndGet();
 			}
@@ -271,11 +270,11 @@ public class Account {
 			
 			Call call = new Call();
 			
-			if (!Strings.isEmpty(from)) {
+			if (from != null) {
 				call.setFrom(from);
 			}
 			
-			if (!Strings.isEmpty(to)) {
+			if (to != null) {
 				call.setTo(to);
 			}
 			

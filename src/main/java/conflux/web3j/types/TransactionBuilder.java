@@ -14,22 +14,22 @@ public class TransactionBuilder {
 	public static final BigDecimal DEFAULT_GAS_OVERFLOW_RATIO = BigDecimal.valueOf(1.3);
 	public static final BigDecimal DEFAULT_COLLATERAL_OVERFLOW_RATIO = BigDecimal.valueOf(2);
 	
-	private String from;
+	private Address from;
 	private BigDecimal gasOverflowRatio;
 	private BigDecimal collateralOverflowRatio;
 	private RawTransaction tx = new RawTransaction();
 	
-	public TransactionBuilder(String from) {
+	public TransactionBuilder(Address from) {
 		this(from, DEFAULT_GAS_OVERFLOW_RATIO, DEFAULT_COLLATERAL_OVERFLOW_RATIO);
 	}
 	
-	public TransactionBuilder(String from, BigDecimal gasOverflowRatio, BigDecimal collateralOverflowRatio) {
+	public TransactionBuilder(Address from, BigDecimal gasOverflowRatio, BigDecimal collateralOverflowRatio) {
 		this.from = from;
 		this.gasOverflowRatio = gasOverflowRatio;
 		this.collateralOverflowRatio = collateralOverflowRatio;
 	}
 	
-	public TransactionBuilder withFrom(String from) {
+	public TransactionBuilder withFrom(Address from) {
 		this.from = from;
 		return this;
 	}
@@ -54,7 +54,7 @@ public class TransactionBuilder {
 		return this;
 	}
 	
-	public TransactionBuilder withTo(String to) {
+	public TransactionBuilder withTo(Address to) {
 		this.tx.setTo(to);
 		return this;
 	}
@@ -110,9 +110,9 @@ public class TransactionBuilder {
 			this.tx.setGasPrice(RawTransaction.getDefaultGasPrice());
 		}
 		
-		if (this.tx.getTo() == null) {
-			this.tx.setTo("");
-		}
+//		if (this.tx.getTo() == null) {
+//			this.tx.setTo(null);
+//		}
 		
 		if (this.tx.getValue() == null) {
 			this.tx.setValue(BigInteger.ZERO);
@@ -137,8 +137,8 @@ public class TransactionBuilder {
 		Call call = new Call();
 		call.setFrom(this.from);
 		
-		String to = this.tx.getTo();
-		if (!Strings.isEmpty(to)) {
+		Address to = this.tx.getTo();
+		if (to != null) {
 			call.setTo(to);
 		}
 		

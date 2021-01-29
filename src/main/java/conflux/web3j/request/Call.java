@@ -1,7 +1,7 @@
 package conflux.web3j.request;
 
 import java.math.BigInteger;
-
+import conflux.web3j.types.Address;
 import org.web3j.utils.Numeric;
 
 public class Call {
@@ -18,6 +18,10 @@ public class Call {
 		return from;
 	}
 	
+	public void setFrom(Address from) {
+		this.from = from.getAddress();
+	}
+
 	public void setFrom(String from) {
 		this.from = from;
 	}
@@ -26,6 +30,10 @@ public class Call {
 		return to;
 	}
 	
+	public void setTo(Address to) {
+		this.to = to.getAddress();
+	}
+
 	public void setTo(String to) {
 		this.to = to;
 	}
