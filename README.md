@@ -43,7 +43,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         String privateKey = "0xxxxxx";
         // Initialize a accountManager
-        AccountManager am = new AccountManager();
+        AccountManager am = new AccountManager(testNetId);
         // import private key
         am.imports(privateKey, "123456");
         // import a keystore file
