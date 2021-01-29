@@ -6,10 +6,10 @@ import java.util.Optional;
 import org.web3j.utils.Numeric;
 
 public enum AddressType {
-	Null("null", new AddressException("null address type required")),
-	Builtin("builtin", new AddressException("builtin address type required")),
-	User("user", new AddressException("user address type required")),
-	Contract("contract", new AddressException("contract address type required"));
+	Null("null", "null address type required"),
+	Builtin("builtin", "builtin address type required"),
+	User("user", "user address type required"),
+	Contract("contract", "contract address type required");
 
 	private static final HashMap<String, Character> TYPE_MAP = new HashMap<>();
 	static {
@@ -19,9 +19,9 @@ public enum AddressType {
 	}
 
 	private String value;
-	private AddressException typeMismatchException;
+	private String typeMismatchException;
 
-	private AddressType(String value, AddressException ae) {
+	private AddressType(String value, String ae) {
 		this.value = value;
 		this.typeMismatchException = ae;
 	}
@@ -31,7 +31,7 @@ public enum AddressType {
 	}
 
 	public AddressException getTypeMismatchException() {
-		return typeMismatchException;
+		return new AddressException(typeMismatchException);
 	}
 	
 	public String normalize(String hexAddress) {
