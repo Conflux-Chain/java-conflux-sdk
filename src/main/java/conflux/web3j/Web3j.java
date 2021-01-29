@@ -85,10 +85,10 @@ class Web3j implements Cfx {
 	@Override
 	public Request<BigInteger, BigIntResponse> getBalance(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getBalance", BigIntResponse.class, address.getAddress())
+			return new Request<>(this.service, "cfx_getBalance", BigIntResponse.class, address)
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getBalance", BigIntResponse.class, address.getAddress(), epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getBalance", BigIntResponse.class, address, epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
@@ -96,10 +96,10 @@ class Web3j implements Cfx {
 	@Override
 	public Request<Optional<String>, StringNullableResponse> getAdmin(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getAdmin", StringNullableResponse.class, address.getAddress())
+			return new Request<>(this.service, "cfx_getAdmin", StringNullableResponse.class, address)
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getAdmin", StringNullableResponse.class, address.getAddress(), epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getAdmin", StringNullableResponse.class, address, epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
@@ -107,10 +107,10 @@ class Web3j implements Cfx {
 	@Override
 	public Request<SponsorInfo, SponsorInfo.Response> getSponsorInfo(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getSponsorInfo", SponsorInfo.Response.class, address.getAddress())
+			return new Request<>(this.service, "cfx_getSponsorInfo", SponsorInfo.Response.class, address)
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getSponsorInfo", SponsorInfo.Response.class, address.getAddress(), epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getSponsorInfo", SponsorInfo.Response.class, address, epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
@@ -118,10 +118,10 @@ class Web3j implements Cfx {
 	@Override
 	public Request<BigInteger, BigIntResponse> getStakingBalance(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getStakingBalance", BigIntResponse.class, address.getAddress())
+			return new Request<>(this.service, "cfx_getStakingBalance", BigIntResponse.class, address)
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getStakingBalance", BigIntResponse.class, address.getAddress(), epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getStakingBalance", BigIntResponse.class, address, epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
@@ -129,10 +129,10 @@ class Web3j implements Cfx {
 	@Override
 	public Request<BigInteger, BigIntResponse> getCollateralForStorage(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getCollateralForStorage", BigIntResponse.class, address.getAddress())
+			return new Request<>(this.service, "cfx_getCollateralForStorage", BigIntResponse.class, address)
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getCollateralForStorage", BigIntResponse.class, address.getAddress(), epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getCollateralForStorage", BigIntResponse.class, address, epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
@@ -140,10 +140,10 @@ class Web3j implements Cfx {
 	@Override
 	public Request<String, StringResponse> getCode(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getCode", StringResponse.class, address.getAddress())
+			return new Request<>(this.service, "cfx_getCode", StringResponse.class, address)
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getCode", StringResponse.class, address.getAddress(), epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getCode", StringResponse.class, address, epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
@@ -151,10 +151,10 @@ class Web3j implements Cfx {
 	@Override
 	public Request<Optional<String>, StringNullableResponse> getStorageAt(Address address, String pos, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getStorageAt", StringNullableResponse.class, address.getAddress(), pos)
+			return new Request<>(this.service, "cfx_getStorageAt", StringNullableResponse.class, address, pos)
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getStorageAt", StringNullableResponse.class, address.getAddress(), pos, epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getStorageAt", StringNullableResponse.class, address, pos, epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
@@ -162,10 +162,10 @@ class Web3j implements Cfx {
 	@Override
 	public Request<Optional<StorageRoot>, StorageRoot.Response> getStorageRoot(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getStorageRoot", StorageRoot.Response.class, address.getAddress())
+			return new Request<>(this.service, "cfx_getStorageRoot", StorageRoot.Response.class, address)
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getStorageRoot", StorageRoot.Response.class, address.getAddress(), epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getStorageRoot", StorageRoot.Response.class, address, epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
@@ -203,10 +203,10 @@ class Web3j implements Cfx {
 	@Override
 	public Request<BigInteger, BigIntResponse> getNonce(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getNextNonce", BigIntResponse.class, address.getAddress())
+			return new Request<>(this.service, "cfx_getNextNonce", BigIntResponse.class, address)
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getNextNonce", BigIntResponse.class, address.getAddress(), epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getNextNonce", BigIntResponse.class, address, epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
@@ -272,10 +272,10 @@ class Web3j implements Cfx {
 	@Override
 	public Request<AccountInfo, AccountInfo.Response> getAccount(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getAccount", AccountInfo.Response.class, address.getAddress())
+			return new Request<>(this.service, "cfx_getAccount", AccountInfo.Response.class, address)
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getAccount", AccountInfo.Response.class, address.getAddress(), epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getAccount", AccountInfo.Response.class, address, epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
@@ -341,10 +341,10 @@ class Web3j implements Cfx {
 	@Override
 	public Request<List<DepositInfo>, DepositInfo.ListResponse> getDepositList(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getDepositList", DepositInfo.ListResponse.class, address.getAddress())
+			return new Request<>(this.service, "cfx_getDepositList", DepositInfo.ListResponse.class, address)
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getDepositList", DepositInfo.ListResponse.class, address.getAddress(), epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getDepositList", DepositInfo.ListResponse.class, address, epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
@@ -352,10 +352,10 @@ class Web3j implements Cfx {
 	@Override
 	public Request<List<VoteStakeInfo>, VoteStakeInfo.ListResponse> getVoteList(Address address, Epoch... epoch) {
 		if (epoch.length == 0) {
-			return new Request<>(this.service, "cfx_getVoteList", VoteStakeInfo.ListResponse.class, address.getAddress())
+			return new Request<>(this.service, "cfx_getVoteList", VoteStakeInfo.ListResponse.class, address)
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
-			return new Request<>(this.service, "cfx_getVoteList", VoteStakeInfo.ListResponse.class, address.getAddress(), epoch[0].getValue())
+			return new Request<>(this.service, "cfx_getVoteList", VoteStakeInfo.ListResponse.class, address, epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
