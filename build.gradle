@@ -7,13 +7,15 @@
  */
 
 plugins {
-    // Apply the java-library plugin to add support for Java Library
-    id 'java-library'
+    id 'java-library'  // Apply the java-library plugin to add support for Java Library
+    id 'maven-publish'
+    id 'signing'
 }
 
+group = 'io.github.conflux-chain'
+version = '1.0.3-SNAPSHOT'   // SNAPSHOT
+
 repositories {
-    // Use jcenter for resolving dependencies.
-    // You can declare any Maven/Ivy/file repository here.
     jcenter()
 //    mavenCentral()
 }
@@ -25,7 +27,7 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:28.0-jre'
 
-    compile 'org.web3j:core:4.6.3'
+    compile 'org.web3j:core:4.8.4'
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
@@ -36,3 +38,84 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId = 'conflux.web3j'
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+
+            pom {
+                name = 'java-conflux-sdk'
+                description = 'Java SDK for conflux network'
+                url = 'https://github.com/Conflux-Chain/java-conflux-sdk'
+                properties = [
+                        tags: "blockchain, conflux"
+                ]
+                licenses {
+                    license {
+                        name = 'GNU General Public License v3.0'
+                        url = 'https://github.com/Conflux-Chain/conflux-rust/blob/master/LICENSE'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'Pana'
+                        name = 'Pana.W'
+                        email = 'pana.wang@outlook.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:https://github.com/Conflux-Chain/java-conflux-sdk.git'
+                    developerConnection = 'scm:git://github.com/Conflux-Chain/java-conflux-sdk.git'
+                    url = 'https://github.com/conflux-chain/java-conflux-sdk'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            name = "OSSRH"
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
+
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/conflux-chain/java-conflux-sdk"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
+}
+
+// ref https://docs.github.com/en/actions/guides/publishing-java-packages-with-gradle

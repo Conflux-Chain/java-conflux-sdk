@@ -5,8 +5,8 @@ import conflux.web3j.types.Address;
 import org.web3j.utils.Numeric;
 
 public class Call {
-	private String from;
-	private String to;
+	private Address from;
+	private Address to;
 	private BigInteger gasPrice;
 	private BigInteger gas;
 	private BigInteger value;
@@ -14,30 +14,22 @@ public class Call {
 	private BigInteger nonce;
 	private BigInteger storageLimit;
 	
-	public String getFrom() {
+	public Address getFrom() {
 		return from;
 	}
 	
 	public void setFrom(Address from) {
-		this.from = from.getAddress();
-	}
-
-	public void setFrom(String from) {
 		this.from = from;
 	}
-	
-	public String getTo() {
+
+	public Address getTo() {
 		return to;
 	}
 	
 	public void setTo(Address to) {
-		this.to = to.getAddress();
-	}
-
-	public void setTo(String to) {
 		this.to = to;
 	}
-	
+
 	public String getGasPrice() {
 		return this.gasPrice == null ? null : Numeric.encodeQuantity(this.gasPrice);
 	}
