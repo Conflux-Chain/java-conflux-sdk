@@ -19,7 +19,8 @@ public class Log {
 	private String transactionIndex;
 	private String logIndex;
 	private String transactionLogIndex;
-	
+	private String revertTo;
+
 	public String getAddress() {
 		return address;
 	}
@@ -114,6 +115,18 @@ public class Log {
 	
 	public void setTransactionLogIndex(String transactionLogIndex) {
 		this.transactionLogIndex = transactionLogIndex;
+	}
+
+	public Optional<BigInteger> getRevertTo() {
+		if (this.revertTo == null || this.revertTo.isEmpty()) {
+			return Optional.empty();
+		} else {
+			return Optional.of(Numeric.decodeQuantity(this.revertTo));
+		}
+	}
+
+	public void setRevertTo(String revertTo) {
+		this.revertTo = revertTo;
 	}
 }
 

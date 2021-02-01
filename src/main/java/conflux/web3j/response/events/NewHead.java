@@ -6,7 +6,7 @@ import org.web3j.utils.Numeric;
 
 public class NewHead {
     private boolean adaptive;
-    private int blame;
+    private String blame;
     private String deferredLogsBloomHash;
     private String deferredReceiptsRoot;
     private String deferredStateRoot;
@@ -28,7 +28,7 @@ public class NewHead {
     }
 
     public int getBlame() {
-        return blame;
+        return Numeric.decodeQuantity(blame).intValue();
     }
 
     public String getDeferredLogsBloomHash() {
