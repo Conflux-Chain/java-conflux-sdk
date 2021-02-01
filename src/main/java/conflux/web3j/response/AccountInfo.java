@@ -8,7 +8,8 @@ import org.web3j.utils.Numeric;
 public class AccountInfo {
 	
 	public static class Response extends CfxResponse<AccountInfo> {}
-	
+
+	private Address address;
     private String balance;
     private String nonce;
     private String codeHash;
@@ -16,6 +17,14 @@ public class AccountInfo {
     private String collateralForStorage;
     private String accumulatedInterestReturn;
     private Address admin;
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
     
 	public BigInteger getBalance() {
 		return Numeric.decodeQuantity(this.balance);
