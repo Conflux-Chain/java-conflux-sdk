@@ -39,23 +39,11 @@ test {
     useJUnitPlatform()
 }
 
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
-    from javadoc
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
 publishing {
     publications {
         maven(MavenPublication) {
             artifactId = 'conflux.web3j'
             from components.java
-            artifact sourcesJar
-            artifact javadocJar
 
             versionMapping {
                 usage('java-api') {
