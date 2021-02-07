@@ -77,7 +77,7 @@ import conflux.web3j.Cfx;
 public class App {
 
 	public static void main(String[] args) throws Exception {
-		Cfx cfx = Cfx.create("http://mainnet-jsonrpc.conflux-chain.org:12537", 3, 1000);
+		Cfx cfx = Cfx.create("https://test.confluxrpc.org/v2", 3, 1000);
 		BigInteger epoch = cfx.getEpochNumber().sendAndGet();
 		System.out.println("Current epoch: " + epoch);
 	}

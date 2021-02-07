@@ -32,5 +32,4 @@ gradle-app.setting
 .settings/
 bin
 .idea
-docs/cfx-address.md
 docs/tmp.md
