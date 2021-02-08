@@ -1,14 +1,15 @@
 package conflux.web3j.types;
 
+import java.util.Arrays;
+
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.common.io.BaseEncoding;
 import com.google.common.primitives.Bytes;
+
+import conflux.web3j.contract.abi.DecodeUtil;
 import conflux.web3j.crypto.ConfluxBase32;
-import org.web3j.abi.datatypes.Type;
 
-import java.util.Arrays;
-
-public class Address implements Type<String> {
+public class Address {
     private final String address;  // base32Check address
     private final String hexAddress;
     private final int netId;
@@ -37,6 +38,11 @@ public class Address implements Type<String> {
         this.addressType = Address.addressType(addressBuffer);
         this.netId = netId;
         this.hexAddress = "0x" + BaseEncoding.base16().encode(addressBuffer).toLowerCase();
+    }
+    
+    public static Address decodeABI(String encoded, int netId) {
+    	String hex = DecodeUtil.decode(encoded, org.web3j.abi.datatypes.Address.class);
+    	return new Address(hex, netId);
     }
 
     @JsonValue
@@ -96,7 +102,7 @@ public class Address implements Type<String> {
     private static final String HEX_PREFIX = "0X";
     private static final String DELIMITER = ":";
     private static final byte[] CHECKSUM_TEMPLATE = new byte[]{0, 0, 0, 0, 0, 0, 0, 0};
-    private static final long NET_ID_LIMIT = 4294967295L;  // 0xFFFFFFFF
+//    private static final long NET_ID_LIMIT = 4294967295L;  // 0xFFFFFFFF
     private static final int CFX_ADDRESS_CHAR_LENGTH = 42;
 
     public static String encode(byte[] hexBuf, int netId) throws AddressException {
@@ -192,12 +198,12 @@ public class Address implements Type<String> {
         return Bytes.concat(new byte[]{VERSION_BYTE}, addressBuf);
     }
 
-    private static byte[] decodePayload(byte[] payload) throws AddressException {
-        if(payload.length <= 1 || payload[0] != VERSION_BYTE) {
-            throw new AddressException("Can not recognize version byte");
-        }
-        return Arrays.copyOfRange(payload, 1, payload.length);
-    }
+//    private static byte[] decodePayload(byte[] payload) throws AddressException {
+//        if(payload.length <= 1 || payload[0] != VERSION_BYTE) {
+//            throw new AddressException("Can not recognize version byte");
+//        }
+//        return Arrays.copyOfRange(payload, 1, payload.length);
+//    }
 
     private static byte[] addressBufferFromHex(String hexAddress) throws AddressException {
         hexAddress = hexAddress.toUpperCase();
@@ -302,4 +308,20 @@ public class Address implements Type<String> {
         }
         return c ^ 1;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+    	if (this == obj) {
+			return true;
+		}
+    	
+    	if (!(obj instanceof Address)) {
+			return false;
+		}
+    	
+    	Address other = (Address) obj;
+    	
+    	return this.address.equalsIgnoreCase(other.address);
+    }
+    
 }

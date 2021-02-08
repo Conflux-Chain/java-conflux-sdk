@@ -28,7 +28,7 @@ public class AdminControl extends ContractCall {
     }
 
     public String getAdmin(Address contractAddr) throws RpcException {
-        return this.callAndGet(Address.class, "getAdmin", contractAddr.getABIAddress());
+        return this.callAndGet(org.web3j.abi.datatypes.Address.class, "getAdmin", contractAddr.getABIAddress());
     }
 
     public String destroy (Option option, Address contractAddr) throws Exception {

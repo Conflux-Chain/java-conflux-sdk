@@ -36,7 +36,7 @@ public class SponsorWhitelistControl extends ContractCall {
     }
 
     public String getSponsorForGas(Address contractAddr) throws RpcException {
-        return this.callAndGet(Address.class, "getSponsorForGas", contractAddr.getABIAddress());
+        return this.callAndGet(org.web3j.abi.datatypes.Address.class, "getSponsorForGas", contractAddr.getABIAddress());
     }
 
     public BigInteger getSponsoredBalanceForGas(Address contractAddr) throws RpcException {
@@ -48,7 +48,7 @@ public class SponsorWhitelistControl extends ContractCall {
     }
 
     public String getSponsorForCollateral(Address contractAddr) throws RpcException {
-        return this.callAndGet(Address.class, "getSponsorForCollateral", contractAddr.getABIAddress());
+        return this.callAndGet(org.web3j.abi.datatypes.Address.class, "getSponsorForCollateral", contractAddr.getABIAddress());
     }
 
     public BigInteger getSponsoredBalanceForCollateral(Address contractAddr) throws RpcException {
@@ -89,7 +89,7 @@ public class SponsorWhitelistControl extends ContractCall {
 
     public String removePrivilegeByAdmin(Account.Option option, Address contractAddr, Address[] address) throws Exception {
         List<org.web3j.abi.datatypes.Address> list = Arrays.stream(address).map(Address::getABIAddress).collect(Collectors.toList());
-        return account.call(option, this.contractAddress, "removePrivilegeByAdmin", contractAddr,
+        return account.call(option, this.contractAddress, "removePrivilegeByAdmin", contractAddr.getABIAddress(),
                 new DynamicArray<>(org.web3j.abi.datatypes.Address.class, list));
     }
 }
