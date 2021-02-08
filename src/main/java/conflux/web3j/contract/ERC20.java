@@ -32,7 +32,7 @@ public class ERC20 extends ContractCall{
     }
 
     public BigInteger allowance(Address owner, Address spender) throws RpcException {
-        return this.callAndGet(Uint256. class, "allowance", owner, spender.getABIAddress());
+        return this.callAndGet(Uint256. class, "allowance", owner.getABIAddress(), spender.getABIAddress());
     }
 
     public String transfer(Account.Option option, Address recipient, BigInteger amount) throws Exception {
