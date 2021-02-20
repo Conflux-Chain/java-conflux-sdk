@@ -101,7 +101,7 @@ public class Address {
     private static final int HEX_PREFIX_LEN = 2;
     private static final String HEX_PREFIX = "0X";
     private static final String DELIMITER = ":";
-    private static final byte[] CHECKSUM_TEMPLATE = new byte[]{0, 0, 0, 0, 0, 0, 0, 0};
+    private static final byte[] CHECKSUM_TEMPLATE = new byte[8];
 //    private static final long NET_ID_LIMIT = 4294967295L;  // 0xFFFFFFFF
     private static final int CFX_ADDRESS_CHAR_LENGTH = 42;
 

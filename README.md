@@ -1,10 +1,34 @@
 # Conflux Java SDK
 
+[![javadoc](https://javadoc.io/badge2/io.github.conflux-chain/conflux.web3j/javadoc.svg)](https://javadoc.io/doc/io.github.conflux-chain/conflux.web3j)
+
 The Conflux Java SDK allows any Java client to interact with a local or remote Conflux node based on JSON-RPC 2.0 protocol. With Conflux Java SDK, user can easily manage accounts, send transactions, deploy smart contracts and query blockchain information.
+
+## How to import
+We have publish this package to maven central repository for easy import, you can import it 
+
+### Apache Maven:
+```xml
+<dependency>
+  <groupId>io.github.conflux-chain</groupId>
+  <artifactId>conflux.web3j</artifactId>
+  <version>x.x.x</version>
+</dependency>
+```
+
+### Gradle Groovy DSL:
+```groovy
+implementation 'io.github.conflux-chain:conflux.web3j:x.x.x'
+```
+
+For detail version list check [here](https://search.maven.org/artifact/io.github.conflux-chain/conflux.web3j)
+
+### Manually
+Or you can download jar package from github release page, or clone the source code build jar manually.
 
 ## Docs
 
-* [API](https://conflux-chain.github.io/java-conflux-sdk/index.html)
+* [API](https://javadoc.io/doc/io.github.conflux-chain/conflux.web3j)
 * [SDK updates for CIP37](./docs/cfx-address.md)
 * [changelog](./CHANGELOG.md)
 
