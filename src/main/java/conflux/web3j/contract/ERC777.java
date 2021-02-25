@@ -4,6 +4,7 @@ import conflux.web3j.Account;
 import conflux.web3j.Cfx;
 import conflux.web3j.RpcException;
 import conflux.web3j.contract.abi.DecodeUtil;
+import conflux.web3j.types.CfxAddress;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Utf8String;
 import org.web3j.abi.datatypes.generated.Uint256;
@@ -17,15 +18,15 @@ import java.util.List;
 
 public class ERC777 extends ContractCall {
     private Account account;
-    private conflux.web3j.types.Address contract;
+    private CfxAddress contract;
 
     private static final TypeReference<DynamicArray<Address>> TYPE_DYNAMIC_ARRAY_ADDRESS = new TypeReference<DynamicArray<Address>>() {};
 
-    public ERC777(Cfx cfx, conflux.web3j.types.Address erc777Address) {
+    public ERC777(Cfx cfx, CfxAddress erc777Address) {
         super(cfx, erc777Address);
     }
 
-    public ERC777(Cfx cfx, conflux.web3j.types.Address address, Account account) {
+    public ERC777(Cfx cfx, CfxAddress address, Account account) {
         super(cfx, address);
         this.account = account;
         this.contract = address;

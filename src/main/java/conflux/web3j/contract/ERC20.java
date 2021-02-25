@@ -8,16 +8,17 @@ import org.web3j.abi.datatypes.Address;
 import conflux.web3j.Account;
 import conflux.web3j.Cfx;
 import conflux.web3j.RpcException;
+import conflux.web3j.types.CfxAddress;
 
 public class ERC20 extends ContractCall{
     private Account account;
-    private conflux.web3j.types.Address contract;
+    private CfxAddress contract;
 
-    public ERC20(Cfx cfx, conflux.web3j.types.Address address) {
+    public ERC20(Cfx cfx, CfxAddress address) {
         super(cfx, address);
     }
 
-    public ERC20(Cfx cfx, conflux.web3j.types.Address address, Account account) {
+    public ERC20(Cfx cfx, CfxAddress address, Account account) {
         super(cfx, address);
         this.account = account;
         this.contract = address;

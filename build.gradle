@@ -12,6 +12,9 @@ plugins {
     id 'signing'
 }
 
+group = 'io.github.conflux-chain'
+version = '1.0.5'   // SNAPSHOT
+
 repositories {
     jcenter()
 //    mavenCentral()
@@ -44,9 +47,6 @@ task javadocJar(type: Jar) {
     archiveClassifier = 'javadoc'
     from javadoc.destinationDir
 }
-
-group = 'io.github.conflux-chain'
-version = '1.0.5'   // SNAPSHOT
 
 signing {
     def signingKey = findProperty("signingKey")

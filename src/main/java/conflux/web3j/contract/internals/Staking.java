@@ -9,21 +9,22 @@ import conflux.web3j.Account;
 import conflux.web3j.Cfx;
 import conflux.web3j.RpcException;
 import conflux.web3j.contract.ContractCall;
+import conflux.web3j.types.CfxAddress;
 
 public class Staking extends ContractCall {
     private final static String contract = "0x0888000000000000000000000000000000000002";
     private Account account;
-    private final conflux.web3j.types.Address contractAddress;
+    private final CfxAddress contractAddress;
 
     public Staking(Account account, int networkId) {
-        super(account.getCfx(), new conflux.web3j.types.Address(Staking.contract, networkId));
-        this.contractAddress = new conflux.web3j.types.Address(Staking.contract, networkId);
+        super(account.getCfx(), new CfxAddress(Staking.contract, networkId));
+        this.contractAddress = new CfxAddress(Staking.contract, networkId);
         this.account = account;
     }
 
     public Staking(Cfx cfx) {
-        super(cfx, new conflux.web3j.types.Address(Staking.contract, cfx.getIntNetworkId()));
-        this.contractAddress = new conflux.web3j.types.Address(Staking.contract, cfx.getIntNetworkId());
+        super(cfx, new CfxAddress(Staking.contract, cfx.getIntNetworkId()));
+        this.contractAddress = new CfxAddress(Staking.contract, cfx.getIntNetworkId());
     }
 
     public void setAccount(Account account) {

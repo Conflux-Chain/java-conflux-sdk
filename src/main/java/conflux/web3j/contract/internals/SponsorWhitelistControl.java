@@ -11,22 +11,23 @@ import conflux.web3j.Account;
 import conflux.web3j.Cfx;
 import conflux.web3j.RpcException;
 import conflux.web3j.contract.ContractCall;
+import conflux.web3j.types.CfxAddress;
 
 
 public class SponsorWhitelistControl extends ContractCall {
     private final static String contract = "0x0888000000000000000000000000000000000001";
     private Account account;
-    private final conflux.web3j.types.Address contractAddress;
+    private final CfxAddress contractAddress;
 
     public SponsorWhitelistControl(Account account, int networkId) {
-        super(account.getCfx(), new conflux.web3j.types.Address(SponsorWhitelistControl.contract, networkId));
-        this.contractAddress = new conflux.web3j.types.Address(SponsorWhitelistControl.contract, networkId);
+        super(account.getCfx(), new CfxAddress(SponsorWhitelistControl.contract, networkId));
+        this.contractAddress = new CfxAddress(SponsorWhitelistControl.contract, networkId);
         this.account = account;
     }
 
     public SponsorWhitelistControl(Cfx cfx) {
-        super(cfx, new conflux.web3j.types.Address(SponsorWhitelistControl.contract, cfx.getIntNetworkId()));
-        this.contractAddress = new conflux.web3j.types.Address(SponsorWhitelistControl.contract, cfx.getIntNetworkId());
+        super(cfx, new CfxAddress(SponsorWhitelistControl.contract, cfx.getIntNetworkId()));
+        this.contractAddress = new CfxAddress(SponsorWhitelistControl.contract, cfx.getIntNetworkId());
     }
 
     public void setAccount(Account account) {

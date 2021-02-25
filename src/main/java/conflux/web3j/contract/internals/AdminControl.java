@@ -6,21 +6,22 @@ import conflux.web3j.Cfx;
 import conflux.web3j.RpcException;
 import conflux.web3j.contract.ContractCall;
 import org.web3j.abi.datatypes.Address;
+import conflux.web3j.types.CfxAddress;
 
 public class AdminControl extends ContractCall {
     private final static String contract = "0x0888000000000000000000000000000000000000";
     private Account account;  // if account not set, can only use getAdmin method
-    private conflux.web3j.types.Address contractAddress;
+    private CfxAddress contractAddress;
 
     public AdminControl(Account account, int networkId) {
-        super(account.getCfx(), new conflux.web3j.types.Address(AdminControl.contract, networkId));
-        this.contractAddress = new conflux.web3j.types.Address(AdminControl.contract, networkId);
+        super(account.getCfx(), new CfxAddress(AdminControl.contract, networkId));
+        this.contractAddress = new CfxAddress(AdminControl.contract, networkId);
         this.account = account;
     }
 
     public AdminControl(Cfx cfx) {
-        super(cfx, new conflux.web3j.types.Address(AdminControl.contract, cfx.getIntNetworkId()));
-        this.contractAddress = new conflux.web3j.types.Address(AdminControl.contract, cfx.getIntNetworkId());
+        super(cfx, new CfxAddress(AdminControl.contract, cfx.getIntNetworkId()));
+        this.contractAddress = new CfxAddress(AdminControl.contract, cfx.getIntNetworkId());
     }
 
     public void setAccount(Account account) {
