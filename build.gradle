@@ -13,7 +13,7 @@ plugins {
 }
 
 group = 'io.github.conflux-chain'
-version = '1.0.3-SNAPSHOT'   // SNAPSHOT
+version = '1.0.5'   // SNAPSHOT
 
 repositories {
     jcenter()
@@ -39,11 +39,29 @@ test {
     useJUnitPlatform()
 }
 
+task sourcesJar(type: Jar) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allJava
+}
+task javadocJar(type: Jar) {
+    archiveClassifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+signing {
+    def signingKey = findProperty("signingKey")
+    def signingPassword = findProperty("signingPassword")
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign publishing.publications;
+}
+
 publishing {
     publications {
-        maven(MavenPublication) {
-            artifactId = 'conflux.web3j'
+        mavenJava(MavenPublication) {
             from components.java
+            artifactId = 'conflux.web3j'
+            artifact sourcesJar
+            artifact javadocJar
 
             versionMapping {
                 usage('java-api') {
@@ -95,14 +113,14 @@ publishing {
             }
         }
 
-        maven {
-            name = "GitHubPackages"
-            url = "https://maven.pkg.github.com/conflux-chain/java-conflux-sdk"
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
+//        maven {
+//            name = "GitHubPackages"
+//            url = "https://maven.pkg.github.com/conflux-chain/java-conflux-sdk"
+//            credentials {
+//                username = System.getenv("GITHUB_ACTOR")
+//                password = System.getenv("GITHUB_TOKEN")
+//            }
+//        }
     }
 }
 
