@@ -7,6 +7,7 @@
 5. `Address.validate` has been moved to `AddressType.validateHexAddress`
 6. ERC20Call, ERC20Executor, ERC777Call, ERC777Executor has been removed, you can use the new ERC20, ERC777
 7. AccountManager's constructor add a new parameter `networkId`
+8. `org.web3j:core` updated to version 4.8.4
 
 
 ### 0.9.0
