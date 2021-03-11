@@ -228,4 +228,4 @@ Conflux Java SDK also provides some helpful tools:
 Conflux network's vm is compatible with evm, and a lot web3j functionality can directly used on Conflux network,
 For example `Sign`, encode and so on.
 
-* [Web3j API (Please choose 4.6.3 manually)](https://javadoc.io/doc/org.web3j)
+* [Web3j API (Please choose 4.8.4 manually)](https://javadoc.io/doc/org.web3j)
