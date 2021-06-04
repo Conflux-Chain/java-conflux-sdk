@@ -1,12 +1,13 @@
 package conflux.web3j;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Map;
 
-import conflux.web3j.types.*;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
@@ -15,9 +16,17 @@ import org.web3j.crypto.ECKeyPair;
 import org.web3j.utils.Strings;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import conflux.web3j.request.Call;
 import conflux.web3j.response.UsedGasAndCollateral;
+import conflux.web3j.types.Address;
+import conflux.web3j.types.AddressException;
+import conflux.web3j.types.AddressType;
+import conflux.web3j.types.RawTransaction;
+import conflux.web3j.types.SendTransactionError;
+import conflux.web3j.types.SendTransactionResult;
+import conflux.web3j.types.TransactionBuilder;
 
 public class Account {
 	
@@ -131,22 +140,32 @@ public class Account {
 	}
 	
 	public String transfer(Option option, Address to, BigInteger value) throws Exception {
-		option.apply(this.cfx);
-		RawTransaction tx = RawTransaction.transfer(this.nonce, to, value, option.epochHeight);
-		option.updatePriceAndChainId(tx);
-		option.updateGasLimit(tx);
+		RawTransaction tx = this.buildRawTransaction(option, to, null);
+		tx.setValue(value);
 		return this.mustSend(tx);
 	}
 	
-	public String deploy(String bytecodes) throws Exception {
-		return this.deploy(new Option(), bytecodes);
+	private RawTransaction buildRawTransaction(Option option, Address to, String data) {
+		return option.buildTx(this.cfx, this.address, this.nonce, to, data);
 	}
 	
-	public String deploy(Option option, String bytecodes) throws Exception {
-		option.apply(this.cfx, this.getAddress(), null, bytecodes);
-		RawTransaction tx = RawTransaction.deploy(this.nonce, option.gasLimit, option.value, option.storageLimit, option.epochHeight, bytecodes);
-		option.updatePriceAndChainId(tx);
+	public String deploy(String bytecodes, Type<?>... constructorArgs) throws Exception {
+		return this.deploy(new Option(), bytecodes, constructorArgs);
+	}
+	
+	public String deploy(Option option, String bytecodes, Type<?>... constructorArgs) throws Exception {
+		RawTransaction tx = this.buildRawTransaction(option, null, bytecodes);
 		return this.mustSend(tx);
+	}
+	
+	public String deployFile(String file, Type<?>... constructorArgs) throws Exception {
+		return this.deployFile(new Option(), file, constructorArgs);
+	}
+	
+	public String deployFile(Option option, String file, Type<?>... constructorArgs) throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		String bytecode = (String) mapper.readValue(new File(file), Map.class).get("bytecode");
+		return this.deploy(option, bytecode, constructorArgs);
 	}
 	
 	public String call(Address contract, String method, Type<?>... inputs) throws Exception {
@@ -164,14 +183,12 @@ public class Account {
 		return this.call(option, contract, data);
 	}
 	
-	public String call(Address contract, String data) throws Exception {
-		return this.call(new Option(), contract, data);
+	public String callWithData(Address contract, String data) throws Exception {
+		return this.callWithData(new Option(), contract, data);
 	}
 	
-	public String call(Option option, Address contract, String data) throws Exception {
-		option.apply(this.cfx, this.getAddress(), contract, data);
-		RawTransaction tx = RawTransaction.create(this.nonce, option.gasLimit, contract, option.value, option.storageLimit, option.epochHeight, data);
-		option.updatePriceAndChainId(tx);
+	public String callWithData(Option option, Address contract, String data) throws Exception {
+		RawTransaction tx = this.buildRawTransaction(option, contract, data);
 		return this.mustSend(tx);
 	}
 	
@@ -253,21 +270,30 @@ public class Account {
 			return this;
 		}
 		
-		private void apply(Cfx cfx) {
-			if (this.epochHeight == null) {
-				this.epochHeight = cfx.getEpochNumber().sendAndGet();
-			}
-		}
-		
-		private void apply(Cfx cfx, Address from, Address to, String data) {
+		private void applyDefault(Cfx cfx, Address from, Address to, String data) {
 			if (this.epochHeight == null) {
 				this.epochHeight = cfx.getEpochNumber().sendAndGet();
 			}
 			
+			// do not estimate if user specified gas and storage limits
 			if (this.gasLimit != null && this.storageLimit != null) {
 				return;
 			}
 			
+			// transfer funds without data
+			if (Strings.isEmpty(data) && to != null) {
+				switch (to.getType()) {
+				case Null:
+				case User:
+					this.gasLimit = CfxUnit.DEFAULT_GAS_LIMIT;
+					this.storageLimit = BigInteger.ZERO;
+					return;
+				default:
+					break;
+				}
+			}
+			
+			// deploy/call contract or transfer funds with data
 			Call call = new Call();
 			
 			if (from != null) {
@@ -295,7 +321,11 @@ public class Account {
 			}
 		}
 		
-		private void updatePriceAndChainId(RawTransaction tx) {
+		private RawTransaction buildTx(Cfx cfx, Address from, BigInteger nonce, Address to, String data) {
+			this.applyDefault(cfx, from, to, data);
+			
+			RawTransaction tx = RawTransaction.create(nonce, this.gasLimit, to, this.value, this.storageLimit, this.epochHeight, data);
+			
 			if (this.gasPrice != null) {
 				tx.setGasPrice(this.gasPrice);
 			}
@@ -303,12 +333,8 @@ public class Account {
 			if (this.chainId != null) {
 				tx.setChainId(this.chainId);
 			}
-		}
-
-		private void updateGasLimit(RawTransaction tx) {
-			if (this.gasLimit != null) {
-				tx.setGas(this.gasLimit);
-			}
+			
+			return tx;
 		}
 	}
 
