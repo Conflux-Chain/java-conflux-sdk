@@ -180,7 +180,7 @@ public class Account {
 			data = FunctionEncoder.encode(function);
 		}
 		
-		return this.call(option, contract, data);
+		return this.callWithData(option, contract, data);
 	}
 	
 	public String callWithData(Address contract, String data) throws Exception {
