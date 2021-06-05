@@ -13,6 +13,7 @@ import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
+import org.web3j.utils.Numeric;
 import org.web3j.utils.Strings;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -154,6 +155,11 @@ public class Account {
 	}
 	
 	public String deploy(Option option, String bytecodes, Type<?>... constructorArgs) throws Exception {
+		bytecodes = Numeric.prependHexPrefix(bytecodes);
+		if (constructorArgs != null && constructorArgs.length > 0) {
+			bytecodes += FunctionEncoder.encodeConstructor(Arrays.asList(constructorArgs));
+		}
+		
 		RawTransaction tx = this.buildRawTransaction(option, null, bytecodes);
 		return this.mustSend(tx);
 	}
