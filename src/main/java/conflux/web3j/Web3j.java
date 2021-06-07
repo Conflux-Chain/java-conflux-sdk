@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import conflux.web3j.request.TraceFilter;
 import conflux.web3j.response.*;
 import conflux.web3j.response.events.EpochNotification;
 import conflux.web3j.response.events.LogNotification;
@@ -370,6 +371,36 @@ class Web3j implements Cfx {
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
+	
+	@Override
+	public Request<List<Receipt>, Receipt.ListResponse> getEpochReceipt(Epoch epoch) {
+		return new Request<>(this.service, "cfx_getEpochReceipts", Receipt.ListResponse.class, epoch.getValue());
+	}
+
+	@Override
+	public Request<Optional<AccountPendingInfo>, AccountPendingInfo.Response> getAccountPendingInfo(Address address) {
+		return new Request<>(this.service, "cfx_getAccountPendingInfo", AccountPendingInfo.Response.class, address);
+	}
+
+	@Override
+	public Request<AccountPendingTransactions, AccountPendingTransactions.Response> getAccountPendingTransactions(Address address) {
+		return new Request<>(this.service, "cfx_getAccountPendingTransactions", AccountPendingTransactions.Response.class, address);
+	}
+
+	@Override
+	public Request<Optional<List<LocalizedTrace>>, LocalizedTrace.Response> traceTransaction(String txHash) {
+		return new Request<>(this.service, "trace_transaction", LocalizedTrace.Response.class, txHash);
+	}
+
+	@Override
+	public Request<Optional<LocalizedBlockTrace>, LocalizedBlockTrace.Response> traceBlock(String blockHash) {
+		return new Request<>(this.service, "trace_block", LocalizedBlockTrace.Response.class, blockHash);
+	}
+
+	@Override
+	public Request<Optional<List<LocalizedTrace>>, LocalizedTrace.Response> traceFilter(TraceFilter filter) {
+		return new Request<>(this.service, "trace_filter", LocalizedTrace.Response.class, filter);
+	}
 
 	@Override
 	public <T,R extends Response<?> & HasValue<T>> Request<T, R> getCustomizedRequest(Class<R> responseType, String method, Object... params){
@@ -405,11 +436,15 @@ class Web3j implements Cfx {
 	}
 
 	@Override
-	public Flowable<EpochNotification> subscribeEpochs() {
+	public Flowable<EpochNotification> subscribeEpochs(Epoch... epoch) {
+		String epochTag = Epoch.latestMined().getValue();  // default value is latest_mined
+		if (epoch.length > 0) {
+			epochTag = epoch[0].getValue();
+		}
 		return service.subscribe(
 				new org.web3j.protocol.core.Request<>(
 						"cfx_subscribe",
-						Collections.singletonList("epochs"),
+						Arrays.asList("epochs", epochTag),
 						service,
 						Subscribe.class),
 				"cfx_unsubscribe",
