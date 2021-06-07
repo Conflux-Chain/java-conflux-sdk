@@ -10,7 +10,6 @@ public class Status {
 	
     private String bestHash;
     private String chainId;
-	private String networkId;
     private String epochNumber;
     private String blockNumber;
     private String pendingTxNumber;
@@ -35,10 +34,6 @@ public class Status {
 		return Numeric.decodeQuantity(this.chainId);
 	}
 
-	public void setNetworkId(String networkId) {
-		this.networkId = networkId;
-	}
-    
     public BigInteger getEpochNumber() {
 		return Numeric.decodeQuantity(this.epochNumber);
 	}
