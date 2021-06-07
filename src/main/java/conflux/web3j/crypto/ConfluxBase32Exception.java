@@ -1,5 +1,6 @@
 package conflux.web3j.crypto;
 
+@SuppressWarnings("serial")
 class ConfluxBase32Exception extends RuntimeException {
     public static final String INVALID_BASE32_STR = "include invalid char";
     public static final String INVALID_BASE32_WORDS = "word should in range [0-31]";

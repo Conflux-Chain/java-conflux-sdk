@@ -2,10 +2,10 @@ package conflux.web3j.request;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import org.web3j.utils.Numeric;
 
 import conflux.web3j.types.Address;
-import org.web3j.utils.Numeric;
 
 public class LogFilter {
 	private Epoch fromEpoch;
