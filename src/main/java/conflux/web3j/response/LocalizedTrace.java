@@ -65,12 +65,12 @@ public class LocalizedTrace {
     }
 
     private Action action;
+    private String type;
     private String epochHash;
     private String epochNumber;
     private String blockHash;
     private String transactionPosition;
     private String transactionHash;
-    private String type;
 
     @Override
     public String toString() {
