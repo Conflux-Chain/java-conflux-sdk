@@ -13,9 +13,9 @@ public class AdminControl extends ContractCall {
     private Account account;  // if account not set, can only use getAdmin method
     private CfxAddress contractAddress;
 
-    public AdminControl(Account account, int networkId) {
-        super(account.getCfx(), new CfxAddress(AdminControl.contract, networkId));
-        this.contractAddress = new CfxAddress(AdminControl.contract, networkId);
+    public AdminControl(Account account) {
+        super(account.getCfx(), new CfxAddress(AdminControl.contract, account.getCfx().getIntNetworkId()));
+        this.contractAddress = new CfxAddress(AdminControl.contract, account.getCfx().getIntNetworkId());
         this.account = account;
     }
 

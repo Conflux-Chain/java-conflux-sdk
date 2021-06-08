@@ -16,9 +16,9 @@ public class Staking extends ContractCall {
     private Account account;
     private final CfxAddress contractAddress;
 
-    public Staking(Account account, int networkId) {
-        super(account.getCfx(), new CfxAddress(Staking.contract, networkId));
-        this.contractAddress = new CfxAddress(Staking.contract, networkId);
+    public Staking(Account account) {
+        super(account.getCfx(), new CfxAddress(Staking.contract, account.getCfx().getIntNetworkId()));
+        this.contractAddress = new CfxAddress(Staking.contract, account.getCfx().getIntNetworkId());
         this.account = account;
     }
 

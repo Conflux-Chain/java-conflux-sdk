@@ -373,7 +373,7 @@ class Web3j implements Cfx {
 	}
 	
 	@Override
-	public Request<List<Receipt>, Receipt.ListResponse> getEpochReceipt(Epoch epoch) {
+	public Request<List<List<Receipt>>, Receipt.ListResponse> getEpochReceipt(Epoch epoch) {
 		return new Request<>(this.service, "cfx_getEpochReceipts", Receipt.ListResponse.class, epoch.getValue());
 	}
 

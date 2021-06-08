@@ -110,4 +110,16 @@ public class Action {
     public Address getFrom() {
         return this.from;
     }
+
+    @Override
+    public String toString() {
+        String result = "";
+        result += "callType: " + this.callType;
+        result += "\nfrom: " + this.from;
+        result += "\ngas: " + this.gas;
+        result += "\ninput: " + this.input;
+        result += "\nto: " + this.to;
+        result += "\nvalue: " + this.value;
+        return result;
+    }
 }

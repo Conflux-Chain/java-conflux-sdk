@@ -4,6 +4,7 @@ import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
 
 public class AccountPendingTransactions {
     public static class Response extends CfxResponse<AccountPendingTransactions> {}
@@ -11,6 +12,26 @@ public class AccountPendingTransactions {
     private String pendingCount;
     private TxPendingStatus firstTxStatus;
     private List<Transaction> pendingTransactions;
+
+    public Optional<TxPendingStatus> getFirstTxStatus() {
+        if (this.firstTxStatus == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(this.firstTxStatus);
+        }
+    }
+
+    public void setFirstTxStatus(TxPendingStatus firstTxStatus) {
+        this.firstTxStatus = firstTxStatus;
+    }
+
+    public List<Transaction> getPendingTransactions() {
+        return pendingTransactions;
+    }
+
+    public void setPendingTransactions(List<Transaction> pendingTransactions) {
+        this.pendingTransactions = pendingTransactions;
+    }
 
     public BigInteger getPendingCount() {
         return Numeric.decodeQuantity(this.pendingCount);

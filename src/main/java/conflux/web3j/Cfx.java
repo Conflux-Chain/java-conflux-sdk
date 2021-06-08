@@ -117,7 +117,7 @@ public interface Cfx extends Closeable, CfxPubSub {
 
 	Request<SupplyInfo, SupplyInfo.Response> getSupplyInfo(Epoch... epoch);
 
-	Request<List<Receipt>, Receipt.ListResponse> getEpochReceipt(Epoch epoch);
+	Request<List<List<Receipt>>, Receipt.ListResponse> getEpochReceipt(Epoch epoch);
 
 	Request<Optional<AccountPendingInfo>, AccountPendingInfo.Response> getAccountPendingInfo(Address address);
 

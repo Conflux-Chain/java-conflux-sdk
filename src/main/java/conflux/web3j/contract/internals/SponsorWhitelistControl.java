@@ -19,9 +19,9 @@ public class SponsorWhitelistControl extends ContractCall {
     private Account account;
     private final CfxAddress contractAddress;
 
-    public SponsorWhitelistControl(Account account, int networkId) {
-        super(account.getCfx(), new CfxAddress(SponsorWhitelistControl.contract, networkId));
-        this.contractAddress = new CfxAddress(SponsorWhitelistControl.contract, networkId);
+    public SponsorWhitelistControl(Account account) {
+        super(account.getCfx(), new CfxAddress(SponsorWhitelistControl.contract, account.getCfx().getIntNetworkId()));
+        this.contractAddress = new CfxAddress(SponsorWhitelistControl.contract, account.getCfx().getIntNetworkId());
         this.account = account;
     }
 

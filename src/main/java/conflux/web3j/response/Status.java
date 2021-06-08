@@ -8,10 +8,9 @@ public class Status {
 	
 	public static class Response extends CfxResponse<Status> {}
 
-//	Add new fields latestCheckpoint, latestConfirmed, and latestState in cfx_getStatus.
-	
     private String bestHash;
     private String chainId;
+	private String networkId;
     private String epochNumber;
     private String blockNumber;
     private String pendingTxNumber;
@@ -38,6 +37,8 @@ public class Status {
 	public BigInteger getNetworkId() {
 		return Numeric.decodeQuantity(this.networkId);
 	}
+
+	public void setNetworkId(String networkId) {this.networkId = networkId;}
 
     public BigInteger getEpochNumber() {
 		return Numeric.decodeQuantity(this.epochNumber);
