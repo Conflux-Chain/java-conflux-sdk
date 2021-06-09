@@ -5,8 +5,6 @@ import conflux.web3j.request.LogFilter;
 import io.reactivex.Flowable;
 import conflux.web3j.response.events.*;
 
-import java.util.Optional;
-
 public interface CfxPubSub {
     /**
      * Creates a {@link Flowable} instance that emits a notification when a new header is appended

@@ -14,8 +14,9 @@ Note: the required RPC service version is `1.1.4` or above.
 
 #### MISC
 
-1. `Account` add method `deploy`
-2. Internal contract's constructor method omit a parameter `networkId`
+1. `Account` added method `deploy`, which can used to deploy contract.
+2. `Account` added method `deployFile` which supports to deploy contract with truffle compiled json file.
+3. Internal contract's constructor method omit a parameter `networkId`
 
 ### 1.0.0
 

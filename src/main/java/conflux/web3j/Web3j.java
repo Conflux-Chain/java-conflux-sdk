@@ -21,12 +21,13 @@ import conflux.web3j.request.Call;
 import conflux.web3j.request.Epoch;
 import conflux.web3j.request.LogFilter;
 import org.web3j.protocol.core.Response;
+import org.web3j.protocol.http.HttpService;
 
 
 /**
  * JSON-RPC Request object building factory.
  */
-class Web3j implements Cfx {
+public class Web3j implements Web3 {
 	private Web3jService service;
 	private int retry;
 	private long intervalMillis;
@@ -332,12 +333,6 @@ class Web3j implements Cfx {
 		return new Request<>(this.service, "cfx_clientVersion", StringResponse.class)
 				.withRetry(this.retry, this.intervalMillis);
 	}
-
-	/*
-	Request<List<DepositInfo>, DepositInfo.ListResponse> getDepositList();
-
-	Request<List<VoteStakeInfo>, VoteStakeInfo.ListResponse> getVoteList();
-	* */
 
 	@Override
 	public Request<List<DepositInfo>, DepositInfo.ListResponse> getDepositList(Address address, Epoch... epoch) {

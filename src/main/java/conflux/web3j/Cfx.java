@@ -6,7 +6,6 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
-import conflux.web3j.request.TraceFilter;
 import conflux.web3j.response.*;
 import conflux.web3j.types.Address;
 import org.web3j.protocol.Web3jService;
@@ -116,18 +115,6 @@ public interface Cfx extends Closeable, CfxPubSub {
 	Request<List<VoteStakeInfo>, VoteStakeInfo.ListResponse> getVoteList(Address address, Epoch... epoch);
 
 	Request<SupplyInfo, SupplyInfo.Response> getSupplyInfo(Epoch... epoch);
-
-	Request<List<List<Receipt>>, Receipt.ListResponse> getEpochReceipt(Epoch epoch);
-
-	Request<Optional<AccountPendingInfo>, AccountPendingInfo.Response> getAccountPendingInfo(Address address);
-
-	Request<AccountPendingTransactions, AccountPendingTransactions.Response> getAccountPendingTransactions(Address address);
-
-	Request<Optional<List<LocalizedTrace>>, LocalizedTrace.Response> traceTransaction(String txHash);
-
-	Request<Optional<LocalizedBlockTrace>, LocalizedBlockTrace.Response> traceBlock(String blockHash);
-
-	Request<Optional<List<LocalizedTrace>>, LocalizedTrace.Response> traceFilter(TraceFilter filter);
 
 	<T,R extends Response<?> & HasValue<T>> Request<T, R> getCustomizedRequest(Class<R> responseType, String method, Object... params);
 	

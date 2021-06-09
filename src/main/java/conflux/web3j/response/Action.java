@@ -5,7 +5,6 @@ import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
 
-// TODO There are five kind actions(call, callResult, create, createResult, internalTraces), how to express them in one class
 public class Action {
     // call
     private String callType;
@@ -113,6 +112,12 @@ public class Action {
 
     @Override
     public String toString() {
+//        try {
+//            return ToStringUtils.getObjectMapper().writeValueAsString(this);
+//        } catch (JsonProcessingException e) {
+//            e.printStackTrace();
+//        }
+
         String result = "";
         result += "callType: " + this.callType;
         result += "\nfrom: " + this.from;
@@ -123,3 +128,5 @@ public class Action {
         return result;
     }
 }
+
+
