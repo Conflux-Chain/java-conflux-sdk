@@ -73,17 +73,4 @@ public class LocalizedTrace {
     private String blockHash;
     private String transactionPosition;
     private String transactionHash;
-
-    @Override
-    public String toString() {
-        String result = "";
-        result += "epochHash: " + this.epochHash;
-        result += "\nepochNumber: " + this.epochNumber;
-        result += "\nblockHash: " + this.blockHash;
-        result += "\ntransactionPosition: " + this.transactionPosition;
-        result += "\ntransactionHash: " + this.transactionHash;
-        result += "\ntype: " + this.type;
-        result += "\naction: " + this.action;
-        return  result;
-    }
 }
