@@ -26,7 +26,7 @@ public class RPCTests {
     Address EMPTY_ADDRESS = new Address("cfxtest:aame568esrpusxku1c449939ntrx2j0rxpmm5ge874");
     Address TEST_ADDRESS = new Address("CFXTEST:TYPE.USER:AAK2RRA2NJVD77EZWJVX04KKDS9FZAGFE6D5R8E957");
 
-    @Test
+    /*@Test
     @DisplayName("getLog")
     void getLog() {
         Web3 cfx = Web3.create(this.MAIN_NET);
@@ -43,7 +43,7 @@ public class RPCTests {
         assertEquals("cfx:achc8nxj7r451c223m18w2dwjnmhkd6rxawrvkvsy2", logs.get(0).getAddress().getAddress());
     }
 
-    /*@Test
+    @Test
     @DisplayName("getStatus")
     void getStatus() {
         Status status = cfx.getStatus().sendAndGet();
