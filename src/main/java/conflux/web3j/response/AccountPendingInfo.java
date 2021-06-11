@@ -1,7 +1,7 @@
 package conflux.web3j.response;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import conflux.web3j.utils.ToStringUtils;
+import conflux.web3j.utils.Utils;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;
@@ -48,11 +48,6 @@ public class AccountPendingInfo {
 
     @Override
     public String toString() {
-        try {
-            return ToStringUtils.getObjectMapper().writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return "Serialized failed";
+        return Utils.jsonStringify(this);
     }
 }

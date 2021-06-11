@@ -21,13 +21,12 @@ import conflux.web3j.request.Call;
 import conflux.web3j.request.Epoch;
 import conflux.web3j.request.LogFilter;
 import org.web3j.protocol.core.Response;
-import org.web3j.protocol.http.HttpService;
 
 
 /**
  * JSON-RPC Request object building factory.
  */
-public class Web3j implements Web3 {
+class Web3j implements Web3 {
 	private Web3jService service;
 	private int retry;
 	private long intervalMillis;
@@ -368,7 +367,7 @@ public class Web3j implements Web3 {
 	}
 	
 	@Override
-	public Request<List<List<Receipt>>, Receipt.ListResponse> getEpochReceipt(Epoch epoch) {
+	public Request<Optional<List<List<Receipt>>>, Receipt.ListResponse> getEpochReceipts(Epoch epoch) {
 		return new Request<>(this.service, "cfx_getEpochReceipts", Receipt.ListResponse.class, epoch.getValue());
 	}
 

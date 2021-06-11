@@ -1,7 +1,5 @@
 package conflux.web3j.response;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import conflux.web3j.utils.ToStringUtils;
 import org.web3j.utils.Numeric;
 
 import java.math.BigInteger;

@@ -116,6 +116,10 @@ public interface Cfx extends Closeable, CfxPubSub {
 
 	Request<SupplyInfo, SupplyInfo.Response> getSupplyInfo(Epoch... epoch);
 
+	Request<Optional<AccountPendingInfo>, AccountPendingInfo.Response> getAccountPendingInfo(Address address);
+
+	Request<AccountPendingTransactions, AccountPendingTransactions.Response> getAccountPendingTransactions(Address address);
+
 	<T,R extends Response<?> & HasValue<T>> Request<T, R> getCustomizedRequest(Class<R> responseType, String method, Object... params);
 	
 	default Receipt waitForReceipt(String txHash) throws InterruptedException {

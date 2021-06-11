@@ -12,9 +12,5 @@ import java.util.Optional;
 
 // debug RPC methods
 public interface Debug extends Closeable {
-    Request<List<List<Receipt>>, Receipt.ListResponse> getEpochReceipt(Epoch epoch);
-
-    Request<Optional<AccountPendingInfo>, AccountPendingInfo.Response> getAccountPendingInfo(Address address);
-
-    Request<AccountPendingTransactions, AccountPendingTransactions.Response> getAccountPendingTransactions(Address address);
+    Request<Optional<List<List<Receipt>>>, Receipt.ListResponse> getEpochReceipts(Epoch epoch);
 }

@@ -10,7 +10,7 @@ import org.web3j.utils.Numeric;
 public class Receipt {
 	
 	public static class Response extends CfxNullableResponse<Receipt> {}
-	public static class ListResponse extends CfxListResponse<List<Receipt>> {}
+	public static class ListResponse extends CfxNullableResponse<List<List<Receipt>>> {}
 	
 	private String transactionHash;
 	private String index;
