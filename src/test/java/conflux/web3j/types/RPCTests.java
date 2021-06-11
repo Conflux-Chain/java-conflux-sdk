@@ -25,8 +25,8 @@ public class RPCTests {
     Web3 cfx_inside_testnet = Web3.create(this.INSIDE_URL);
     Address EMPTY_ADDRESS = new Address("cfxtest:aame568esrpusxku1c449939ntrx2j0rxpmm5ge874");
     Address TEST_ADDRESS = new Address("CFXTEST:TYPE.USER:AAK2RRA2NJVD77EZWJVX04KKDS9FZAGFE6D5R8E957");
-
-    /*@Test
+    /*
+    @Test
     @DisplayName("getLog")
     void getLog() {
         Web3 cfx = Web3.create(this.MAIN_NET);
