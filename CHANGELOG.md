@@ -1,3 +1,23 @@
+### 1.1.0
+
+#### Add more RPC methods
+1. `cfx_getEpochReceipts`
+2. `cfx_getAccountPendingInfo`
+3. `cfx_getAccountPendingTransactions`
+4. `trace_block`
+5. `trace_transaction`
+6. `trace_filter`
+7. `cfx_getLogs`'s filter param add one more field 'offset'
+8. `cfx_subscribe epochs` add one more optional tag parameter, available options: `latest_mined`(default value), `latest_state`
+
+Note: the required RPC service version is `1.1.4` or above.
+
+#### MISC
+
+1. `Account` added method `deploy`, which can used to deploy contract.
+2. `Account` added method `deployFile` which supports to deploy contract with truffle compiled json file.
+3. Internal contract's constructor method omit a parameter `networkId`
+
 ### 1.0.0
 
 1. Class Address support new CIP37 address

@@ -14,6 +14,7 @@ public class LogFilter {
 	private List<Address> address;
 	private List<List<String>> topics;
 	private Long limit;
+	private Long offset;
 	
 	public Epoch getFromEpoch() {
 		return fromEpoch;
@@ -65,5 +66,17 @@ public class LogFilter {
 	
 	public void setLimit(Long limit) {
 		this.limit = limit;
+	}
+
+	public String getOffset() {
+		if (this.offset == null) {
+			return null;
+		} else {
+			return Numeric.encodeQuantity(BigInteger.valueOf(this.offset));
+		}
+	}
+
+	public void setOffset(Long offset) {
+		this.offset = offset;
 	}
 }

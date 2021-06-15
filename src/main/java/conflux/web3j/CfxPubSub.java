@@ -1,5 +1,6 @@
 package conflux.web3j;
 
+import conflux.web3j.request.Epoch;
 import conflux.web3j.request.LogFilter;
 import io.reactivex.Flowable;
 import conflux.web3j.response.events.*;
@@ -27,5 +28,5 @@ public interface CfxPubSub {
      *
      * @return a {@link Flowable} instance that emits new epochs
      */
-    Flowable<EpochNotification> subscribeEpochs();
+    Flowable<EpochNotification> subscribeEpochs(Epoch... epoch);
 }
