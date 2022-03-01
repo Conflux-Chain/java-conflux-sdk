@@ -213,6 +213,12 @@ class Web3j implements Web3 {
 	}
 
 	@Override
+	public Request<BigInteger, BigIntResponse> txpoolNextNonce(Address address) {
+		return new Request<>(this.service, "txpool_nextNonce", BigIntResponse.class, address)
+				.withRetry(this.retry, this.intervalMillis);
+	}
+
+	@Override
 	public Request<String, StringResponse> sendRawTransaction(String hexEncoded) {
 		return new Request<>(this.service, "cfx_sendRawTransaction", StringResponse.class, hexEncoded)
 				.withRetry(this.retry, this.intervalMillis);

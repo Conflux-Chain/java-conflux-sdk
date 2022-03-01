@@ -83,6 +83,10 @@ public class Account {
 	public BigInteger getNonce() {
 		return nonce;
 	}
+
+	public BigInteger getPoolNonce() {
+		return cfx.txpoolNextNonce(this.address).sendAndGet();
+	}
 	
 	public void setNonce(BigInteger nonce) {
 		this.nonce = nonce;
@@ -147,7 +151,7 @@ public class Account {
 	}
 	
 	private RawTransaction buildRawTransaction(Option option, Address to, String data) {
-		return option.buildTx(this.cfx, this.address, this.nonce, to, data);
+		return option.buildTx(this.cfx, this.address, this.getPoolNonce(), to, data);
 	}
 	
 	public String deploy(String bytecodes, Type<?>... constructorArgs) throws Exception {
@@ -319,7 +323,7 @@ public class Account {
 			UsedGasAndCollateral estimation = cfx.estimateGasAndCollateral(call).sendAndGet();
 			
 			if (this.gasLimit == null) {
-				this.gasLimit = new BigDecimal(estimation.getGasUsed()).multiply(this.gasOverflowRatio).toBigInteger();
+				this.gasLimit = estimation.getGasLimit();
 			}
 			
 			if (this.storageLimit == null) {
@@ -338,6 +342,8 @@ public class Account {
 			
 			if (this.chainId != null) {
 				tx.setChainId(this.chainId);
+			} else {
+				tx.setChainId(cfx.getChainId());
 			}
 			
 			return tx;

@@ -123,7 +123,7 @@ public class TransactionBuilder {
 		}
 		
 		if (this.tx.getChainId() == null) {
-			this.tx.setChainId(RawTransaction.getDefaultChainId());
+			this.tx.setChainId(cfx.getChainId());
 		}
 		
 		return this.tx;
