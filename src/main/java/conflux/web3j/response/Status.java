@@ -17,6 +17,8 @@ public class Status {
     private String latestCheckpoint;
     private String latestConfirmed;
     private String latestState;
+	private String latestFinalized;
+	private String ethereumSpaceChainId;
     
     public String getBestHash() {
 		return bestHash;
@@ -32,6 +34,14 @@ public class Status {
     
     public void setChainId(String chainId) {
 		this.chainId = chainId;
+	}
+
+	public BigInteger getEthereumSpaceChainId() {
+		return Numeric.decodeQuantity(this.ethereumSpaceChainId);
+	}
+
+	public void setEthereumSpaceChainId(String chainId) {
+		this.ethereumSpaceChainId = chainId;
 	}
 
 	public BigInteger getNetworkId() {
@@ -86,6 +96,14 @@ public class Status {
 
 	public void setLatestState(String latestState) {
 		this.latestState = latestState;
+	}
+
+	public BigInteger getLatestFinalized() {
+		return Numeric.decodeQuantity(this.latestFinalized);
+	}
+
+	public void setLatestFinalized(String latestFinalized) {
+		this.latestFinalized = latestFinalized;
 	}
 
 }

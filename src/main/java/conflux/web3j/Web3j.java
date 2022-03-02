@@ -403,6 +403,21 @@ class Web3j implements Web3 {
 	}
 
 	@Override
+	public Request<List<String>, StringListResponse.Response> getOpenedMethodGroups() {
+		return new Request<>(this.service, "cfx_openedMethodGroups", StringListResponse.Response.class);
+	}
+
+	@Override
+	public Request<PoSEconomics, PoSEconomics.Response> getPoSEconomics() {
+		return new Request<>(this.service, "cfx_getPoSEconomics", PoSEconomics.Response.class);
+	}
+
+	@Override
+	public Request<PoSEpochRewards, PoSEpochRewards.Response> getPoSRewardByEpoch(Address address, Epoch epoch) {
+		return new Request<>(this.service, "cfx_getPoSRewardByEpoch", PoSEpochRewards.Response.class);
+	}
+
+	@Override
 	public <T,R extends Response<?> & HasValue<T>> Request<T, R> getCustomizedRequest(Class<R> responseType, String method, Object... params){
 		return new Request<>(this.service, method, responseType, params)
 				.withRetry(this.retry, this.intervalMillis);

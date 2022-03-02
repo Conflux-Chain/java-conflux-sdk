@@ -122,6 +122,12 @@ public interface Cfx extends Closeable, CfxPubSub {
 
 	Request<AccountPendingTransactions, AccountPendingTransactions.Response> getAccountPendingTransactions(Address address);
 
+	Request<List<String>, StringListResponse.Response> getOpenedMethodGroups();
+
+	Request<PoSEconomics, PoSEconomics.Response> getPoSEconomics();
+
+	Request<PoSEpochRewards, PoSEpochRewards.Response> getPoSRewardByEpoch(Address address, Epoch epoch);
+
 	<T,R extends Response<?> & HasValue<T>> Request<T, R> getCustomizedRequest(Class<R> responseType, String method, Object... params);
 	
 	default Receipt waitForReceipt(String txHash) throws InterruptedException {

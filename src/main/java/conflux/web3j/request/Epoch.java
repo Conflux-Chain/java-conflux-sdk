@@ -28,6 +28,10 @@ public interface Epoch extends HasValue<String> {
 	static Epoch latestConfirmed() {
 		return DefaultEpoch.LATEST_CONFIRMED;
 	}
+
+	static Epoch latestFinalized() {
+		return DefaultEpoch.LATEST_FINALIZED;
+	}
 	
 	static Epoch numberOf(long number) {
 		String value = Numeric.encodeQuantity(BigInteger.valueOf(number));
@@ -49,7 +53,8 @@ enum DefaultEpoch implements Epoch {
 	LATEST_STATE("latest_state"),
 	LATEST_MINED("latest_mined"),
 	LATEST_CHECKPOINT("latest_checkpoint"),
-	LATEST_CONFIRMED("latest_confirmed");
+	LATEST_CONFIRMED("latest_confirmed"),
+	LATEST_FINALIZED("latest_finalized");
 	
 	private String value;
 	
