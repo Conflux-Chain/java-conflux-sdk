@@ -423,9 +423,6 @@ class Web3j implements Web3 {
 				.withRetry(this.retry, this.intervalMillis);
 	}
 
-
-
-
 	@Override
 	public Flowable<NewHeadsNotification> subscribeNewHeads() {
 		return service.subscribe(
