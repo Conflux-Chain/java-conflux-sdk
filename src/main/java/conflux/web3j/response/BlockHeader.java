@@ -25,6 +25,8 @@ public class BlockHeader {
 	private boolean adaptive;
 	private String nonce;
 	private String size;
+	private String posReference;
+	private List<String> custom;
 	
 	public String getHash() {
 		return hash;
@@ -168,5 +170,21 @@ public class BlockHeader {
 	
 	public void setSize(String size) {
 		this.size = size;
+	}
+
+	public void setPosReference(String posReference) {
+		this.posReference = posReference;
+	}
+
+	public String getPosReference() {
+		return posReference;
+	}
+
+	public List<String> getCustom() {
+		return custom;
+	}
+
+	public void setCustom(List<String> custom) {
+		this.custom = custom;
 	}
 }

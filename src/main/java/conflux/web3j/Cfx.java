@@ -78,6 +78,8 @@ public interface Cfx extends Closeable, CfxPubSub {
 	
 	Request<BigInteger, BigIntResponse> getNonce(Address address, Epoch... epoch);
 
+	Request<BigInteger, BigIntResponse> txpoolNextNonce(Address address);
+
 	Request<String, StringResponse> sendRawTransaction(String hexEncoded);
 	
 	Request<String, StringResponse> call(Call request, Epoch... epoch);
@@ -119,6 +121,12 @@ public interface Cfx extends Closeable, CfxPubSub {
 	Request<Optional<AccountPendingInfo>, AccountPendingInfo.Response> getAccountPendingInfo(Address address);
 
 	Request<AccountPendingTransactions, AccountPendingTransactions.Response> getAccountPendingTransactions(Address address);
+
+	Request<List<String>, StringListResponse.Response> rpcModules();
+
+	Request<PoSEconomics, PoSEconomics.Response> getPoSEconomics();
+
+	Request<PoSEpochRewards, PoSEpochRewards.Response> getPoSRewardByEpoch(Address address, Epoch epoch);
 
 	<T,R extends Response<?> & HasValue<T>> Request<T, R> getCustomizedRequest(Class<R> responseType, String method, Object... params);
 	

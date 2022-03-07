@@ -27,7 +27,7 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.guava:guava:28.0-jre'
 
-    compile 'org.web3j:core:4.8.4'
+    compile 'org.web3j:core:4.9.0'
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'

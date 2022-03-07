@@ -46,7 +46,9 @@ public class RawTransaction {
 	private BigInteger epochHeight;
 	private BigInteger chainId;
 	private String data;
-	
+
+	// Note default will use Mainnet chainId.
+	// To create a testnet, user need invoke RawTransaction.setDefaultChainId(BigInteger.ONE) before invoke the create method.
 	public static RawTransaction create(BigInteger nonce, BigInteger gas, Address to, BigInteger value, BigInteger storageLimit, BigInteger epochHeight, String data) {
 		RawTransaction tx = new RawTransaction();
 		
@@ -57,8 +59,8 @@ public class RawTransaction {
 		tx.value = value;
 		tx.storageLimit = storageLimit;
 		tx.epochHeight = epochHeight;
-		tx.chainId = DefaultChainId.get();
 		tx.data = data;
+		tx.chainId = DefaultChainId.get();
 		
 		return tx;
 	}

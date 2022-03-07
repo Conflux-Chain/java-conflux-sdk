@@ -33,15 +33,13 @@ public class Account {
 	
 	private Cfx cfx;
 	private Address address;
-	private BigInteger nonce;
-	
+
 	private AccountManager am;
 	private ECKeyPair ecKeyPair;
 	
 	private Account(Cfx cfx, Address address) {
 		this.cfx = cfx;
 		this.address = address;
-		this.nonce = cfx.getNonce(this.address).sendAndGet();
 	}
 	
 	public static Account unlock(Cfx cfx, AccountManager am, Address address, String password) throws Exception {
@@ -80,12 +78,8 @@ public class Account {
 		return this.address.getHexAddress();
 	}
 	
-	public BigInteger getNonce() {
-		return nonce;
-	}
-	
-	public void setNonce(BigInteger nonce) {
-		this.nonce = nonce;
+	public BigInteger getPoolNonce() {
+		return cfx.txpoolNextNonce(this.address).sendAndGet();
 	}
 	
 	public String sign(RawTransaction tx) throws Exception {
@@ -96,23 +90,6 @@ public class Account {
 	
 	public SendTransactionResult send(String signedTx) throws Exception {
 		SendTransactionResult result = this.cfx.sendRawTransactionAndGet(signedTx);
-		
-		/*
-		 * Update nonce in following cases:
-		 * 1. Send transaction successfully.
-		 * 2. Transaction sent multiple times due to IO error via retry mechanism,
-		 * and RPC error TxAlreadyExists returned.
-		 * 
-		 * Generally, this is used to send multiple transactions with continuous tx nonce.
-		 * So, each transaction sent to full node should be unique. When RPC error TxAlreadyExists
-		 * returned, the corresponding transaction should be received by RPC server.
-		 */
-		if (result.getRawError() == null 
-				|| result.getErrorType().equals(SendTransactionError.TxAlreadyExists)
-				|| result.getErrorType().equals(SendTransactionError.InvalidNonceAlreadyUsed)) {
-			this.nonce = this.nonce.add(BigInteger.ONE);
-		}
-		
 		return result;
 	}
 	
@@ -147,7 +124,7 @@ public class Account {
 	}
 	
 	private RawTransaction buildRawTransaction(Option option, Address to, String data) {
-		return option.buildTx(this.cfx, this.address, this.nonce, to, data);
+		return option.buildTx(this.cfx, this.address, this.getPoolNonce(), to, data);
 	}
 	
 	public String deploy(String bytecodes, Type<?>... constructorArgs) throws Exception {
@@ -196,14 +173,6 @@ public class Account {
 	public String callWithData(Option option, Address contract, String data) throws Exception {
 		RawTransaction tx = this.buildRawTransaction(option, contract, data);
 		return this.mustSend(tx);
-	}
-	
-	public void waitForNonceUpdated() throws InterruptedException {
-		this.cfx.waitForNonce(this.address, this.nonce);
-	}
-	
-	public void waitForNonceUpdated(long intervalMillis) throws InterruptedException {
-		this.cfx.waitForNonce(this.address, this.nonce, intervalMillis);
 	}
 	
 	public static class Option {
@@ -319,7 +288,7 @@ public class Account {
 			UsedGasAndCollateral estimation = cfx.estimateGasAndCollateral(call).sendAndGet();
 			
 			if (this.gasLimit == null) {
-				this.gasLimit = new BigDecimal(estimation.getGasUsed()).multiply(this.gasOverflowRatio).toBigInteger();
+				this.gasLimit = estimation.getGasLimit();
 			}
 			
 			if (this.storageLimit == null) {
@@ -338,6 +307,8 @@ public class Account {
 			
 			if (this.chainId != null) {
 				tx.setChainId(this.chainId);
+			} else {
+				tx.setChainId(cfx.getChainId());
 			}
 			
 			return tx;

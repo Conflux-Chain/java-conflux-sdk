@@ -1,3 +1,30 @@
+# CHANGELOG
+
+### 1.1.1
+
+* Default gasPrice changed to 1GDrip
+* When sending transaction, will get `chainId` from Cfx instance, and using txpool nonce
+* blockHeader add two new fields `custom`, `posReference`
+* status add two new fields `latestFinalized`, `ethereumSpaceChainId`
+
+#### Add more RPC methods
+
+Add support for new methods imported from Conflux v2.0
+
+1. `txpool_nextNonce`
+2. `cfx_openedMethodGroups`
+3. `cfx_getPoSEconomics`
+4. `cfx_getPoSRewardByEpoch`
+
+#### Account
+
+Several Account method has been removed.
+
+* getNonce
+* setNonce
+* waitForNonceUpdated
+* waitForNonceUpdated
+
 ### 1.1.0
 
 #### Add more RPC methods
