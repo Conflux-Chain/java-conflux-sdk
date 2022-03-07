@@ -122,7 +122,7 @@ public interface Cfx extends Closeable, CfxPubSub {
 
 	Request<AccountPendingTransactions, AccountPendingTransactions.Response> getAccountPendingTransactions(Address address);
 
-	Request<List<String>, StringListResponse.Response> getOpenedMethodGroups();
+	Request<List<String>, StringListResponse.Response> rpcModules();
 
 	Request<PoSEconomics, PoSEconomics.Response> getPoSEconomics();
 

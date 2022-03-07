@@ -33,15 +33,13 @@ public class Account {
 	
 	private Cfx cfx;
 	private Address address;
-	private BigInteger nonce;
-	
+
 	private AccountManager am;
 	private ECKeyPair ecKeyPair;
 	
 	private Account(Cfx cfx, Address address) {
 		this.cfx = cfx;
 		this.address = address;
-		this.nonce = cfx.getNonce(this.address).sendAndGet();
 	}
 	
 	public static Account unlock(Cfx cfx, AccountManager am, Address address, String password) throws Exception {
@@ -80,16 +78,8 @@ public class Account {
 		return this.address.getHexAddress();
 	}
 	
-	public BigInteger getNonce() {
-		return nonce;
-	}
-
 	public BigInteger getPoolNonce() {
 		return cfx.txpoolNextNonce(this.address).sendAndGet();
-	}
-	
-	public void setNonce(BigInteger nonce) {
-		this.nonce = nonce;
 	}
 	
 	public String sign(RawTransaction tx) throws Exception {
@@ -100,23 +90,6 @@ public class Account {
 	
 	public SendTransactionResult send(String signedTx) throws Exception {
 		SendTransactionResult result = this.cfx.sendRawTransactionAndGet(signedTx);
-		
-		/*
-		 * Update nonce in following cases:
-		 * 1. Send transaction successfully.
-		 * 2. Transaction sent multiple times due to IO error via retry mechanism,
-		 * and RPC error TxAlreadyExists returned.
-		 * 
-		 * Generally, this is used to send multiple transactions with continuous tx nonce.
-		 * So, each transaction sent to full node should be unique. When RPC error TxAlreadyExists
-		 * returned, the corresponding transaction should be received by RPC server.
-		 */
-		if (result.getRawError() == null 
-				|| result.getErrorType().equals(SendTransactionError.TxAlreadyExists)
-				|| result.getErrorType().equals(SendTransactionError.InvalidNonceAlreadyUsed)) {
-			this.nonce = this.nonce.add(BigInteger.ONE);
-		}
-		
 		return result;
 	}
 	
@@ -200,14 +173,6 @@ public class Account {
 	public String callWithData(Option option, Address contract, String data) throws Exception {
 		RawTransaction tx = this.buildRawTransaction(option, contract, data);
 		return this.mustSend(tx);
-	}
-	
-	public void waitForNonceUpdated() throws InterruptedException {
-		this.cfx.waitForNonce(this.address, this.nonce);
-	}
-	
-	public void waitForNonceUpdated(long intervalMillis) throws InterruptedException {
-		this.cfx.waitForNonce(this.address, this.nonce, intervalMillis);
 	}
 	
 	public static class Option {

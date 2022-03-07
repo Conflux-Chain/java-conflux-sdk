@@ -403,7 +403,7 @@ class Web3j implements Web3 {
 	}
 
 	@Override
-	public Request<List<String>, StringListResponse.Response> getOpenedMethodGroups() {
+	public Request<List<String>, StringListResponse.Response> rpcModules() {
 		return new Request<>(this.service, "cfx_openedMethodGroups", StringListResponse.Response.class);
 	}
 

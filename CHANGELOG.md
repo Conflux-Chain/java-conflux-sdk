@@ -1,3 +1,5 @@
+# CHANGELOG
+
 ### 1.1.1
 
 * Default gasPrice changed to 1GDrip
@@ -13,6 +15,15 @@ Add support for new methods imported from Conflux v2.0
 2. `cfx_openedMethodGroups`
 3. `cfx_getPoSEconomics`
 4. `cfx_getPoSRewardByEpoch`
+
+#### Account
+
+Several Account method has been removed.
+
+* getNonce
+* setNonce
+* waitForNonceUpdated
+* waitForNonceUpdated
 
 ### 1.1.0
 
