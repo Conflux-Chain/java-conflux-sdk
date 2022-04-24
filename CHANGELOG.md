@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### 1.2.0
+
+* Add support for standard token ERC721, ERC1155
+
 ### 1.1.1
 
 * Default gasPrice changed to 1GDrip

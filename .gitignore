@@ -33,3 +33,4 @@ gradle-app.setting
 bin
 .idea
 docs/tmp.md
+docs/how-to-publish.md
