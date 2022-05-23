@@ -47,6 +47,7 @@ public class ERC721 extends ContractCall {
         return this.balanceOf(account.getABIAddress());
     }
 
+    // pass a hex40 address
     public BigInteger balanceOf(String account) throws  RpcException {
         return this.balanceOf(new Address(account));
     }
