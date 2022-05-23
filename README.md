@@ -4,11 +4,24 @@
 
 The Conflux Java SDK allows any Java client to interact with a local or remote Conflux node based on JSON-RPC 2.0 protocol. With Conflux Java SDK, user can easily manage accounts, send transactions, deploy smart contracts and query blockchain information.
 
+The `java-conflux-sdk` is built on [web3j](https://github.com/web3j/web3j), which providing a lot useful utilities:
+
+* keccak
+* secp256k1
+* abi
+* rlp
+* hex utilities
+
 ## How to import
-We have publish this package to maven central repository for easy import, you can import it 
+We have published this package to maven central repository for easy import, you can import it 
 
 ### Apache Maven:
 ```xml
+<dependency>
+    <groupId>com.squareup.okhttp3</groupId>
+    <artifactId>okhttp</artifactId>
+    <version>4.9.3</version>
+</dependency>
 <dependency>
   <groupId>io.github.conflux-chain</groupId>
   <artifactId>conflux.web3j</artifactId>
@@ -26,11 +39,80 @@ For detail version list check [here](https://search.maven.org/artifact/io.github
 ### Manually
 Or you can download jar package from github release page, or clone the source code build jar manually.
 
+## Guides
+
+* [RPC interaction](./docs/getting-started.md)
+* [Account management](./docs/account-management.md)
+* [Sending transaction](./docs/sending-tx.md)
+* [Contract Interaction](./docs/contract-interaction.md)
+
 ## Docs
 
-* [API](https://javadoc.io/doc/io.github.conflux-chain/conflux.web3j)
+* [Conflux developer documentation portal](https://developer.confluxnetwork.org/)
+* [JAVA SDK API](https://javadoc.io/doc/io.github.conflux-chain/conflux.web3j)
+* [Conflux fullnode RPC API](https://developer.confluxnetwork.org/conflux-doc/docs/json_rpc)
+* [Conflux fullnode pub/sub API](https://developer.confluxnetwork.org/conflux-doc/docs/pubsub)
 * [SDK updates for CIP37](./docs/cfx-address.md)
+* [Testnet Faucet](https://faucet.confluxnetwork.org/)
 * [changelog](./CHANGELOG.md)
+
+## Quick Start
+
+With java-conflux-sdk it's very easy to query balance and send transaction.
+
+```java
+import conflux.web3j.Account;
+import conflux.web3j.Cfx;
+import conflux.web3j.CfxUnit;
+import conflux.web3j.types.Address;
+import java.math.BigInteger;
+
+public class main {
+    public static void main(String[] args) throws Exception {
+        // Use testnet RPC url create a Cfx instance, which can be used to invoke RPC method
+        Cfx cfx = Cfx.create("https://test.confluxrpc.com");
+        String ADDRESS = "cfxtest:aat9v7xdvszbj68x083kjjt52z32g94nwjaj7vdpxf";
+        // getBalance method can be used to query balance of one address
+        BigInteger balance = cfx.getBalance(new Address(ADDRESS)).sendAndGet();
+        // default unit is drip
+        System.out.println("balance in Drip: " + balance);
+        // Use CfxUnit.drip2Cfx convert unit to CFX
+        System.out.println("balance in CFX: " + CfxUnit.drip2Cfx(balance));
+
+        // Create an account with private key
+        Account account = Account.create(cfx, PRIVATE_KEY);
+        // Call account.transfer method to transfer CFX to another address
+        String hash = account.transfer(new Address(ADDRESS), BigInteger.valueOf(100));
+        System.out.println("Transaction hash: " + hash);        
+    }
+}
+```
+
+## Query Conflux Information
+Use `Cfx` interface to query Conflux blockchain information, such as block, epoch, transaction, receipt. Following is an example to query the current epoch number:
+
+```java
+package conflux.sdk.examples;
+
+import java.math.BigInteger;
+import conflux.web3j.types.Address;
+import conflux.web3j.Cfx;
+
+public class App {
+
+	public static void main(String[] args) throws Exception {
+		Cfx cfx = Cfx.create("https://test.confluxrpc.com", 3, 1000);
+        // Invoke RPC method cfx_getEpochNumber
+		BigInteger epoch = cfx.getEpochNumber().sendAndGet();
+		System.out.println("Current epoch: " + epoch);
+        
+        Address addr = new Address("cfxtest:aak2rra2njvd77ezwjvx04kkds9fzagfe6d5r8e957");
+        BigInteger nonce = cfx.getNonce(addr).sendAndGet();
+	}
+
+}
+```
+`Cfx` interface provides a factory method to create an instance, and allow client to enable auto-retry mechanism in case of temporary IO errors.
 
 ## Conflux Address
 Conflux import a new base32 address at [CIP37](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-37.md).
@@ -38,15 +120,15 @@ From `conflux-rust` v1.1.1, and `java-conflux-sdk` 1.0, the new CIP37 will be su
 The `Address` class has added support for CIP37 address.
 
 ```java
-    int testNetId = 1;  // mainnet is 1029
-    Address a = new Address("0x13d2bA4eD43542e7c54fbB6c5fCCb9f269C1f94C", testNetId);
-    Address b = new Address("cfxtest:aak7fsws4u4yf38fk870218p1h3gxut3ku00u1k1da");
+int testNetId = 1;  // mainnet is 1029
+Address a = new Address("0x13d2bA4eD43542e7c54fbB6c5fCCb9f269C1f94C", testNetId);
+Address b = new Address("cfxtest:aak7fsws4u4yf38fk870218p1h3gxut3ku00u1k1da");
 
-    a.getAddress(); // "cfxtest:aak7fsws4u4yf38fk870218p1h3gxut3ku00u1k1da"
-    a.getHexAddress(); // "0x13d2bA4eD43542e7c54fbB6c5fCCb9f269C1f94C"
-    a.getVerboseAddress(); // "NET1921:TYPE.USER:AAR8JZYBZV0FHZREAV49SYXNZUT8S0JT1AT8UHK7M3"
-    a.getNetworkId(); // 1
-    a.getType(); // user
+a.getAddress(); // "cfxtest:aak7fsws4u4yf38fk870218p1h3gxut3ku00u1k1da"
+a.getHexAddress(); // "0x13d2bA4eD43542e7c54fbB6c5fCCb9f269C1f94C"
+a.getVerboseAddress(); // "NET1921:TYPE.USER:AAR8JZYBZV0FHZREAV49SYXNZUT8S0JT1AT8UHK7M3"
+a.getNetworkId(); // 1
+a.getType(); // user
 ```
 
 For complete CIP37 address updates [check here](./docs/cfx-address.md)
@@ -66,7 +148,7 @@ import conflux.web3j.AccountManager;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        String privateKey = "0xxxxxx";
+        String privateKey = "0xxxxxx"; // replace this with your own privateKey
         // Initialize a accountManager
         AccountManager am = new AccountManager(testNetId);
         // import private key
@@ -86,29 +168,6 @@ AccountManager.signTransaction(RawTransaction tx, Address address)
 ```java
 AccountManager.signTransaction(RawTransaction tx, Address address, String password)
 ```
-
-
-## Query Conflux Information
-Use `Cfx` interface to query Conflux blockchain information, such as block, epoch, transaction, receipt. Following is an example to query the current epoch number:
-
-```java
-package conflux.sdk.examples;
-
-import java.math.BigInteger;
-
-import conflux.web3j.Cfx;
-
-public class App {
-
-	public static void main(String[] args) throws Exception {
-		Cfx cfx = Cfx.create("https://test.confluxrpc.com", 3, 1000);
-		BigInteger epoch = cfx.getEpochNumber().sendAndGet();
-		System.out.println("Current epoch: " + epoch);
-	}
-
-}
-```
-`Cfx` interface provides a factory method to create an instance, and allow client to enable auto-retry mechanism in case of temporary IO errors.
 
 ## Send Transaction
 To send a transaction, first you need to build a transaction and sign the transaction at local machine, then send the signed transaction to local or remote Conflux node.
@@ -215,17 +274,18 @@ public class App {
 ```
 
 ## Additional Tools
+
 Conflux Java SDK also provides some helpful tools:
+
 - `Account`: used for a single account to send multiple transactions and manage `nonce` automatically.
 - `CfxUnit`: provides utilities for unit conversion.
 - `ContractCall`: query contract data without ABI file.
 - `DecodeUtil` and `TupleDecoder`: provides utilities for ABI decode.
 - `Recall`: diagnose failed transactions.
 
-
 ## web3j
 
 Conflux network's vm is compatible with evm, and a lot web3j functionality can directly used on Conflux network,
 For example `Sign`, encode and so on.
 
-* [Web3j API (Please choose 4.8.4 manually)](https://javadoc.io/doc/org.web3j)
+* [Web3j API (Please choose 4.9.0 manually)](https://javadoc.io/doc/org.web3j)

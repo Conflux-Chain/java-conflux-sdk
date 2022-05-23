@@ -57,7 +57,7 @@ public class SponsorWhitelistControl extends ContractCall {
     }
 
     public boolean isWhitelisted(Address contractAddr, Address user) throws RpcException {
-        return this.callAndGet(Bool.class, "isWhitelisted", contractAddr, contractAddr);
+        return this.callAndGet(Bool.class, "isWhitelisted", contractAddr, user);
     }
 
     public boolean isAllWhitelisted(Address contractAddr) throws RpcException {
