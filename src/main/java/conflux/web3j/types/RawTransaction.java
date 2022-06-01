@@ -53,7 +53,7 @@ public class RawTransaction {
 		RawTransaction tx = new RawTransaction();
 		
 		tx.nonce = nonce;
-		tx.gasPrice = DefaultGasPrice.get();
+//		tx.gasPrice = DefaultGasPrice.get();
 		tx.gas = gas;
 		tx.to = to;
 		tx.value = value;
