@@ -84,5 +84,3 @@ For complete methods check [fullnode JSONRPC](https://developer.confluxnetwork.o
 
 `Conflux` use base32 encoded address like `cfxtest:aak2rra2njvd77ezwjvx04kkds9fzagfe6d5r8e957`. The java SDK provide a class `conflux.web3j.types.Address` which can be used to construct, encode, decode address.
 For detail usage check [here](./cfx-address.md)
-
-## Account Management

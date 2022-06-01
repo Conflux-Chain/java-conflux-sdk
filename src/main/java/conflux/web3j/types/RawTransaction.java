@@ -18,7 +18,7 @@ import conflux.web3j.CfxUnit;
 
 public class RawTransaction {
 	
-	private static AtomicReference<BigInteger> DefaultGasPrice = new AtomicReference<BigInteger>(CfxUnit.DEFAULT_GAS_PRICE);
+	private static AtomicReference<BigInteger> DefaultGasPrice = new AtomicReference<BigInteger>(BigInteger.ONE);
 	private static AtomicReference<BigInteger> DefaultChainId = new AtomicReference<BigInteger>(BigInteger.valueOf(1029));
 	
 	public static BigInteger getDefaultGasPrice() {
