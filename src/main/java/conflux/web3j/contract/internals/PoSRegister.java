@@ -44,6 +44,10 @@ public class PoSRegister extends ContractCall{
         return account.callWithData(option, this.contractAddress, Numeric.toHexString(registerData));
     }
 
+    public String register(Account.Option option, String registerData) throws Exception {
+        return account.callWithData(option, this.contractAddress, registerData);
+    }
+
     public String retire(Account.Option option, BigInteger votePower)throws Exception{
         return account.call(option, this.contractAddress, "retire", new Uint64(votePower));
     } 
@@ -58,13 +62,29 @@ public class PoSRegister extends ContractCall{
         res[0] = decoder.nextUint256();
         res[1] = decoder.nextUint256();
         return res;
-    
-    } 
+    }
+
+    public BigInteger[] getVotes(String identifier)throws RpcException{
+        BigInteger[] res = new BigInteger[2]; 
+        
+        String rawData = this.call("getVotes", new Bytes32(Numeric.hexStringToByteArray(identifier))).sendAndGet();
+        rawData = Numeric.cleanHexPrefix(rawData);    
+        TupleDecoder decoder = new TupleDecoder(rawData);
+        
+        res[0] = decoder.nextUint256();
+        res[1] = decoder.nextUint256();
+        return res;
+    }
 
     public Address identifierToAddress(byte[] identifier)throws RpcException{
         String hexAddress = this.callAndGet(Address.class, "identifierToAddress", new Bytes32(identifier));        
         return new Address(hexAddress);
-    } 
+    }
+
+    public Address identifierToAddress(String identifier)throws RpcException{
+        String hexAddress = this.callAndGet(Address.class, "identifierToAddress", new Bytes32(Numeric.hexStringToByteArray(identifier)));        
+        return new Address(hexAddress);
+    }
 
     public Bytes32 addressToIdentifier(Address addr)throws RpcException{
         byte[] bytes = this.callAndGet(Bytes32.class, "addressToIdentifier", addr);

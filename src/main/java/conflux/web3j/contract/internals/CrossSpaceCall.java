@@ -36,45 +36,34 @@ public class CrossSpaceCall extends ContractCall{
 
     public String createEVM(Account.Option option, byte[] init)throws Exception{
         return account.call(option, this.contractAddress, "createEVM", new DynamicBytes(init));
-    } 
+    }
+
+    public String createEVM(Account.Option option, String init)throws Exception{
+        return account.call(option, this.contractAddress, "createEVM", new DynamicBytes(Numeric.hexStringToByteArray(init)));
+    }
 
     public String transferEVM(Account.Option option, byte[] to)throws Exception{
         return account.call(option, this.contractAddress, "transferEVM", new Bytes20(to));
     }
 
-    public String transferEVM(Account.Option option, Address to)throws Exception{
-        CfxAddress toAddr = new CfxAddress(to.getValue());
-        return account.call(option, this.contractAddress, "transferEVM", new Bytes20(Numeric.hexStringToByteArray(toAddr.getMappedEVMSpaceAddress())));
-    }
-
-    public String transferEVM(Account.Option option, CfxAddress to)throws Exception{
-        return account.call(option, this.contractAddress, "transferEVM", new Bytes20(Numeric.hexStringToByteArray(to.getMappedEVMSpaceAddress())));
+    public String transferEVM(Account.Option option, String to)throws Exception{
+        return account.call(option, this.contractAddress, "transferEVM", new Bytes20(Numeric.hexStringToByteArray(to)));
     }
 
     public String callEVM(Account.Option option, byte[] to, byte[] data)throws Exception{
         return account.call(option, this.contractAddress, "callEVM", new Bytes20(to), new DynamicBytes(data));
     }
 
-    public String callEVM(Account.Option option, Address to, byte[] data)throws Exception{
-        CfxAddress toAddr = new CfxAddress(to.getValue());
-        return account.call(option, this.contractAddress, "callEVM", new Bytes20(Numeric.hexStringToByteArray(toAddr.getMappedEVMSpaceAddress())), new DynamicBytes(data));
-    }
-
-    public String callEVM(Account.Option option, CfxAddress to, byte[] data)throws Exception{
-        return account.call(option, this.contractAddress, "callEVM", new Bytes20(Numeric.hexStringToByteArray(to.getMappedEVMSpaceAddress())), new DynamicBytes(data));
+    public String callEVM(Account.Option option, String to, String data)throws Exception{
+        return account.call(option, this.contractAddress, "callEVM", new Bytes20(Numeric.hexStringToByteArray(to)), new DynamicBytes(Numeric.hexStringToByteArray(data)));
     }
 
     public String staticCallEVM(Account.Option option, byte[] to, byte[] data)throws Exception{
         return account.call(option, this.contractAddress, "staticCallEVM", new Bytes20(to), new DynamicBytes(data));
     } 
 
-    public String staticCallEVM(Account.Option option, Address to, byte[] data)throws Exception{
-        CfxAddress toAddr = new CfxAddress(to.getValue());
-        return account.call(option, this.contractAddress, "staticCallEVM", new Bytes20(Numeric.hexStringToByteArray(toAddr.getMappedEVMSpaceAddress())), new DynamicBytes(data));
-    }
-
-    public String staticCallEVM(Account.Option option, CfxAddress to, byte[] data)throws Exception{
-        return account.call(option, this.contractAddress, "staticCallEVM", new Bytes20(Numeric.hexStringToByteArray(to.getMappedEVMSpaceAddress())), new DynamicBytes(data));
+    public String staticCallEVM(Account.Option option, String to, String data)throws Exception{
+        return account.call(option, this.contractAddress, "staticCallEVM", new Bytes20(Numeric.hexStringToByteArray(to)), new DynamicBytes(Numeric.hexStringToByteArray(data)));
     }
 
     public String withdrawFromMapped(Account.Option option, BigInteger value)throws Exception{
