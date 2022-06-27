@@ -15,7 +15,7 @@ import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.utils.Numeric;
 import org.web3j.utils.Strings;
-import org.web3j.crypto.Hash;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +26,6 @@ import conflux.web3j.types.Address;
 import conflux.web3j.types.AddressException;
 import conflux.web3j.types.AddressType;
 import conflux.web3j.types.RawTransaction;
-import conflux.web3j.types.SendTransactionError;
 import conflux.web3j.types.SendTransactionResult;
 import conflux.web3j.types.TransactionBuilder;
 
@@ -80,7 +79,7 @@ public class Account {
 	}
 
 	public String getEspaceAddress() {
-		return this.address.getEpaceAddress();
+		return this.address.getMappedEVMSpaceAddress();
 	}
 
 	public BigInteger getPoolNonce() {

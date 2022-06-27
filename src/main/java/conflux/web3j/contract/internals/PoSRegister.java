@@ -18,7 +18,7 @@ import org.web3j.utils.Numeric;
 
 public class PoSRegister extends ContractCall{
     private final static String contract = "0x0888000000000000000000000000000000000005";
-    private Account account;  // if account not set, can only use getAdmin method
+    private Account account;  // if account not set, can only use read method
     private CfxAddress contractAddress;
 
     public PoSRegister(Account account) {
@@ -40,8 +40,7 @@ public class PoSRegister extends ContractCall{
         return account.call(option, this.contractAddress, "increaseStake", new Uint64(votePower));
     }
 
-
-    public String register(Account.Option option, BigInteger votePower, byte[] registerData) throws Exception {
+    public String register(Account.Option option, byte[] registerData) throws Exception {
         return account.callWithData(option, this.contractAddress, Numeric.toHexString(registerData));
     }
 

@@ -70,10 +70,9 @@ public class Address {
         return hexAddress;
     }
 
-    public String getEpaceAddress() {
-        String hexAddr =  this.getHexAddress();      
+    public String getMappedEVMSpaceAddress() {
+        String hexAddr =  this.getHexAddress();
         hexAddr = hexAddr.substring(2, hexAddr.length());
-  
         byte[] t = Hash.sha3(Numeric.hexStringToByteArray(hexAddr));
 
         byte[] mappedBuf = new byte[20];
