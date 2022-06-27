@@ -15,6 +15,7 @@ import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.utils.Numeric;
 import org.web3j.utils.Strings;
+import org.web3j.crypto.Hash;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -77,7 +78,11 @@ public class Account {
 	public String getHexAddress() {
 		return this.address.getHexAddress();
 	}
-	
+
+	public String getEspaceAddress() {
+		return this.address.getEpaceAddress();
+	}
+
 	public BigInteger getPoolNonce() {
 		return cfx.txpoolNextNonce(this.address).sendAndGet();
 	}
