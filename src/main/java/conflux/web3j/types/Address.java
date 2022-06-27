@@ -9,6 +9,10 @@ import com.google.common.primitives.Bytes;
 import conflux.web3j.contract.abi.DecodeUtil;
 import conflux.web3j.crypto.ConfluxBase32;
 
+import org.web3j.crypto.Hash;
+import org.web3j.crypto.Keys;
+import org.web3j.utils.Numeric;
+
 public class Address {
     private final String address;  // base32Check address
     private final String hexAddress;
@@ -64,6 +68,17 @@ public class Address {
 
     public String getHexAddress() {
         return hexAddress;
+    }
+
+    public String getMappedEVMSpaceAddress() {
+        String hexAddr =  this.getHexAddress();
+        hexAddr = hexAddr.substring(2, hexAddr.length());
+        byte[] t = Hash.sha3(Numeric.hexStringToByteArray(hexAddr));
+
+        byte[] mappedBuf = new byte[20];
+		System.arraycopy(t, t.length - 20, mappedBuf, 0, 20);
+
+        return Keys.toChecksumAddress("0x" + BaseEncoding.base16().encode(mappedBuf));
     }
 
     public org.web3j.abi.datatypes.Address getABIAddress() {

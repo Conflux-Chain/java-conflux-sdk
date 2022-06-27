@@ -60,7 +60,7 @@ import conflux.web3j.response.Receipt;
 import conflux.web3j.types.Address;
 
 String bytecode = "0x608060405234801562000011...";
-BigInteger initialSupply = BigInteger.valueOf(21000000 * BigInteger.TEN.pow(18)); // erc20 token default decimals is 18
+BigInteger initialSupply = BigInteger.valueOf(new BigInteger("100000000000000000000")); // erc20 token default decimals is 18
 // when passing constructor parameters we need wrap them with correspond ABI type， for example use Uint256 when ABI require uint256 
 String hash = account.deploy(bytecode, new Uint256(initialSupply));
 // After this transaction is packed and successfully executed we can get its receipt
