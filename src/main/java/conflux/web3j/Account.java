@@ -78,7 +78,7 @@ public class Account {
 		return this.address.getHexAddress();
 	}
 
-	public String getEspaceAddress() {
+	public String getMappedEVMSpaceAddress() {
 		return this.address.getMappedEVMSpaceAddress();
 	}
 
