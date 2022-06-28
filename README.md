@@ -55,6 +55,7 @@ Or you can download jar package from github release page, or clone the source co
 * [SDK updates for CIP37](./docs/cfx-address.md)
 * [Testnet Faucet](https://faucet.confluxnetwork.org/)
 * [changelog](./CHANGELOG.md)
+* [Community Examples](https://github.com/conflux-fans/java-sdk-examples)
 
 ## Quick Start
 
