@@ -307,8 +307,11 @@ public class Account {
 			
 			if (this.gasPrice != null) {
 				tx.setGasPrice(this.gasPrice);
+			} else if (tx.getGasPrice() == null) {
+				BigInteger gasPrice = cfx.getGasPrice().sendAndGet();
+				tx.setGasPrice(gasPrice);
 			}
-			
+
 			if (this.chainId != null) {
 				tx.setChainId(this.chainId);
 			} else {

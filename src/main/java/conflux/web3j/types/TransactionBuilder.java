@@ -107,7 +107,8 @@ public class TransactionBuilder {
 		}
 		
 		if (this.tx.getGasPrice() == null) {
-			this.tx.setGasPrice(RawTransaction.getDefaultGasPrice());
+			BigInteger gasPrice = cfx.getGasPrice().sendAndGet();
+			this.tx.setGasPrice(gasPrice);
 		}
 		
 //		if (this.tx.getTo() == null) {
