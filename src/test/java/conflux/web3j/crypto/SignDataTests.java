@@ -4,9 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.web3j.utils.Numeric;
 
 import java.io.IOException;
-import java.util.Arrays;
 
-import static conflux.web3j.crypto.ECRecoverTest.keyPair;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SignDataTests {

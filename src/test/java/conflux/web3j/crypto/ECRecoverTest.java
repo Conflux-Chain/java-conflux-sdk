@@ -6,10 +6,9 @@ import org.web3j.crypto.Sign;
 import org.web3j.utils.Numeric;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ECRecoverTest {
     private String getAddress() {
@@ -29,8 +28,8 @@ public class ECRecoverTest {
 
         Sign.SignatureData sign = conflux.web3j.crypto.Sign.signPrefixedMessage(message.getBytes(), SampleKeys.KEY_PAIR);
 
-        boolean match = conflux.web3j.crypto.Sign.recoverSignature(sign, msgHash, getAddress());
-        assertTrue(match);
+        String recoverAddress = conflux.web3j.crypto.Sign.recoverSignature(sign, msgHash, getAddress());
+        assertEquals(recoverAddress, getAddress());
     }
 
     @Test
@@ -57,8 +56,8 @@ public class ECRecoverTest {
                         (byte[]) Arrays.copyOfRange(signatureBytes, 0, 32),
                         (byte[]) Arrays.copyOfRange(signatureBytes, 32, 64));
 
-        boolean match = conflux.web3j.crypto.Sign.recoverSignature(sd, dataEncoder.hashStructuredData(), getAddress());
-        assertTrue(match);
+        String recoverAddress = conflux.web3j.crypto.Sign.recoverSignature(sd, dataEncoder.hashStructuredData(), getAddress());
+        assertEquals(recoverAddress, getAddress());
     }
 
     @Test
@@ -70,7 +69,7 @@ public class ECRecoverTest {
         StructuredDataEncoder dataEncoder = new StructuredDataEncoder(msg);
         Sign.SignatureData sign = Sign.signMessage(dataEncoder.hashStructuredData(), SampleKeys.KEY_PAIR, false);
 
-        boolean match = conflux.web3j.crypto.Sign.recoverSignature(sign, dataEncoder.hashStructuredData(), getAddress());
-        assertTrue(match);
+        String recoverAddress = conflux.web3j.crypto.Sign.recoverSignature(sign, dataEncoder.hashStructuredData(), getAddress());
+        assertEquals(recoverAddress, getAddress());
     }
 }
