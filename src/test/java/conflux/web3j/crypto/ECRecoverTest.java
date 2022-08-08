@@ -12,17 +12,12 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ECRecoverTest {
-    public static final String PRIVATE_KEY_STRING =
-            "cb8fdf376eed1c2b13ef305e817a61c9fb22b6d65685214c7a0c0d90a074db51"; //replace with your own private key to test through fluent
-    static final BigInteger PRIVATE_KEY = Numeric.toBigInt(PRIVATE_KEY_STRING);
-
-    static final ECKeyPair keyPair = ECKeyPair.create(PRIVATE_KEY);
     private String getAddress() {
         return Numeric.prependHexPrefix(Keys.getAddress(getPubKey()));
     }
 
     private String getPubKey() {
-        return keyPair.getPublicKey().toString();
+        return SampleKeys.KEY_PAIR.getPublicKey().toString();
     }
 
 
@@ -32,7 +27,7 @@ public class ECRecoverTest {
 
         byte[] msgHash = conflux.web3j.crypto.Sign.getConfluxMessageHash(message.getBytes());
 
-        Sign.SignatureData sign = conflux.web3j.crypto.Sign.signPrefixedMessage(message.getBytes(), keyPair);
+        Sign.SignatureData sign = conflux.web3j.crypto.Sign.signPrefixedMessage(message.getBytes(), SampleKeys.KEY_PAIR);
 
         boolean match = conflux.web3j.crypto.Sign.recoverSignature(sign, msgHash, getAddress());
         assertTrue(match);
@@ -48,7 +43,7 @@ public class ECRecoverTest {
 
         //signature comes from `fluent`
         String signature =
-                "0x7f28d98e75cdcaee68354d6ad0b9a2e8c4a3d365fb10fb70a1bc03a72bdb70de5b6d6587c7af57994c494ca3a1672e17d3f8f013e20641a7299f0d427a39a39001";
+                "0x371ef48d63082d3875fee13b392c5b6a7449aa638921cb9f3d419f5b6a817ba754d085965fb3a041c3b178d3ae3798ea322ae74cb687dd699b5f6045c7fe47a91c";
 
         byte[] signatureBytes = Numeric.hexStringToByteArray(signature);
         byte v = signatureBytes[64];
@@ -73,7 +68,7 @@ public class ECRecoverTest {
                 "build/resources/test/"
                         + "structured_data_json_files/ValidStructuredData.json");
         StructuredDataEncoder dataEncoder = new StructuredDataEncoder(msg);
-        Sign.SignatureData sign = Sign.signMessage(dataEncoder.hashStructuredData(), keyPair, false);
+        Sign.SignatureData sign = Sign.signMessage(dataEncoder.hashStructuredData(), SampleKeys.KEY_PAIR, false);
 
         boolean match = conflux.web3j.crypto.Sign.recoverSignature(sign, dataEncoder.hashStructuredData(), getAddress());
         assertTrue(match);
