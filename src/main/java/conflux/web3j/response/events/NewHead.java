@@ -2,6 +2,7 @@ package conflux.web3j.response.events;
 
 import java.util.List;
 import java.math.BigInteger;
+import java.util.Optional;
 
 import conflux.web3j.types.Address;
 import org.web3j.utils.Numeric;
@@ -47,8 +48,12 @@ public class NewHead {
 
     public BigInteger getDifficulty() { return Numeric.decodeQuantity(difficulty); }
 
-    public BigInteger getEpochNumber() {
-        return Numeric.decodeQuantity(epochNumber);
+    public Optional<BigInteger> getEpochNumber() {
+        if (this.epochNumber == null || this.epochNumber.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(Numeric.decodeQuantity(this.epochNumber));
+        }
     }
 
     public BigInteger getGasLimit() {
