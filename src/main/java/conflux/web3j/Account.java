@@ -70,8 +70,8 @@ public class Account {
 		return account;
 	}
 
-	public static Account randomAccount(Cfx cfx) {
-		Credentials credentials = Credentials.create(generateRandomPrivateKey());
+	public static Account randomAccount(Cfx cfx) throws Exception{
+		Credentials credentials = Credentials.create(org.web3j.crypto.Keys.createEcKeyPair());
 		String hexAddress = AddressType.User.normalize(credentials.getAddress());
 		Address address = new Address(hexAddress, cfx.getIntNetworkId());
 		Account account = new Account(cfx, address);
@@ -325,7 +325,7 @@ public class Account {
 				BigInteger gasPrice = cfx.getGasPrice().sendAndGet();
 				tx.setGasPrice(gasPrice);
 			}
-			
+
 			if (this.chainId != null) {
 				tx.setChainId(this.chainId);
 			} else {
@@ -334,18 +334,6 @@ public class Account {
 			
 			return tx;
 		}
-	}
-
-	public static String generateRandomPrivateKey() {
-		byte[] initialEntropy = new byte[16];
-		new SecureRandom().nextBytes(initialEntropy);
-
-		String mnemonic = MnemonicUtils.generateMnemonic(initialEntropy);
-		byte[] seed = MnemonicUtils.generateSeed(mnemonic, null);
-		byte[] i = hmacSha512("Bitcoin seed".getBytes(), seed);
-		byte[] il = Arrays.copyOfRange(i, 0, 32);
-
-		return Numeric.toHexString(il);
 	}
 
 	public String getPrivateKey() {
