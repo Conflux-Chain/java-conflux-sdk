@@ -7,12 +7,14 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
+import java.security.SecureRandom;
 
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.ECKeyPair;
+import org.web3j.crypto.MnemonicUtils;
 import org.web3j.utils.Numeric;
 import org.web3j.utils.Strings;
 
@@ -28,6 +30,9 @@ import conflux.web3j.types.AddressType;
 import conflux.web3j.types.RawTransaction;
 import conflux.web3j.types.SendTransactionResult;
 import conflux.web3j.types.TransactionBuilder;
+
+import static org.web3j.crypto.Hash.hmacSha512;
+
 
 public class Account {
 	
@@ -58,6 +63,15 @@ public class Account {
 	
 	public static Account create(Cfx cfx, String privateKey) throws AddressException {
 		Credentials credentials = Credentials.create(privateKey);
+		String hexAddress = AddressType.User.normalize(credentials.getAddress());
+		Address address = new Address(hexAddress, cfx.getIntNetworkId());
+		Account account = new Account(cfx, address);
+		account.ecKeyPair = credentials.getEcKeyPair();
+		return account;
+	}
+
+	public static Account randomAccount(Cfx cfx) {
+		Credentials credentials = Credentials.create(generateRandomPrivateKey());
 		String hexAddress = AddressType.User.normalize(credentials.getAddress());
 		Address address = new Address(hexAddress, cfx.getIntNetworkId());
 		Account account = new Account(cfx, address);
@@ -311,7 +325,7 @@ public class Account {
 				BigInteger gasPrice = cfx.getGasPrice().sendAndGet();
 				tx.setGasPrice(gasPrice);
 			}
-
+			
 			if (this.chainId != null) {
 				tx.setChainId(this.chainId);
 			} else {
@@ -322,4 +336,19 @@ public class Account {
 		}
 	}
 
+	public static String generateRandomPrivateKey() {
+		byte[] initialEntropy = new byte[16];
+		new SecureRandom().nextBytes(initialEntropy);
+
+		String mnemonic = MnemonicUtils.generateMnemonic(initialEntropy);
+		byte[] seed = MnemonicUtils.generateSeed(mnemonic, null);
+		byte[] i = hmacSha512("Bitcoin seed".getBytes(), seed);
+		byte[] il = Arrays.copyOfRange(i, 0, 32);
+
+		return Numeric.toHexString(il);
+	}
+
+	public String getPrivateKey() {
+		return Numeric.toHexStringNoPrefix(ecKeyPair.getPrivateKey());
+	}
 }
