@@ -70,7 +70,7 @@ public class Account {
 		return account;
 	}
 
-	public static Account randomAccount(Cfx cfx) throws Exception{
+	public static Account random(Cfx cfx) throws Exception{
 		Credentials credentials = Credentials.create(org.web3j.crypto.Keys.createEcKeyPair());
 		String hexAddress = AddressType.User.normalize(credentials.getAddress());
 		Address address = new Address(hexAddress, cfx.getIntNetworkId());
