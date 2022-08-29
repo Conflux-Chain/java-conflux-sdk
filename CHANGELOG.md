@@ -1,5 +1,12 @@
 # CHANGELOG
 
+### 1.2.5
+
+1. Add support for internal contract CrossSpaceCall and PoSRegister
+2. Adapt for [CIP-23](https://github.com/Conflux-Chain/CIPs/blob/master/CIPs/cip-23.md)
+3. Fix `blockHead` event subscribe loss bug
+4. Add `random` and `getPrivateKey` to `Account` class
+
 ### 1.2.0
 
 * Add support for standard token ERC721, ERC1155
