@@ -45,6 +45,7 @@ Or you can download jar package from github release page, or clone the source co
 * [Account management](./docs/account-management.md)
 * [Sending transaction](./docs/sending-tx.md)
 * [Contract Interaction](./docs/contract-interaction.md)
+* [Batch RPC](./docs/batch-rpc.md)
 
 ## Docs
 
