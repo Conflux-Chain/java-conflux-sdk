@@ -140,7 +140,7 @@ public class Account {
 		tx.setValue(value);
 		return this.mustSend(tx);
 	}
-	
+
 	private RawTransaction buildRawTransaction(Option option, Address to, String data) {
 		return option.buildTx(this.cfx, this.address, this.getPoolNonce(), to, data);
 	}
@@ -313,10 +313,10 @@ public class Account {
 				this.storageLimit = new BigDecimal(estimation.getStorageCollateralized()).multiply(this.collateralOverflowRatio).toBigInteger();
 			}
 		}
-		
-		private RawTransaction buildTx(Cfx cfx, Address from, BigInteger nonce, Address to, String data) {
+
+		public RawTransaction buildTx(Cfx cfx, Address from, BigInteger nonce, Address to, String data) {
 			this.applyDefault(cfx, from, to, data);
-			
+
 			RawTransaction tx = RawTransaction.create(nonce, this.gasLimit, to, this.value, this.storageLimit, this.epochHeight, data);
 			
 			if (this.gasPrice != null) {
