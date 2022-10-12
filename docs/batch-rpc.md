@@ -2,9 +2,12 @@
 `java-conflux-sdk` provides the Batch RPC function that is based on the Web3J.
 
 # How to propose batch requests
+This doc offers several examples to present how to propose batch requests. 
+
+The main functions include `Transfer Funds`, `Call Contracts`, `Query Information`, `Query Contract`.
 
 ## Transfer Funds
-This doc provides a doc o present the corresponding example. The main idea of the batch is to create several rawTransactions. The nonce have to be config by ourselves. 
+The main idea of sending batch transaction is to create several rawTransactions. The nonce have to be config by ourselves. 
 
 Create a web3j client to send batch requests.
 
@@ -96,7 +99,7 @@ Query functions return the hex string of the results, which has to be decoded.
     }
 ```
 
-### Query Contract
+## Query Contract
 
 ### Example
 ```java

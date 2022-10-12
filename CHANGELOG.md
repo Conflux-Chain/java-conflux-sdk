@@ -1,5 +1,8 @@
 # CHANGELOG
 
+### 1.2.6
+* Add support for Batch Requests
+
 ### 1.2.5
 
 1. Add support for internal contract CrossSpaceCall and PoSRegister
