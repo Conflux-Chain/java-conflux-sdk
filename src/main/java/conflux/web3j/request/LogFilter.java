@@ -1,8 +1,12 @@
 package conflux.web3j.request;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.web3j.abi.EventEncoder;
+import org.web3j.abi.datatypes.Event;
 import org.web3j.utils.Numeric;
 
 import conflux.web3j.types.Address;
@@ -78,5 +82,37 @@ public class LogFilter {
 
 	public void setOffset(Long offset) {
 		this.offset = offset;
+	}
+
+	public static LogFilter generateLogFilter(Epoch startEpoch, Epoch endEpoch, Event event, Address contract_address, Address sender){
+		LogFilter filter = new LogFilter();
+		List<conflux.web3j.types.Address> addresses = Arrays.asList(contract_address);
+		filter.setAddress(addresses);
+		filter.setFromEpoch(startEpoch);
+		filter.setToEpoch(endEpoch);
+
+		List<List<String>> topics = new ArrayList<List<String>>();
+		List<String> topic = Arrays.asList(EventEncoder.encode(event), sender.getHexAddress(), contract_address.getHexAddress());
+
+		topics.add(topic);
+
+		filter.setTopics(topics);
+
+		return filter;
+	}
+
+	public static LogFilter generateLogFilter(Event event, Address contract_address, Address sender){
+		LogFilter filter = new LogFilter();
+		List<conflux.web3j.types.Address> addresses = Arrays.asList(contract_address);
+		filter.setAddress(addresses);
+
+		List<List<String>> topics = new ArrayList<List<String>>();
+		List<String> topic = Arrays.asList(EventEncoder.encode(event), sender.getHexAddress(), contract_address.getHexAddress());
+
+		topics.add(topic);
+
+		filter.setTopics(topics);
+
+		return filter;
 	}
 }
