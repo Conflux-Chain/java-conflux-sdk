@@ -122,7 +122,10 @@ public class PoSRegister extends ContractCall{
     }
 
     public List<RegisterEventResponse> getRegisterEvents(Receipt transactionReceipt) {
-        LogFilter filter = LogFilter.generateLogFilter(REGISTER_EVENT, this.contractAddress, this.account.getAddress());
+        LogFilter filter = LogFilter.generateLogFilter(
+                REGISTER_EVENT,
+                this.contractAddress
+        );
         filter.setBlockHashes(Arrays.asList(transactionReceipt.getBlockHash()));
 
         List<Log> logs = this.getLogs(filter);
@@ -152,7 +155,10 @@ public class PoSRegister extends ContractCall{
     }
 
     public List<IncreaseStakeEventResponse> getIncreaseStakeEvents(Receipt transactionReceipt) {
-        LogFilter filter = LogFilter.generateLogFilter(INCREASE_STAKE_EVENT, this.contractAddress, this.account.getAddress());
+        LogFilter filter = LogFilter.generateLogFilter(
+                INCREASE_STAKE_EVENT,
+                this.contractAddress
+        );
         filter.setBlockHashes(Arrays.asList(transactionReceipt.getBlockHash()));
 
         List<Log> logs = this.getLogs(filter);
@@ -179,7 +185,10 @@ public class PoSRegister extends ContractCall{
     }
 
     public List<RetireEventResponse> getRetireEvents(Receipt transactionReceipt) {
-        LogFilter filter = LogFilter.generateLogFilter(RETIRE_EVENT, this.contractAddress, this.account.getAddress());
+        LogFilter filter = LogFilter.generateLogFilter(
+                RETIRE_EVENT,
+                this.contractAddress
+        );
         filter.setBlockHashes(Arrays.asList(transactionReceipt.getBlockHash()));
 
         List<Log> logs = this.getLogs(filter);
@@ -229,7 +238,15 @@ public class PoSRegister extends ContractCall{
     }
 
     public Flowable<RegisterEventResponse> RegisterEventFlowable(Cfx cfxPubsub, Epoch startEpoch, Epoch endEpoch) throws Exception{
-        return RegisterEventFlowable(cfxPubsub, LogFilter.generateLogFilter(Epoch.earliest(), Epoch.latestState(), REGISTER_EVENT, this.contractAddress, this.account.getAddress()));
+        return RegisterEventFlowable(
+                cfxPubsub,
+                LogFilter.generateLogFilter(
+                        Epoch.earliest(),
+                        Epoch.latestState(),
+                        REGISTER_EVENT,
+                        this.contractAddress
+                )
+        );
     }
 
     public Flowable<IncreaseStakeEventResponse> IncreaseStakeEventFlowable(Cfx cfxPubsub, LogFilter filter)throws Exception {
@@ -255,7 +272,15 @@ public class PoSRegister extends ContractCall{
     }
 
     public Flowable<RegisterEventResponse> IncreaseStakeEventFlowable(Cfx cfxPubsub, Epoch startEpoch, Epoch endEpoch) throws Exception{
-        return RegisterEventFlowable(cfxPubsub, LogFilter.generateLogFilter(Epoch.earliest(), Epoch.latestState(), INCREASE_STAKE_EVENT, this.contractAddress, this.account.getAddress()));
+        return RegisterEventFlowable(
+                cfxPubsub,
+                LogFilter.generateLogFilter(
+                        Epoch.earliest(),
+                        Epoch.latestState(),
+                        INCREASE_STAKE_EVENT,
+                        this.contractAddress
+                )
+        );
     }
 
     public Flowable<RetireEventResponse> RetireEventFlowable(Cfx cfxPubsub, LogFilter filter)throws Exception {
@@ -281,7 +306,15 @@ public class PoSRegister extends ContractCall{
     }
 
     public Flowable<RegisterEventResponse> RetireEventFlowable(Cfx cfxPubsub, Epoch startEpoch, Epoch endEpoch) throws Exception{
-        return RegisterEventFlowable(cfxPubsub, LogFilter.generateLogFilter(Epoch.earliest(), Epoch.latestState(), RETIRE_EVENT, this.contractAddress, this.account.getAddress()));
+        return RegisterEventFlowable(
+                cfxPubsub,
+                LogFilter.generateLogFilter(
+                        Epoch.earliest(),
+                        Epoch.latestState(),
+                        RETIRE_EVENT,
+                        this.contractAddress
+                )
+        );
     }
 
     public static class RegisterEventResponse extends LogNotification {

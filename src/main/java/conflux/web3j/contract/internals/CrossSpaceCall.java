@@ -23,7 +23,6 @@ import org.web3j.abi.FunctionReturnDecoder;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.*;
 import org.web3j.abi.datatypes.generated.Uint256;
-import org.web3j.abi.datatypes.generated.Uint64;
 import org.web3j.utils.Numeric;
 import org.web3j.abi.datatypes.generated.Bytes20;
 
@@ -123,7 +122,10 @@ public class CrossSpaceCall extends ContractCall{
     }
 
     public List<CallEventResponse> getCallEvents(Receipt transactionReceipt) {
-        LogFilter filter = LogFilter.generateLogFilter(Call_EVENT, this.contractAddress, this.account.getAddress());
+        LogFilter filter = LogFilter.generateLogFilter(
+                Call_EVENT,
+                this.contractAddress
+        );
         filter.setBlockHashes(Arrays.asList(transactionReceipt.getBlockHash()));
 
         List<Log> logs = this.getLogs(filter);
@@ -157,7 +159,10 @@ public class CrossSpaceCall extends ContractCall{
     }
 
     public List<CreateEventResponse> getCreateEvents(Receipt transactionReceipt) {
-        LogFilter filter = LogFilter.generateLogFilter(Create_EVENT, this.contractAddress, this.account.getAddress());
+        LogFilter filter = LogFilter.generateLogFilter(
+                Call_EVENT,
+                this.contractAddress
+        );
         filter.setBlockHashes(Arrays.asList(transactionReceipt.getBlockHash()));
 
         List<Log> logs = this.getLogs(filter);
@@ -191,7 +196,10 @@ public class CrossSpaceCall extends ContractCall{
     }
 
     public List<WithdrawEventResponse> getWithdrawEvents(Receipt transactionReceipt) {
-        LogFilter filter = LogFilter.generateLogFilter(Withdraw_EVENT, this.contractAddress, this.account.getAddress());
+        LogFilter filter = LogFilter.generateLogFilter(
+                Call_EVENT,
+                this.contractAddress
+        );
         filter.setBlockHashes(Arrays.asList(transactionReceipt.getBlockHash()));
 
         List<Log> logs = this.getLogs(filter);
@@ -224,7 +232,10 @@ public class CrossSpaceCall extends ContractCall{
     }
 
     public List<OutcomeEventResponse> getOutcomeEvents(Receipt transactionReceipt) {
-        LogFilter filter = LogFilter.generateLogFilter(Outcome_EVENT, this.contractAddress, this.account.getAddress());
+        LogFilter filter = LogFilter.generateLogFilter(
+                Call_EVENT,
+                this.contractAddress
+        );
         filter.setBlockHashes(Arrays.asList(transactionReceipt.getBlockHash()));
 
         List<Log> logs = this.getLogs(filter);
@@ -247,19 +258,49 @@ public class CrossSpaceCall extends ContractCall{
     }
 
     public Flowable<CallEventResponse> CallEventFlowable(Cfx cfxPubsub, Epoch startEpoch, Epoch endEpoch) throws Exception{
-        return CallEventFlowable(cfxPubsub, LogFilter.generateLogFilter(Epoch.earliest(), Epoch.latestState(), Call_EVENT, this.contractAddress, this.account.getAddress()));
+        return CallEventFlowable(
+                cfxPubsub,
+                LogFilter.generateLogFilter(
+                        Epoch.earliest(),
+                        Epoch.latestState(),
+                        Call_EVENT,
+                        this.contractAddress
+                )
+        );
     }
 
     public Flowable<CreateEventResponse> CreateEventFlowable(Cfx cfxPubsub, Epoch startEpoch, Epoch endEpoch) throws Exception{
-        return CreateEventFlowable(cfxPubsub, LogFilter.generateLogFilter(Epoch.earliest(), Epoch.latestState(), Create_EVENT, this.contractAddress, this.account.getAddress()));
+        return CreateEventFlowable(
+                cfxPubsub,
+                LogFilter.generateLogFilter(
+                        Epoch.earliest(),
+                        Epoch.latestState(),
+                        Create_EVENT,
+                        this.contractAddress
+                )
+        );
     }
 
     public Flowable<WithdrawEventResponse> WithdrawEventFlowable(Cfx cfxPubsub, Epoch startEpoch, Epoch endEpoch) throws Exception{
-        return WithdrawEventFlowable(cfxPubsub, LogFilter.generateLogFilter(Epoch.earliest(), Epoch.latestState(), Withdraw_EVENT, this.contractAddress, this.account.getAddress()));
+        return WithdrawEventFlowable(cfxPubsub,
+                LogFilter.generateLogFilter(
+                        Epoch.earliest(),
+                        Epoch.latestState(),
+                        Withdraw_EVENT,
+                        this.contractAddress
+                )
+        );
     }
 
     public Flowable<OutcomeEventResponse> OutcomeEventFlowable(Cfx cfxPubsub, Epoch startEpoch, Epoch endEpoch) throws Exception{
-        return OutcomeEventFlowable(cfxPubsub, LogFilter.generateLogFilter(Epoch.earliest(), Epoch.latestState(), Outcome_EVENT, this.contractAddress, this.account.getAddress()));
+        return OutcomeEventFlowable(cfxPubsub,
+                LogFilter.generateLogFilter(
+                        Epoch.earliest(),
+                        Epoch.latestState(),
+                        Outcome_EVENT,
+                        this.contractAddress
+                )
+        );
     }
 
     public Flowable<CallEventResponse> CallEventFlowable(Cfx cfxPubsub, LogFilter filter)throws Exception {
