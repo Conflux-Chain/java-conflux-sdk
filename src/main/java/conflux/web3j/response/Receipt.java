@@ -29,6 +29,7 @@ public class Receipt {
 	private boolean storageCoveredBySponsor;
 	private String storageCollateralized;
 	private List<StorageChange> storageReleased;
+	private String gasFee;
 
 	
 	public String getTransactionHash() {
@@ -171,5 +172,9 @@ public class Receipt {
 
 	public void setStorageReleased(List<StorageChange> change) {
 		this.storageReleased = change;
+	}
+
+	public String getGasFee(){
+		return gasFee;
 	}
 }
