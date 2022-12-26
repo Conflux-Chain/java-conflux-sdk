@@ -174,7 +174,7 @@ public class Receipt {
 		this.storageReleased = change;
 	}
 
-	public String getGasFee(){
-		return gasFee;
+	public BigInteger getGasFee(){
+		return Numeric.decodeQuantity(gasFee);
 	}
 }
