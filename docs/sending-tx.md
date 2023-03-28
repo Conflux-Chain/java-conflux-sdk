@@ -55,11 +55,11 @@ rawTx.setValue(value);
 rawTx.setGasPrice(CfxUnit.DEFAULT_GAS_PRICE);
 // set all the rest field: nonce, gas, storageLimit ...
 // send it with account.send
-String hash = account.send(rawTx);
+SendTransactionResult resp1 = account.send(rawTx);
 
 // or sign it and send
 String signedTx = account.sign(rawTx);
-String hash2 = account.send(signedTx);
+SendTransactionResult resp2 = account.send(signedTx);
 ```
 
 [`RawTransaction`](https://javadoc.io/static/io.github.conflux-chain/conflux.web3j/1.1.1/conflux/web3j/types/RawTransaction.html) also provide several methods to help quick build tx:
