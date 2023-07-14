@@ -9,7 +9,8 @@ public enum AddressType {
 	Null("null", "null address type required"),
 	Builtin("builtin", "builtin address type required"),
 	User("user", "user address type required"),
-	Contract("contract", "contract address type required");
+	Contract("contract", "contract address type required"),
+    Unknown("unknown", "unknown address type required");
 
 	private static final HashMap<String, Character> TYPE_MAP = new HashMap<>();
 	static {
@@ -46,8 +47,10 @@ public enum AddressType {
 				return Optional.of(User);
 			case '8':
 				return Optional.of(Contract);
+			default:
+				return Optional.of(Unknown);
 		}
-		return Optional.empty();
+//		return Optional.empty();
 	}
 
 	private static final int HEX_LENGTH_WITH_PREFIX = 42;
