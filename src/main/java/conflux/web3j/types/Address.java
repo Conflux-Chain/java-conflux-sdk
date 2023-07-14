@@ -281,7 +281,7 @@ public class Address {
             case 0x80:
                 return AddressType.Contract;
             default:
-                throw new AddressException(AddressException.INVALID_TYPE);
+                return AddressType.Unknown;
         }
     }
 
