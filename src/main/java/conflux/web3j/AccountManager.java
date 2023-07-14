@@ -101,7 +101,7 @@ public class AccountManager {
 		return this.createKeyFile(password, Keys.createEcKeyPair());
 	}
 	
-	private Address createKeyFile(String password, ECKeyPair ecKeyPair) throws Exception {
+	protected Address createKeyFile(String password, ECKeyPair ecKeyPair) throws Exception {
 		WalletFile walletFile = Wallet.createStandard(password, ecKeyPair);
 		walletFile.setAddress(AddressType.User.normalize(walletFile.getAddress()));
 
@@ -131,7 +131,7 @@ public class AccountManager {
 	 * @param filename key file name.
 	 * @return account address of the key file.
 	 */
-	private String parseAddressFromFilename(String filename) {
+	protected String parseAddressFromFilename(String filename) {
 		if (!filename.startsWith(keyfilePrefix) || !filename.endsWith(keyfileExt)) {
 			return "";
 		}
