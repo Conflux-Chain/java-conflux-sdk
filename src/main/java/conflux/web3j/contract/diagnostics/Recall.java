@@ -13,6 +13,7 @@ import conflux.web3j.response.StringResponse;
 import conflux.web3j.response.Transaction;
 import conflux.web3j.response.UsedGasAndCollateral;
 
+// @deprecated
 public class Recall {
 	
 	private Cfx cfx;
