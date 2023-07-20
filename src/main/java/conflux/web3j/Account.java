@@ -46,6 +46,12 @@ public class Account {
 		this.cfx = cfx;
 		this.address = address;
 	}
+
+	public Account(Cfx cfx, Address address, ECKeyPair ecKeyPair) {
+		this.cfx = cfx;
+		this.address = address;
+		this.ecKeyPair = ecKeyPair;
+	}
 	
 	public static Account unlock(Cfx cfx, AccountManager am, Address address, String password) throws Exception {
 		return unlock(cfx, am, address, password, Duration.ZERO);
@@ -143,6 +149,10 @@ public class Account {
 
 	private RawTransaction buildRawTransaction(Option option, Address to, String data) {
 		return option.buildTx(this.cfx, this.address, this.getPoolNonce(), to, data);
+	}
+
+	protected RawTransaction buildRawTransaction(Option option, Address to, String data, BigInteger nonce) {
+		return option.buildTx(this.cfx, this.address, nonce, to, data);
 	}
 	
 	public String deploy(String bytecodes, Type<?>... constructorArgs) throws Exception {
