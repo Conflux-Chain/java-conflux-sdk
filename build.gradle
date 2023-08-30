@@ -13,7 +13,7 @@ plugins {
 }
 
 group = 'io.github.conflux-chain'
-version = '1.2.9'   // SNAPSHOT
+version = '1.2.10'   // SNAPSHOT
 
 repositories {
     jcenter()
