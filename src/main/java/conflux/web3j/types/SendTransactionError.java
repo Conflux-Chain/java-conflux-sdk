@@ -31,6 +31,9 @@ public enum SendTransactionError {
 	}
 	
 	private boolean matches(String message) {
+		if (message == null) {
+			return false;
+		}
 		if (this.prefix != null && !message.startsWith(this.prefix)) {
 			return false;
 		}
