@@ -31,6 +31,9 @@ public enum SendTransactionError {
 	}
 	
 	private boolean matches(String message) {
+		if (message == null) {
+			return false;
+		}
 		if (this.prefix != null && !message.startsWith(this.prefix)) {
 			return false;
 		}
@@ -61,11 +64,11 @@ public enum SendTransactionError {
 		String data = rpcError.getData();
 		if (data != null) {
 			data = data.replace("\"", "").replace("\\", "");
-		}
-		
-		for (SendTransactionError error : SendTransactionError.values()) {
-			if (error.matches(data)) {
-				return error;
+
+			for (SendTransactionError error : SendTransactionError.values()) {
+				if (error.matches(data)) {
+					return error;
+				}
 			}
 		}
 		

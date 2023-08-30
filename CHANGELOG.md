@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### 1.2.10
+
+1. Fix SendTransactionError parse method to handle data is null
+
 ### 1.2.6
 * Add support for Batch Requests
 
