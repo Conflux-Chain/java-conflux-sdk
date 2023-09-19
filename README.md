@@ -49,14 +49,15 @@ Or you can download jar package from github release page, or clone the source co
 
 ## Docs
 
-* [Conflux developer documentation portal](https://developer.confluxnetwork.org/)
+* [Conflux developer documentation portal](https://doc.confluxnetwork.org/)
 * [JAVA SDK API](https://javadoc.io/doc/io.github.conflux-chain/conflux.web3j)
-* [Conflux fullnode RPC API](https://developer.confluxnetwork.org/conflux-doc/docs/json_rpc)
-* [Conflux fullnode pub/sub API](https://developer.confluxnetwork.org/conflux-doc/docs/pubsub)
+* [Conflux fullnode RPC API](https://doc.confluxnetwork.org/docs/core/build/json-rpc/)
+* [Conflux fullnode pub/sub API](https://doc.confluxnetwork.org/docs/core/build/json-rpc/pubsub)
 * [SDK updates for CIP37](./docs/cfx-address.md)
 * [Testnet Faucet](https://faucet.confluxnetwork.org/)
 * [changelog](./CHANGELOG.md)
 * [Community Examples](https://github.com/conflux-fans/java-sdk-examples)
+* [Contract method interaction ABI encode](https://github.com/conflux-fans/crypto-knowledge/blob/main/blogs/java-sdk-abi-encode.md)
 
 ## Quick Start
 
@@ -198,7 +199,7 @@ String result = account.transfer(opt, new Address("0x13d2bA4eD43542e7c54fbB6c5fC
 ```
 
 ## Websocket and PubSub
-The `conflux-rust` fullnode [support PubSub](https://developer.confluxnetwork.org/conflux-doc/docs/pubsub) through websocket, the default port is 12535, you need open it manually.
+The `conflux-rust` fullnode [support PubSub](https://doc.confluxnetwork.org/docs/core/build/json-rpc/pubsub) through websocket, the default port is 12535, you need open it manually.
 Now the SDK provide three methods `subscribeNewHeads`, `subscribeLogs`, `subscribeEpochs` you can use to sub respect events.
 
 ```java

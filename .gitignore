@@ -34,3 +34,4 @@ bin
 .idea
 docs/tmp.md
 docs/how-to-publish.md
+.vscode
