@@ -47,6 +47,10 @@ public interface Cfx extends Closeable, CfxPubSub {
 	BigInteger getChainId();
 	
 	Request<BigInteger, BigIntResponse> getGasPrice();
+
+	Request<BigInteger, BigIntResponse> getMaxPriorityFeePerGas();
+
+	Request<BigInteger, BigIntResponse> getFeeBurnt();
 	
 	Request<BigInteger, BigIntResponse> getEpochNumber(Epoch... epoch);
 	
@@ -127,6 +131,10 @@ public interface Cfx extends Closeable, CfxPubSub {
 	Request<PoSEconomics, PoSEconomics.Response> getPoSEconomics();
 
 	Request<PoSEpochRewards, PoSEpochRewards.Response> getPoSRewardByEpoch(Address address, Epoch epoch);
+
+	Request<ParamsOfVote, ParamsOfVote.Response> getParamsFromVote(Epoch... epoch);
+
+	Request<FeeHistory, FeeHistory.Response> getFeeHistory(int count, Epoch epoch, List<Float> percentiles);
 
 	<T,R extends Response<?> & HasValue<T>> Request<T, R> getCustomizedRequest(Class<R> responseType, String method, Object... params);
 	

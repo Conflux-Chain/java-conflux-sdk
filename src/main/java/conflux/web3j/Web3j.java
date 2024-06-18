@@ -73,12 +73,41 @@ class Web3j implements Web3 {
 	}
 
 	@Override
+	public Request<BigInteger, BigIntResponse> getMaxPriorityFeePerGas() {
+		return new Request<>(this.service, "cfx_maxPriorityFeePerGas", BigIntResponse.class)
+				.withRetry(this.retry, this.intervalMillis);
+	}
+
+	@Override
+	public Request<BigInteger, BigIntResponse> getFeeBurnt() {
+		return new Request<>(this.service, "cfx_getFeeBurnt", BigIntResponse.class)
+				.withRetry(this.retry, this.intervalMillis);
+	}
+
+	@Override
+	public Request<FeeHistory, FeeHistory.Response> getFeeHistory(int count, Epoch epoch, List<Float> percentiles) {
+		return new Request<>(this.service, "cfx_feeHistory", FeeHistory.Response.class, count, epoch.getValue(), percentiles)
+				.withRetry(this.retry, this.intervalMillis);
+	}
+
+	@Override
 	public Request<BigInteger, BigIntResponse> getEpochNumber(Epoch... epoch) {
 		if (epoch.length == 0) {
 			return new Request<>(this.service, "cfx_epochNumber", BigIntResponse.class)
 					.withRetry(this.retry, this.intervalMillis);
 		} else {
 			return new Request<>(this.service, "cfx_epochNumber", BigIntResponse.class, epoch[0].getValue())
+					.withRetry(this.retry, this.intervalMillis);
+		}
+	}
+
+	@Override
+	public Request<ParamsOfVote, ParamsOfVote.Response> getParamsFromVote(Epoch... epoch) {
+		if (epoch.length == 0) {
+			return new Request<>(this.service, "cfx_getParamsFromVote", ParamsOfVote.Response.class)
+					.withRetry(this.retry, this.intervalMillis);
+		} else {
+			return new Request<>(this.service, "cfx_getParamsFromVote", ParamsOfVote.Response.class, epoch[0].getValue())
 					.withRetry(this.retry, this.intervalMillis);
 		}
 	}
