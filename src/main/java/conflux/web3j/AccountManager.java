@@ -40,6 +40,7 @@ public class AccountManager {
 	
 	// directory to store the key files.
 	private String dir;
+	private Path dirPath;
 	// unlocked accounts: map<address, item>
 	private ConcurrentHashMap<String, UnlockedItem> unlocked;
 
@@ -61,8 +62,10 @@ public class AccountManager {
 	 * @throws IOException if failed to create directories.
 	 */
 	public AccountManager(String dir, int networkId) throws IOException {
-		Files.createDirectories(Paths.get(dir));
-		this.dir = dir;
+		Path p = Paths.get(dir).normalize();
+		Files.createDirectories(p);
+		this.dir = p.toString();
+		this.dirPath = p;
 		this.networkId = networkId;
 		this.unlocked = new ConcurrentHashMap<String, UnlockedItem>();
 	}
@@ -118,7 +121,7 @@ public class AccountManager {
 	 * @throws IOException if read files failed
 	 */
 	public List<Address> list() throws IOException {
-		return Files.list(Paths.get(this.dir))
+		return Files.list(this.dirPath)
 				.map(path -> this.parseAddressFromFilename(path.getFileName().toString()))
 				.filter(path -> !path.isEmpty())
 				.sorted()
@@ -190,7 +193,7 @@ public class AccountManager {
 	 * @throws Exception if read file failed
 	 */
 	public boolean exists(Address address) throws Exception {
-		return Files.list(Paths.get(this.dir))
+		return Files.list(this.dirPath)
 				.map(path -> this.parseAddressFromFilename(path.getFileName().toString()))
 				.anyMatch(path -> path.equalsIgnoreCase(address.getHexAddress()));
 	}
@@ -204,7 +207,7 @@ public class AccountManager {
 	 */
 	public boolean delete(Address address) throws Exception {
 		String hexAddress = address.getHexAddress();
-		List<Path> files = Files.list(Paths.get(this.dir))
+		List<Path> files = Files.list(this.dirPath)
 				.filter(path -> this.parseAddressFromFilename(path.getFileName().toString()).equalsIgnoreCase(hexAddress))
 				.collect(Collectors.toList());
 		
@@ -213,7 +216,7 @@ public class AccountManager {
 		}
 		
 		for (Path file : files) {
-			Files.delete(file);
+			Files.delete(file.normalize());
 		}
 		
 		this.unlocked.remove(hexAddress);
@@ -230,7 +233,7 @@ public class AccountManager {
 	 * @throws Exception if file read failed
 	 */
 	public boolean update(Address address, String password, String newPassword) throws Exception {
-		List<Path> files = Files.list(Paths.get(this.dir))
+		List<Path> files = Files.list(this.dirPath)
 				.filter(path -> this.parseAddressFromFilename(path.getFileName().toString()).equalsIgnoreCase(address.getHexAddress()))
 				.collect(Collectors.toList());
 		
@@ -239,7 +242,7 @@ public class AccountManager {
 		}
 		
 		ECKeyPair ecKeyPair = WalletUtils.loadCredentials(password, files.get(0).toString()).getEcKeyPair();
-		Files.delete(files.get(0));
+		Files.delete(files.get(0).normalize());
 		this.createKeyFile(newPassword, ecKeyPair);
 		
 		return true;
@@ -253,7 +256,7 @@ public class AccountManager {
 	 * @throws Exception if file read failed
 	 */
 	public String exportPrivateKey(Address address, String password) throws Exception {
-		List<Path> files = Files.list(Paths.get(this.dir))
+		List<Path> files = Files.list(this.dirPath)
 				.filter(path -> this.parseAddressFromFilename(path.getFileName().toString()).equalsIgnoreCase(address.getHexAddress()))
 				.collect(Collectors.toList());
 		
@@ -275,7 +278,7 @@ public class AccountManager {
 	 */
 	public boolean unlock(Address address, String password, Duration... timeout) throws Exception {
 		String hexAddress = address.getHexAddress();
-		List<Path> files = Files.list(Paths.get(this.dir))
+		List<Path> files = Files.list(this.dirPath)
 				.filter(path -> this.parseAddressFromFilename(path.getFileName().toString()).equalsIgnoreCase(hexAddress))
 				.collect(Collectors.toList());
 		
@@ -346,7 +349,7 @@ public class AccountManager {
 				this.unlocked.remove(address);
 			}
 			
-			List<Path> files = Files.list(Paths.get(this.dir))
+			List<Path> files = Files.list(this.dirPath)
 					.filter(path -> this.parseAddressFromFilename(path.getFileName().toString()).equalsIgnoreCase(address))
 					.collect(Collectors.toList());
 			
