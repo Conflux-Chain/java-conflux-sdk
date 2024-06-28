@@ -112,8 +112,6 @@ public class RawTransaction {
 				RlpString.create(r),
 				RlpString.create(s)));
 
-		System.out.println(Numeric.toHexString(signedTx));
-
 		// add prefix for typed transaction
 		if (Objects.equals(this.type, RawTransaction.TYPE_1559)) {
 			signedTx = concat(TYPE_1559_PREFIX, signedTx);
