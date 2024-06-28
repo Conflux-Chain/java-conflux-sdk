@@ -1,5 +1,12 @@
 # CHANGELOG
 
+### 1.3.0
+
+This version add support for [Conflux hardfork v2.4.0](https://doc.confluxnetwork.org/docs/general/hardforks/v2.4), including:
+
+1. New added RPC methods: cfx_maxPriorityFeePerGas, cfx_feeHistory, cfx_getFeeBurnt
+2. Support for CIP-1559 transaction
+
 ### 1.2.10
 
 1. Fix SendTransactionError parse method to handle data is null

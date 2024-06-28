@@ -2,7 +2,11 @@ package conflux.web3j.types;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.List;
+import java.util.Objects;
 
+import conflux.web3j.request.Epoch;
+import conflux.web3j.response.Block;
 import org.web3j.utils.Strings;
 
 import conflux.web3j.Cfx;
@@ -12,7 +16,7 @@ import conflux.web3j.response.UsedGasAndCollateral;
 public class TransactionBuilder {
 	
 	public static final BigDecimal DEFAULT_GAS_OVERFLOW_RATIO = BigDecimal.valueOf(1.3);
-	public static final BigDecimal DEFAULT_COLLATERAL_OVERFLOW_RATIO = BigDecimal.valueOf(2);
+	public static final BigDecimal DEFAULT_COLLATERAL_OVERFLOW_RATIO = BigDecimal.valueOf(1.3);
 	
 	private Address from;
 	private BigDecimal gasOverflowRatio;
@@ -36,6 +40,28 @@ public class TransactionBuilder {
 	
 	public TransactionBuilder withNonce(BigInteger nonce) {
 		this.tx.setNonce(nonce);
+		return this;
+	}
+
+	public TransactionBuilder withType(BigInteger val) {
+		this.tx.setType(val);
+		return this;
+	}
+
+	public TransactionBuilder withAccessList(List<AccessListEntry> val) {
+		this.tx.setAccessList(val);
+		return this;
+	}
+
+	public TransactionBuilder withMaxPriorityFeePerGas(BigInteger val) {
+		this.tx.setType(RawTransaction.TYPE_1559);
+		this.tx.setMaxPriorityFeePerGas(val);
+		return this;
+	}
+
+	public TransactionBuilder withMaxFeePerGas(BigInteger val) {
+		this.tx.setType(RawTransaction.TYPE_1559);
+		this.tx.setMaxFeePerGas(val);
 		return this;
 	}
 	
@@ -105,12 +131,25 @@ public class TransactionBuilder {
 		if (this.tx.getNonce() == null) {
 			this.tx.setNonce(cfx.getNonce(this.from).sendAndGet());
 		}
-		
-		if (this.tx.getGasPrice() == null) {
-			BigInteger gasPrice = cfx.getGasPrice().sendAndGet();
-			this.tx.setGasPrice(gasPrice);
+
+		if (Objects.equals(this.tx.getType(), RawTransaction.TYPE_1559)) {
+			if (this.tx.getMaxPriorityFeePerGas() == null) {
+				BigInteger maxPriorityFeePerGas = cfx.getMaxPriorityFeePerGas().sendAndGet();
+				this.tx.setMaxPriorityFeePerGas(maxPriorityFeePerGas);
+			}
+			if (this.tx.getMaxFeePerGas() == null) {
+				Block b = cfx.getBlockByEpoch(Epoch.latestState()).sendAndGet().get();
+
+				BigInteger maxFeePerGas = b.getBaseFeePerGas().multiply(new BigInteger("2")).add(this.tx.getMaxPriorityFeePerGas());
+				this.tx.setMaxFeePerGas(maxFeePerGas);
+			}
+		} else {
+			if (this.tx.getGasPrice() == null) {
+				BigInteger gasPrice = cfx.getGasPrice().sendAndGet();
+				this.tx.setGasPrice(gasPrice);
+			}
 		}
-		
+
 //		if (this.tx.getTo() == null) {
 //			this.tx.setTo(null);
 //		}
@@ -156,8 +195,8 @@ public class TransactionBuilder {
 		UsedGasAndCollateral estimation = cfx.estimateGasAndCollateral(call).sendAndGet();
 		
 		if (this.tx.getGas() == null) {
-			BigDecimal gasLimit = new BigDecimal(estimation.getGasUsed()).multiply(this.gasOverflowRatio);
-			this.tx.setGas(gasLimit.toBigInteger());
+//			BigDecimal gasLimit = new BigDecimal(estimation.getGasUsed()).multiply(this.gasOverflowRatio);
+			this.tx.setGas(estimation.getGasUsed());
 		}
 		
 		if (this.tx.getStorageLimit() == null) {
