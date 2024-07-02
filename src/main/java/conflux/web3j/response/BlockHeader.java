@@ -27,6 +27,15 @@ public class BlockHeader {
 	private String size;
 	private String posReference;
 	private List<String> custom;
+	private String baseFeePerGas;
+
+	public BigInteger getBaseFeePerGas() {
+		return Numeric.decodeQuantity(this.baseFeePerGas);
+	}
+
+	public void setBaseFeePerGas(String baseFeePerGas) {
+		this.baseFeePerGas = baseFeePerGas;
+	}
 	
 	public String getHash() {
 		return hash;

@@ -30,7 +30,33 @@ public class Receipt {
 	private String storageCollateralized;
 	private List<StorageChange> storageReleased;
 	private String gasFee;
+	private String type;
+	private String burntGasFee;
+	private String effectiveGasPrice;
 
+	public BigInteger getBurntGasFee() {
+		return Numeric.decodeQuantity(burntGasFee);
+	}
+
+	public void setBurntGasFee(String burntGasFee) {
+		this.burntGasFee = burntGasFee;
+	}
+
+	public BigInteger getEffectiveGasPrice() {
+		return Numeric.decodeQuantity(effectiveGasPrice);
+	}
+
+	public void setEffectiveGasPrice(String effectiveGasPrice) {
+		this.effectiveGasPrice = effectiveGasPrice;
+	}
+
+	public int getType() {
+		return Numeric.decodeQuantity(type).intValue();
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 	
 	public String getTransactionHash() {
 		return transactionHash;
@@ -176,5 +202,9 @@ public class Receipt {
 
 	public BigInteger getGasFee(){
 		return Numeric.decodeQuantity(gasFee);
+	}
+
+	public void setGasFee(String gasFee) {
+		this.gasFee = gasFee;
 	}
 }

@@ -3,8 +3,10 @@ package conflux.web3j.response;
 import java.math.BigInteger;
 import java.util.Optional;
 
+import conflux.web3j.types.AccessListEntry;
 import conflux.web3j.types.Address;
 import org.web3j.utils.Numeric;
+import java.util.List;
 
 public class Transaction {
 	
@@ -28,6 +30,51 @@ public class Transaction {
 	private String v;
 	private String r;
 	private String s;
+	private String type;
+	private String yParity;
+	private String maxFeePerGas;
+	private String maxPriorityFeePerGas;
+	private List<AccessListEntry> accessList;
+
+	public BigInteger getMaxFeePerGas() {
+		return Numeric.decodeQuantity(this.maxFeePerGas);
+	}
+
+	public void setMaxFeePerGas(String maxFeePerGas) {
+		this.maxFeePerGas = maxFeePerGas;
+	}
+
+	public BigInteger getMaxPriorityFeePerGas() {
+		return Numeric.decodeQuantity(this.maxPriorityFeePerGas);
+	}
+
+	public void setMaxPriorityFeePerGas(String maxPriorityFeePerGas) {
+		this.maxPriorityFeePerGas = maxPriorityFeePerGas;
+	}
+
+	public BigInteger getYParity() {
+		return Numeric.decodeQuantity(yParity);
+	}
+
+	public void setYParity(String yParity) {
+		this.yParity = yParity;
+	}
+
+	public int getType() {
+		return Numeric.decodeQuantity(type).intValue();
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public List<AccessListEntry> getAccessList() {
+		return accessList;
+	}
+
+	public void setAccessList(List<AccessListEntry> accessList) {
+		this.accessList = accessList;
+	}
 	
 	public String getHash() {
 		return hash;
