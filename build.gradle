@@ -16,8 +16,8 @@ group = 'io.github.conflux-chain'
 version = '1.3.0'   // SNAPSHOT
 
 repositories {
-    jcenter()
-//    mavenCentral()
+//    jcenter()
+    mavenCentral()
 }
 
 dependencies {
@@ -39,19 +39,26 @@ test {
     useJUnitPlatform()
 }
 
-task sourcesJar(type: Jar) {
+tasks.register('sourcesJar', Jar) {
     archiveClassifier = 'sources'
     from sourceSets.main.allJava
 }
-task javadocJar(type: Jar) {
+tasks.register('javadocJar', Jar) {
     archiveClassifier = 'javadoc'
     from javadoc.destinationDir
 }
 
+tasks.register('printEnvironmentVariable') {
+    doLast {
+        println "MY_ENV_VAR: " + findProperty("signing.secretKey") as String
+    }
+}
+
 signing {
-    def signingKey = findProperty("signingKey")
-    def signingPassword = findProperty("signingPassword")
-    useInMemoryPgpKeys(signingKey, signingPassword)
+    useInMemoryPgpKeys(
+            findProperty("signing.secretKey") as String,
+            findProperty("signing.password") as String
+    )
     sign publishing.publications;
 }
 
@@ -108,19 +115,10 @@ publishing {
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
             name = "OSSRH"
             credentials {
-                username = System.getenv("MAVEN_USERNAME")
-                password = System.getenv("MAVEN_PASSWORD")
+                username = findProperty("maven.username")
+                password = findProperty("maven.password")
             }
         }
-
-//        maven {
-//            name = "GitHubPackages"
-//            url = "https://maven.pkg.github.com/conflux-chain/java-conflux-sdk"
-//            credentials {
-//                username = System.getenv("GITHUB_ACTOR")
-//                password = System.getenv("GITHUB_TOKEN")
-//            }
-//        }
     }
 }
 
