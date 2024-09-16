@@ -3,9 +3,15 @@ package conflux.web3j.contract;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
+import conflux.web3j.request.LogFilter;
+import conflux.web3j.response.Log;
 import org.web3j.abi.FunctionEncoder;
+import org.web3j.abi.TypeReference;
+import org.web3j.abi.datatypes.DynamicArray;
 import org.web3j.abi.datatypes.Function;
+import org.web3j.abi.datatypes.StaticArray;
 import org.web3j.abi.datatypes.Type;
 
 import conflux.web3j.Cfx;
@@ -90,4 +96,17 @@ public class ContractCall {
 		return DecodeUtil.decode(rawData, returnType);
 	}
 
+	public <T extends Type<?>> List<T> callAndGet(TypeReference<DynamicArray<T>> returnType, String method, Type<?>... args) {
+		String rawData = this.call(method, args).sendAndGet();
+		return DecodeUtil.decode(rawData, returnType);
+	}
+
+	public <T extends Type<?>> List<T> callAndGet(TypeReference.StaticArrayTypeReference<StaticArray<T>> returnType, String method, Type<?>... args) {
+		String rawData = this.call(method, args).sendAndGet();
+		return DecodeUtil.decode(rawData, returnType);
+	}
+
+	public List<Log> getLogs(LogFilter filter) {
+		return this.cfx.getLogs(filter).sendAndGet();
+	}
 }
